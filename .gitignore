@@ -1,0 +1,13 @@
+# Intellij
+.idea/
+
+# Build files
+build/
+
+# CMake
+.cache/
+
+# Debugging
+core
+dump
+core_dump
