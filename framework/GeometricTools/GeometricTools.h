@@ -8,8 +8,6 @@
 
 #include <array>
 #include <vector>
-#include <iostream>
-#include <iomanip>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

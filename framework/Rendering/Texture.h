@@ -4,53 +4,71 @@
 #include <string>
 #include <glad/glad.h>
 
-
-namespace Framework
-{
+namespace Framework {
     class Shader;
 
-	/**
-	 * The Texture class represents a texture object in OpenGL. It should be
-	 * stored in TextureManager.
-	*/
-	class Texture {
-	public:
-		/** The texture's format. */
-		enum TextureType { Texture2D = 0, CubeMap, WhiteTexture };
-	public:
-		/**
-		 * Construct Texture.
-		 * This constructs an empty Texture class. You should load or create a
-		 * texture before binding it.
-		 */
-		Texture() = default;
-		virtual ~Texture();
+    /**
+     * The Texture class represents a texture object in OpenGL. It should be
+     * stored in TextureManager.
+     */
+    class Texture
+    {
+    public:
+        /** The texture's format. */
+        enum TextureType
+        {
+            Texture2D = 0,
+            CubeMap,
+            WhiteTexture
+        };
+
+    public:
+        /**
+         * Construct Texture.
+         * This constructs an empty Texture class. You should load or create a
+         * texture before binding it.
+         */
+        Texture() = default;
+        virtual ~Texture();
 
         /** Create a white texture in memory */
         void createWhiteTexture(Shader* shader, const std::string& name);
 
         /** Load a 2-dimensional texture from disk */
-        void loadTexture2D(
-                Shader* _shader, const std::string& name, const std::string& filepath, int slot = 0);
+        void loadTexture2D(Shader* _shader,
+                           const std::string& name,
+                           const std::string& filepath,
+                           int slot = 0);
 
         /** Load a cube map from disk */
-        void loadCubeMap(Shader* _shader, const std::string& name, const std::string& filepath, int slot = 0);
+        void loadCubeMap(Shader* _shader,
+                         const std::string& name,
+                         const std::string& filepath,
+                         int slot = 0);
 
         /**
          * Bind the texture
          * @param slot Texture slot to bind
-		 * TODO: Add support for multiple textures
+         * TODO: Add support for multiple textures
          * TODO: Make an assertion when an empty texture is bound
          */
-		void bind();
+        void bind();
 
         /**
          * Unbind the texture
          * @param slot Texture slot to unbind
          */
-		void unbind();
+        void unbind();
 
-	private:
+        /**
+         * Set the texture's type.
+         *
+         * This is important to determine what sampler type is used in the
+         * fragment shader.
+         */
+        void setType(TextureType newType) { type = newType; };
+
+    private:
         /** Gives the TextureManager access to Texture's private members */
         friend class TextureManager;
 
@@ -78,7 +96,7 @@ namespace Framework
         int32_t internalFormat;
         GLenum dataFormat;
         GLenum textureTarget; // Used when binding
-	};
+    };
 }
 
 #endif // TEXTURE_H

@@ -1,37 +1,130 @@
 #ifndef LAB_ENTITY_H
 #define LAB_ENTITY_H
 
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
-
-#include <glm/glm.hpp>
-
+// C libraries
 #include <cstdint>
-#include <memory>
+
+// C++ libraries
+#include <algorithm>
+#include <vector>
+#include <string>
+
+// External
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace Physics {
     class BoundingBox;
 }
 
+namespace Framework {
+    class Shader;
+    class VertexArray;
+    class VertexBuffer;
+    class IndexBuffer;
+}
+
+/**
+ * Object that exists in the scene
+ * 
+ * The Entity is the lowest level component of the scene hierarchy. It is
+ * placeable in the world either as a drawble object or as an invisible
+ * entity. Such entity can be used for 
+*/
 class Entity
 {
-public:
+public: // Constructors and destructors
+    /**
+     * Default constructor.
+     *
+     * Construct an empty entity. If the entity is drawable, it must
+     * first be iniitialized.
+     *
+     * @see initDrawable()
+     */
     Entity() = default;
-    Entity(
-        Framework::Shader* shader,
-        std::vector<float> vertices, 
-        std::vector<uint32_t> indices,
-    	GLenum drawType = GL_DYNAMIC_DRAW
-    );
 
     virtual ~Entity();
 
+    /**
+     * Add a new parent.
+     * 
+     * The entity is a node in a tree structure. If it doesn't have a parent,
+     * then it's safe to assume that it's the top node.
+     *
+     * @param entity The new parent
+     */
+    void addParent(Entity* entity) { parent = entity; }
+
+    /**
+     *  Add a new child
+     *
+     * The entity is a node in a tree structure. By adding a child, we are
+     * expanding the tree structure.
+     */
+    void addChild(Entity* entity) { children.push_back(entity); }
+
+    /**
+     * Remove a child at the i'th index.
+     *
+     * Please be cautious that removing a child will not delete it. It must
+     * manually be deleted by the user.
+     */
+    Entity* removeChildAt(int i)
+    {
+        if (i < children.size()) {
+            return *children.erase(children.begin() + i);
+        }
+    }
+
+    /**
+     * Remove a child by its id.
+     * 
+     * Please be cautious that removing a child will not delete it. It must
+     * manually be deleted by the user.
+     */
+    Entity* removeChildById(int id)
+    {
+        std::find_if(children.begin(), children.end(), [id](Entity* e) {
+            return e->getId() == id;
+        });
+
+        return nullptr;
+    }
+
+    /**
+     * Return the entity's unique identifier.
+     * 
+     * No other entity should have this identifier.
+     */
+    int getId() const { return id; }
+
+    /**
+     * Draw itself and all child entities.
+     */
     virtual void draw() const;
 
     /**
-     * Move the entity by a certain distance from it's current position
+     * Update itself and all child entities.
+     * 
+     * This funuction should ideally be called at least once per frame.
+     * This allows updating the entities internal logic. The function may be
+     * overwritten by sub-classes, but it is important that the base class
+     * update() is always called at the end. Example:
+     * 
+     * void SubClass::update() {
+     *    // Perform some instructions
+     *    Entity::update();
+     * }
+     */
+    virtual void update();
+
+    /**
+     * Move the entity.
+     * 
+     * This function is a shorthand for currentPosition + unitsToMoveBy. It takes
+     * the current position and adds x, y and z units to move by.
+     * 
      * @param moveBy How much to move by
      */
     void move(glm::vec3 moveBy);
@@ -60,10 +153,7 @@ public:
         this->position = position;
         recalculateModelMatrix();
     }
-    inline const glm::vec3& getPosition() const
-    {
-        return position;
-    }
+    inline const glm::vec3& getPosition() const { return position; }
 
     inline const glm::vec4& getColor() const { return color; }
     void setColor(const glm::vec4& color);
@@ -73,9 +163,42 @@ public:
     // Physics
     Physics::BoundingBox* getBoundingBox() { return boundingBox; }
 
+    void setTextureName(const std::string& name) { textureName = name; }
+
+protected:
+    /**
+     * Initialize required parameters and data to draw the entity on screen.
+     *
+     * @param shader The shader to bind to before drawing the entity
+     * @param vertices Vertices with attributes. These are used when drawing
+     * @param indices All indices. Used for the index buffer
+     * @param drawType (default: GL_DYNAMIC_DRAW) Either static or dynamic
+     */
+    void initDrawable(Framework::Shader* shader,
+                      std::vector<float> vertices,
+                      std::vector<uint32_t> indices);
+
 private:
-    void init();
+    /**
+     *  Recalculate the entity's model matrix.
+     *
+     * This needs to be called before every draw if the entity has changed its
+     * transformation.
+     */
     void recalculateModelMatrix();
+
+private:
+    Entity* parent = nullptr;
+    std::vector<Entity*> children;
+
+    /** Unique identifier. No other entity should have this id */
+    int id = -1;
+
+    /** If this is set, then bind a texture by name before drawing. */
+    std::string textureName;
+
+    /** Prevents drawing itself if this isn't configured yet */
+    bool isDrawable = false;
 
 protected:
     Framework::VertexArray* vertexArray = nullptr;
@@ -87,12 +210,10 @@ protected:
     // Transformation
     glm::mat4 modelMatrix;
     glm::vec3 position;
-    float yaw = 0.0f,
-        pitch = 0.0f,
-        roll = 0.0f;
+    float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
 
     // This color is multiplied by texture color
-    glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
+    glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
     std::vector<float> vertices;
     std::vector<uint32_t> indices;
@@ -106,6 +227,7 @@ protected:
 
     // Physics
     Physics::BoundingBox* boundingBox = nullptr;
+
 };
 
 #endif // LAB_ENTITY_H

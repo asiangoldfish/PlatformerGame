@@ -1,8 +1,11 @@
-# Intellij
+# IDE
 .idea/
+.vscode/
+.vs/
 
 # Build files
 build/
+out/
 
 # CMake
 .cache/

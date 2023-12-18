@@ -1,5 +1,8 @@
 #include "Floor.h"
 
+#include "VertexArray.h"
+#include "VertexBuffer.h"
+
 void Floor::setTiles(uint32_t x, uint32_t y)
 {
     tilesX = x;
@@ -62,6 +65,8 @@ void Floor::generateColors() {
     // Set color attributes to get chessboard tile colors
     int numOfAttributes = 12;
     int colorOffset = 3 * sizeof(float);
+
+    vertexArray->bind();
 
     // The attribute index per vertex
     for (int y = 0; y < tilesY; y++) {

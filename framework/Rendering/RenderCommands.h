@@ -63,10 +63,10 @@ namespace RenderCommand
 		const Framework::VertexArray& vertexArrayObject,
 	 	GLenum primitive = GL_TRIANGLES) {
 		
-		vertexArrayObject.bind();
 
 		uint32_t count = vertexArrayObject.getIndexBuffer()->getCount();
-
+		
+		vertexArrayObject.bind();
 		glDrawElements(
 			GL_TRIANGLES,
             (int)count,

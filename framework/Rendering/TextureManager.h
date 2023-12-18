@@ -32,22 +32,24 @@ namespace Framework {
          * @param format Texture format. See TextureFormat documentation
          * supported formats.
          */
-        void loadTexture(
+        static void loadTexture(
                 const std::string& name,
                 const std::string& filepath,
                 TextureFormat format);
 
-        void createTexture(const std::string& name);
+        static void createTexture(const std::string& name);
 
         /** Bind a texture by name */
-        void bind(const std::string& name);
+        static void bind(const std::string& name);
 
-        void setShader(Shader* s) { shader = s; }
+        static void setShader(Shader* s) { shader = s; }
+
+        static void clearTextures() { textures.clear(); }
 
     private:
         // TODO: textures should be a map. This forces their name to be unique.
-        std::vector<std::shared_ptr<Texture>> textures;
-        Shader* shader = nullptr;
+        static std::vector<std::shared_ptr<Texture>> textures;
+        static Shader* shader;
     };
 
 } // Framework

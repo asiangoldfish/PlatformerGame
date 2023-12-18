@@ -14,6 +14,7 @@ const float tileSize = 1.0f;
 // Forward declarations
 // ---------
 class Floor;
+class Map;
 
 namespace Framework
 {
@@ -79,6 +80,9 @@ public:
     void keyboardInput();
 
 private:
+    void drawSun();
+
+private:
     // ----------
     // Entities
     // ----------
@@ -99,7 +103,6 @@ private:
     // Textures and shaders
     // -----------
     Framework::Shader* shader = nullptr;
-    Framework::TextureManager textureManager;
 
     // -----------
     // Camera
@@ -119,7 +122,11 @@ private:
     float lastFrameTime;
     bool enableTexture = true;
 
-    void drawSun();
+    // ---------------
+    // Map
+    // ---------------
+    Map* map = nullptr;
+
 };
 
 
