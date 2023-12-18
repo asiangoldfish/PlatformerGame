@@ -74,10 +74,26 @@ Map::loadMap(const std::string& name)
                     case 'W':
                         Cube* wall = new Cube(shader);
                         wall->setScale(1.0f);
-                        wall->setColor(glm::vec4{ 1.0f });
+                        wall->setColor(glm::vec4{ 0.6f });
                         wall->setPosition({ index[0], index[1], 0});
                         wall->setTextureName("wall");
                         baseNode->addChild(wall);
+
+                        wall = new Cube(shader);
+                        wall->setScale(1.0f);
+                        wall->setColor(glm::vec4{ 0.8f });
+                        wall->setPosition({ index[0], index[1], 1});
+                        wall->setTextureName("wall");
+                        baseNode->addChild(wall);
+
+                        wall = new Cube(shader);
+                        wall->setScale(1.0f);
+                        wall->setColor(glm::vec4{ 1.0f });
+                        wall->setPosition({ index[0], index[1], 2});
+                        wall->setTextureName("wall");
+                        baseNode->addChild(wall);
+
+                        // Create some thickness to the wall
                         break;
                 }
                 index[0]++;  // Increase X-position
