@@ -61,12 +61,10 @@ void main() {
      * observerDirection, n is arbitrary shininess factor, and "."
      * signifies dot product. Here split across 2 lines of code.
      *
-     * This comment doesn't necessarily need to be here.
-     * If it's not of convenience feel free to remove.
-     *
      * S = str . (ref . obs)^n
      */
-    float specFactor = pow(max(dot(observerDirection, reflectedLight), 0.0f), 12);
+    const float glossiness = 32.0;
+    float specFactor = pow(max(dot(observerDirection, reflectedLight), 0.0f), glossiness);
     vec3  specular = specFactor * u_specularColor;
 
     // Compute the final colors

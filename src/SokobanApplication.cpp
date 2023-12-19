@@ -116,12 +116,6 @@ SokobanApplication::init()
     // Entities
     // -------
     // Player
-    player = new Cube(gApp->getShader());
-    player->setTextureName("player");
-
-    player->setScale(0.8f);
-    player->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    player->setPosition({ 3.0f, 0.4f, 4.0f });
 
     // ---------
     // Rendering
@@ -182,9 +176,6 @@ SokobanApplication::run()
         shader->setMat4("u_projection", camera->getProjectionMatrix());
         shader->setMat4("u_view", camera->getViewMatrix());
 
-        // Player
-        player->draw();
-
         map->update();
         map->draw();
 
@@ -217,9 +208,6 @@ SokobanApplication::shutdown()
 
     delete shader;
     shader = nullptr;
-
-    delete player;
-    player = nullptr;
 
     delete sun;
     sun = nullptr;
@@ -282,60 +270,82 @@ SokobanApplication::keyboardInput()
     // Move camera
     // -------
 
-    // Counterclockwise rotation
-    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        //        gApp->rotateCamera(false);
-        gApp->getCamera()->moveSideway(-1);
-    }
+//    // Counterclockwise rotation
+//    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+//        //        gApp->rotateCamera(false);
+//        gApp->getCamera()->moveSideway(-1);
+//    }
+//
+//    // Clockwise rotation
+//    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+//        //        gApp->rotateCamera(true);
+//        gApp->getCamera()->moveSideway(1);
+//    }
+//
+//    float fovStep = 30.0f * gApp->getDeltaTime();
+//
+//    // Zoom in
+//    if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+//        //        Framework::PerspectiveCamera::Frustrum frustrum =
+//        //          gApp->getCamera()->getFrustrum();
+//        //        frustrum.angle =
+//        //          std::max(gApp->getCamera()->getFrustrum().angle - fovStep,
+//        //          05.0f);
+//        //        gApp->getCamera()->setFrustrum(frustrum);
+//
+//        gApp->getCamera()->moveUp(1.0f);
+//    }
+//
+//    // Zoom out
+//    if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+//        //        Framework::PerspectiveCamera::Frustrum frustrum =
+//        //          gApp->getCamera()->getFrustrum();
+//        //        frustrum.angle =
+//        //          std::min(gApp->getCamera()->getFrustrum().angle + fovStep,
+//        //          120.0f);
+//        //        gApp->getCamera()->setFrustrum(frustrum);
+//
+//        gApp->getCamera()->moveUp(-1.0f);
+//    }
 
-    // Clockwise rotation
-    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        //        gApp->rotateCamera(true);
-        gApp->getCamera()->moveSideway(1);
-    }
+    // ----------
+    // Player movement
+    // ----------
+    Cube* player = (Cube*)map->getPlayer();
+    float movementSpeed = 3.0f;
+    float moveBy = deltaTime * movementSpeed;
 
-    float fovStep = 30.0f * gApp->getDeltaTime();
-
-    // Zoom in
+    // Up
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        //        Framework::PerspectiveCamera::Frustrum frustrum =
-        //          gApp->getCamera()->getFrustrum();
-        //        frustrum.angle =
-        //          std::max(gApp->getCamera()->getFrustrum().angle - fovStep,
-        //          05.0f);
-        //        gApp->getCamera()->setFrustrum(frustrum);
-
-        gApp->getCamera()->moveUp(1.0f);
+        player->move({ 0.0f, moveBy, 0.0f });
     }
-
-    // Zoom out
     if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-        //        Framework::PerspectiveCamera::Frustrum frustrum =
-        //          gApp->getCamera()->getFrustrum();
-        //        frustrum.angle =
-        //          std::min(gApp->getCamera()->getFrustrum().angle + fovStep,
-        //          120.0f);
-        //        gApp->getCamera()->setFrustrum(frustrum);
-
-        gApp->getCamera()->moveUp(-1.0f);
+        player->move({ 0.0f, -moveBy, 0.0f });
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+        player->move({ moveBy, 0.0f, 0.0f });
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+        player->move({ -moveBy, 0.0f, 0.0f });
     }
 
-    shader->setFloat3("u_cameraPosition", camera->getPosition());
+//    camera->setPosition({ player->getPosition().x, player->getPosition().y, camera->getPosition().z });
 }
 
 void
 SokobanApplication::movePlayer(glm::vec3 direction)
 {
+    Entity* player = map->getPlayer();
     glm::vec3 playerPos = player->getPosition();
     bool canMove = true;
 
     // Only move the player if there is no wall or pillar in the way
-    canMove = !(playerPos.x + direction.x == 0 ||
-                playerPos.x + direction.x == mapSize - 1 ||
-                playerPos.z + direction.z == 0 ||
-                playerPos.z + direction.z == mapSize - 1);
+//    canMove = !(playerPos.x + direction.x == 0 ||
+//                playerPos.x + direction.x == mapSize - 1 ||
+//                playerPos.z + direction.z == 0 ||
+//                playerPos.z + direction.z == mapSize - 1);
 
-    if (canMove) { // Pillars
+//    if (canMove) { // Pillars
         for (const auto& pillar : pillars) {
             if (pillar->getPosition().x == playerPos.x + direction.x &&
                 pillar->getPosition().z == playerPos.z + direction.z) {
@@ -344,14 +354,14 @@ SokobanApplication::movePlayer(glm::vec3 direction)
                 break;
             }
         }
-    }
+//    }
 
     // Only move the player if nothing blocked the way
-    if (canMove) {
+//    if (canMove) {
         if (moveBox(direction)) {
-            getPlayer()->move(direction);
+            player->move(direction);
         }
-    }
+//    }
 }
 
 /**
@@ -363,7 +373,7 @@ SokobanApplication::movePlayer(glm::vec3 direction)
 bool
 SokobanApplication::moveBox(glm::vec3 direction)
 {
-    glm::vec3 playerNewPos = player->getPosition() + direction;
+    glm::vec3 playerNewPos = map->getPlayer()->getPosition() + direction;
 
     bool canMove = true;
     Cube* adjacentBox = nullptr;
@@ -533,52 +543,6 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
         gApp->getShader()->setInt("u_enableTexture", gApp->getEnableTexture());
 
         // Toggle color for all entities except floor
-    }
-
-    // ----------
-    // Player movement
-    // ----------
-    // Player can only move once per key press
-    struct MoveDirection
-    {
-        bool up = false, down = false, left = false, right = false;
-    };
-    static MoveDirection direction;
-
-    // Up
-    if (key == GLFW_KEY_UP && action == GLFW_PRESS && !direction.up) {
-        direction.up = true;
-        gApp->movePlayer({ 1.0f, 0.0f, 0.0f });
-    }
-    if ((key == GLFW_KEY_UP) && action == GLFW_RELEASE) {
-        direction.up = false;
-    }
-
-    // Down
-    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !direction.down) {
-        direction.down = true;
-        gApp->movePlayer({ -1.0f, 0.0f, 0.0f });
-    }
-    if ((key == GLFW_KEY_DOWN) && action == GLFW_RELEASE) {
-        direction.down = false;
-    }
-
-    // Left
-    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !direction.left) {
-        direction.left = true;
-        gApp->movePlayer({ 0.0f, 0.0f, -1.0f });
-    }
-    if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE) {
-        direction.left = false;
-    }
-
-    // Right
-    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !direction.right) {
-        direction.right = true;
-        gApp->movePlayer({ 0.0f, 0.0f, 1.0f });
-    }
-    if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE) {
-        direction.right = false;
     }
 }
 

@@ -73,6 +73,7 @@ Map::loadMap(const std::string& name)
 
         while (getline(infile, readLine)) {
             Cube* entity = nullptr;
+            bool wallFound = false;
 
             for (auto& c : readLine) {
                 switch (toupper(c)) {
@@ -90,9 +91,36 @@ Map::loadMap(const std::string& name)
                         entity->setTextureName("wall");
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
+
+                        wallFound = true;
                         break;
 
-                    case 'B':
+                    case ' ':
+                        // Only spawn background if we have first spawned a
+                        // wall.
+                        if (wallFound) {
+                            entity = new Cube(shader);
+                            entity->setPosition({ index, height, -1 });
+                            entity->setTextureName("background");
+                            entity->setParent(baseNode);
+                            baseNode->addChild(entity);
+                        }
+                        break;
+
+                    case 'P':
+                        // Spawn player
+                        entity = new Cube(shader);
+                        entity->setScale(0.8f);
+                        entity->setPosition({ index, height, 0 });
+                        entity->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+                        entity->setTextureName("player");
+                        entity->setParent(baseNode);
+
+                        baseNode->addChild(entity);
+
+                        player = entity;
+
+                        // Spawn background
                         entity = new Cube(shader);
                         entity->setPosition({ index, height, -1 });
                         entity->setTextureName("background");
@@ -107,7 +135,7 @@ Map::loadMap(const std::string& name)
             }
 
             index = 0; // Reset X-position as we are on a new line now
-            height--;   // Increase Y-position
+            height--;  // Increase Y-position
         }
 
         // Close the file as we have finished reading it

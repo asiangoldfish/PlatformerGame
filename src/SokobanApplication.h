@@ -70,7 +70,6 @@ public:
     std::vector<Cube*>& getPillars() { return pillars; }
     std::vector<Cube*>& getDestinations() { return destinations; }
     std::vector<Cube*>& getBoxes() { return boxes; }
-    Cube* getPlayer() { return player; }
 
     bool moveBox(glm::vec3 direction);
     void movePlayer(glm::vec3 direction);
@@ -97,8 +96,6 @@ private:
     std::vector<Cube*> boxes;
     std::vector<Cube*> pillars;
     std::vector<Cube*> destinations;
-
-    Cube* player = nullptr;
 
     const int maxDestinations = 6;
     const int maxPillars = 6;

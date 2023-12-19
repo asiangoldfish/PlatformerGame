@@ -54,10 +54,14 @@ public:
     /** Get the map's width */
     int getWidth() const { return width; }
 
+    [[nodiscard]] Entity* getPlayer() const { return player; }
+
 private:
     /** <mapName, filepath> */
     std::map<std::string, std::string> mapsCollection;
     Entity* baseNode = nullptr;
+    Entity* player = nullptr;
+
     Framework::Shader* shader = nullptr;
 
     int height = 0;  ///< Map size in height
