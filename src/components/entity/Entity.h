@@ -54,7 +54,7 @@ public: // Constructors and destructors
      *
      * @param entity The new parent
      */
-    void addParent(Entity* entity) { parent = entity; }
+    void setParent(Entity* entity) { parent = entity; }
 
     /**
      *  Add a new child
@@ -156,7 +156,28 @@ public: // Constructors and destructors
     inline const glm::vec3& getPosition() const { return position; }
 
     inline const glm::vec4& getColor() const { return color; }
+
+    /**
+     * Set the entity's colour.
+     * 
+     * If the entity has a texture, then these will be mixed before rendering.
+     */
     void setColor(const glm::vec4& color);
+
+    /**
+     * Set the entity's colour. The alpha channel is set to 1.0.
+     * 
+     * If the entity has a texture, then these will be mixed before rendering.
+     */
+    void setColor(const glm::vec3& color);
+
+    /**
+     * Set the entity's colour. The alpha channel is set to 1.0.
+     * 
+     * The colour will be on a gray scale.
+     * If the entity has a texture, then these will be mixed before rendering.
+     */
+    void setColor(const float color);
 
     const std::vector<glm::vec3> getVertices();
 
@@ -218,7 +239,7 @@ protected:
     std::vector<float> vertices;
     std::vector<uint32_t> indices;
 
-    glm::vec3 scale;
+    glm::vec3 scale = glm::vec3{ 1.0f };
 
     GLenum drawType;
 

@@ -46,7 +46,7 @@ namespace Framework {
     void PerspectiveCamera::computeProjectionMatrix() {
         projectionMatrix = glm::perspective(
             glm::radians(frustrum.angle),
-            frustrum.width/frustrum.height,
+            (float)frustrum.width/(float)frustrum.height,
             frustrum.nearClip,
             frustrum.farClip
         );

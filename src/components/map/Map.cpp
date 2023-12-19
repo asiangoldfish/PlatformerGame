@@ -66,40 +66,48 @@ Map::loadMap(const std::string& name)
     if (infile) {
         // Line that is currently read from the file
         std::string readLine;
-        int index[2] = { 0 };
+
+        width = 0;
+        height = 0;
+        int index = 0;
 
         while (getline(infile, readLine)) {
+            Cube* entity = nullptr;
+
             for (auto& c : readLine) {
                 switch (toupper(c)) {
                     case 'W':
-                        Cube* wall = new Cube(shader);
-                        wall->setScale(1.0f);
-                        wall->setColor(glm::vec4{ 0.6f });
-                        wall->setPosition({ index[0], index[1], 0});
-                        wall->setTextureName("wall");
-                        baseNode->addChild(wall);
+                        entity = new Cube(shader);
+                        entity->setColor(glm::vec3{ 0.8f });
+                        entity->setPosition({ index, height, 0 });
+                        entity->setTextureName("wall");
+                        entity->setParent(baseNode);
+                        baseNode->addChild(entity);
 
-                        wall = new Cube(shader);
-                        wall->setScale(1.0f);
-                        wall->setColor(glm::vec4{ 0.8f });
-                        wall->setPosition({ index[0], index[1], 1});
-                        wall->setTextureName("wall");
-                        baseNode->addChild(wall);
+                        entity = new Cube(shader);
+                        entity->setColor(glm::vec3{ 1.0f });
+                        entity->setPosition({ index, height, 1 });
+                        entity->setTextureName("wall");
+                        entity->setParent(baseNode);
+                        baseNode->addChild(entity);
+                        break;
 
-                        wall = new Cube(shader);
-                        wall->setScale(1.0f);
-                        wall->setColor(glm::vec4{ 1.0f });
-                        wall->setPosition({ index[0], index[1], 2});
-                        wall->setTextureName("wall");
-                        baseNode->addChild(wall);
-
-                        // Create some thickness to the wall
+                    case 'B':
+                        entity = new Cube(shader);
+                        entity->setPosition({ index, height, -1 });
+                        entity->setTextureName("background");
+                        entity->setParent(baseNode);
+                        baseNode->addChild(entity);
                         break;
                 }
-                index[0]++;  // Increase X-position
+                index++; // Increase X-position
             }
-            index[0] = 0;   // Reset X-position as we are on a new line now
-            index[1]--;     // Increase Y-position
+            if (index > width) {
+                width = index;
+            }
+
+            index = 0; // Reset X-position as we are on a new line now
+            height--;   // Increase Y-position
         }
 
         // Close the file as we have finished reading it

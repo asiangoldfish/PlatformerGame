@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     /* Create a new instance of the application
      * By heap allocating the app, we can easier control its lifetime.
      */
-    auto app = new SokobanApplication("Game", "1.0.0", { 1024, 1024 });
+    auto app = new SokobanApplication("Game", "1.0.0", { 1280, 720 });
     if (!app->init()) {
         // If the application somehow fails to startup, we gracefully kill it.
         app->shutdown(); // Ensure everything is cleaned up before calling glfwTerminate()

@@ -21,7 +21,7 @@ public:
     /**
      * Default constructor
      */
-    Map(Framework::Shader* shader);
+    explicit Map(Framework::Shader* shader);
 
     /**
      * Delete all entities belonging to this map.
@@ -48,11 +48,20 @@ public:
     /** Load a map by its name */
     bool loadMap(const std::string& name);
 
+    /** Get the map's height */
+    int getHeight() const { return height; }
+
+    /** Get the map's width */
+    int getWidth() const { return width; }
+
 private:
     /** <mapName, filepath> */
     std::map<std::string, std::string> mapsCollection;
     Entity* baseNode = nullptr;
-    Framework::Shader* shader;
+    Framework::Shader* shader = nullptr;
+
+    int height = 0;  ///< Map size in height
+    int width = 0;   ///< Map size in width
 };
 
 #endif // MAP_H

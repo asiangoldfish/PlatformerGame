@@ -52,6 +52,8 @@ public:
     void rotateCamera(bool rotateRight);
     float getCameraDistance() const { return cameraDistance; }
 
+    float getCameraSpeed() const { return cameraSpeed; }
+
     float getDeltaTime() const { return deltaTime; }
     Framework::PerspectiveCamera* getCamera() { return camera.get(); }
     float getWorldCenter() const { return worldCenter; }
@@ -78,6 +80,9 @@ public:
     // --------
     /** Called every frame */
     void keyboardInput();
+
+    [[nodiscard]] bool getIsRightButtonPressed() const { return isRightButtonPressed; }
+    void setIsRightButtonPressed(const bool isPressed) { isRightButtonPressed = isPressed; }
 
 private:
     void drawSun();
@@ -108,19 +113,22 @@ private:
     // Camera
     // -----------
     float degreesDirection = 1;
-    float degrees = 180.0f;
+    float degrees = 10.0f;
     std::shared_ptr<Framework::PerspectiveCamera> camera;
     float cameraDistance = 20.0f;
+    float cameraSpeed = 0.1f;
     float worldCenter = (float)mapSize / 2.0f;  // Position in which the camera should always look at
 
     Framework::Light light;
     Cube* sun;
-    float sunDistance = 15.0f;
-    float dayNightCycleSpeed = 0.25f;
+    float sunDistance = 30.0f;
+    float dayNightCycleSpeed = 0.1f;
 
     float deltaTime;
     float lastFrameTime;
     bool enableTexture = true;
+
+    bool isRightButtonPressed = false;
 
     // ---------------
     // Map

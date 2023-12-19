@@ -156,6 +156,18 @@ Entity::setColor(const glm::vec4& color)
     this->color = color;
 }
 
+void
+Entity::setColor(const glm::vec3& color)
+{
+    this->color = glm::vec4(color, 1.0f);
+}
+
+void
+Entity::setColor(const float color)
+{
+    this->color = glm::vec4(color, color, color, 1.0f);
+}
+
 /**
  * Retrieves positional vertices from the vertices member variable.
  * with anything else.
