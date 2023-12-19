@@ -1,22 +1,30 @@
-#ifndef LOG_H
-#define LOG_H
+#pragma once
 
-#include <string>
+#include <memory>
 
-namespace Framework {
-    /**
-     * Logger class for logging messages to file or console
-     */
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
+
+namespace Framework
+{
     class Log
     {
     public:
-        /**
-         * Log a message to console
-         * @param msg Message to log to console
-         */
-        static void log(const std::string& msg);
-    };
+        static void init();
 
+        inline static std::shared_ptr<spdlog::logger>& getLogger()
+        {
+            return logger;
+        }
+
+    private:
+        static std::shared_ptr<spdlog::logger> logger;
+    };
 }
 
-#endif // LOG_H
+#define TRACE(...)      Framework::Log::getLogger()->trace(__VA_ARGS__)
+#define INFO(...)       Framework::Log::getLogger()->info(__VA_ARGS__)
+#define DEBUG(...)      Framework::Log::getLogger()->info(__VA_ARGS__)
+#define WARN(...)       Framework::Log::getLogger()->warn(__VA_ARGS__)
+#define ERROR(...)      Framework::Log::getLogger()->error(__VA_ARGS__)
+#define FATAL(...)      Framework::Log::getLogger()->fatal(__VA_ARGS__)

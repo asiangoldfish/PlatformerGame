@@ -16,6 +16,7 @@ target_link_libraries(${PROJECT_NAME}
     stb
 
     # Framework
+    Core
     GLFWApplication
     GeometricTools
     Rendering
