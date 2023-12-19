@@ -4,6 +4,8 @@ add_library(${PROJECT_NAME} STATIC
     Entity.h Entity.cpp
     Floor.h Floor.cpp
     Physics.h Physics.cpp
+    Material.h
+    Material.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

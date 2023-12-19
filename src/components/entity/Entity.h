@@ -13,6 +13,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "Material.h"
+
 namespace Physics {
     class BoundingBox;
 }
@@ -26,11 +28,11 @@ namespace Framework {
 
 /**
  * Object that exists in the scene
- * 
+ *
  * The Entity is the lowest level component of the scene hierarchy. It is
  * placeable in the world either as a drawble object or as an invisible
- * entity. Such entity can be used for 
-*/
+ * entity. Such entity can be used for
+ */
 class Entity
 {
 public: // Constructors and destructors
@@ -48,7 +50,7 @@ public: // Constructors and destructors
 
     /**
      * Add a new parent.
-     * 
+     *
      * The entity is a node in a tree structure. If it doesn't have a parent,
      * then it's safe to assume that it's the top node.
      *
@@ -79,7 +81,7 @@ public: // Constructors and destructors
 
     /**
      * Remove a child by its id.
-     * 
+     *
      * Please be cautious that removing a child will not delete it. It must
      * manually be deleted by the user.
      */
@@ -94,7 +96,7 @@ public: // Constructors and destructors
 
     /**
      * Return the entity's unique identifier.
-     * 
+     *
      * No other entity should have this identifier.
      */
     int getId() const { return id; }
@@ -106,12 +108,12 @@ public: // Constructors and destructors
 
     /**
      * Update itself and all child entities.
-     * 
+     *
      * This funuction should ideally be called at least once per frame.
      * This allows updating the entities internal logic. The function may be
      * overwritten by sub-classes, but it is important that the base class
      * update() is always called at the end. Example:
-     * 
+     *
      * void SubClass::update() {
      *    // Perform some instructions
      *    Entity::update();
@@ -121,10 +123,10 @@ public: // Constructors and destructors
 
     /**
      * Move the entity.
-     * 
-     * This function is a shorthand for currentPosition + unitsToMoveBy. It takes
-     * the current position and adds x, y and z units to move by.
-     * 
+     *
+     * This function is a shorthand for currentPosition + unitsToMoveBy. It
+     * takes the current position and adds x, y and z units to move by.
+     *
      * @param moveBy How much to move by
      */
     void move(glm::vec3 moveBy);
@@ -158,22 +160,37 @@ public: // Constructors and destructors
     inline const glm::vec4& getColor() const { return color; }
 
     /**
+     * Get the entity's material
+     */
+    Rendering::Material getMaterial() { return material; }
+
+
+      /**
+     * Set the entity's material.
+     *
+     * The material is set to Rendering::MaterialPreset::CUSTOM by default. Change the material's properties for a
+     * desired result.
+     * @param mat Material to set
+     */
+    void setMaterial(const Rendering::Material& mat) { material = mat; }
+
+    /**
      * Set the entity's colour.
-     * 
+     *
      * If the entity has a texture, then these will be mixed before rendering.
      */
     void setColor(const glm::vec4& color);
 
     /**
      * Set the entity's colour. The alpha channel is set to 1.0.
-     * 
+     *
      * If the entity has a texture, then these will be mixed before rendering.
      */
     void setColor(const glm::vec3& color);
 
     /**
      * Set the entity's colour. The alpha channel is set to 1.0.
-     * 
+     *
      * The colour will be on a gray scale.
      * If the entity has a texture, then these will be mixed before rendering.
      */
@@ -249,6 +266,7 @@ protected:
     // Physics
     Physics::BoundingBox* boundingBox = nullptr;
 
+    Rendering::Material material;
 };
 
 #endif // LAB_ENTITY_H

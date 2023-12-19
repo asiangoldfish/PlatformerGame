@@ -92,6 +92,8 @@ Map::loadMap(const std::string& name)
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
+                        entity->getMaterial().getProperties().setShininess(250.0f);
+
                         wallFound = true;
                         break;
 
@@ -115,6 +117,7 @@ Map::loadMap(const std::string& name)
                         entity->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
                         entity->setTextureName("player");
                         entity->setParent(baseNode);
+                        entity->setMaterial(Rendering::MaterialPreset::CHROME);
 
                         baseNode->addChild(entity);
 

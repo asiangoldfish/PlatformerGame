@@ -60,6 +60,8 @@ Entity::initDrawable(Framework::Shader* shader,
     recalculateModelMatrix();
 
     isDrawable = true;
+
+    material = Rendering::Material(Rendering::MaterialPreset::CUSTOM);
 }
 
 // Draw itself and all child nodes.
@@ -70,6 +72,11 @@ Entity::draw() const
         // Upload all required uniforms
         shader->setMat4("u_model", modelMatrix);
         shader->setFloat4("u_color", color);
+
+        // Upload material properties
+        shader->setFloat3("u_material.ambient", material.getProperties().ambient);
+        shader->setFloat3("u_material.diffuse", material.getProperties().diffuse);
+        shader->setFloat3("u_material.specular", material.getProperties().specular);
 
         Framework::TextureManager::bind(textureName);
         RenderCommand::drawIndex(*vertexArray);

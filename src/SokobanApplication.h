@@ -119,7 +119,7 @@ private:
     Framework::Light light;
     Cube* sun;
     float sunDistance = 30.0f;
-    float dayNightCycleSpeed = 0.1f;
+    float dayNightCycleSpeed = 25.0f;
 
     float deltaTime;
     float lastFrameTime;

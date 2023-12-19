@@ -30,17 +30,6 @@ namespace Framework {
             position = newPosition;
         }
 
-        void setDiffuseColor(const glm::vec3 diff)
-        {
-            diffuseColor = diff;
-            update();
-        }
-        void setSpecularColor(const glm::vec3 spec)
-        {
-            specularColor = spec;
-            update();
-        }
-
         /** Uploads variables to frag shader. */
         void update();
 
@@ -51,9 +40,6 @@ namespace Framework {
     private:
         Shader* shader = nullptr;
         glm::vec3 position{0.0f};
-
-        glm::vec3 diffuseColor{1.0f};
-        glm::vec3 specularColor{1.0f};
 
         bool enableLighting = true;
     };

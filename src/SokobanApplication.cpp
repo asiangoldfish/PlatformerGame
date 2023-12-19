@@ -4,8 +4,12 @@
 
 #include "SokobanApplication.h"
 
+// Standard libraries
+#include <algorithm>
+#include <string>
+
 // Framework API
-#include "GeometricTools.h"
+#include "Log.h"
 #include "PerspectiveCamera.h"
 #include "RenderCommands.h"
 #include "Shader.h"
@@ -17,11 +21,8 @@
 #include "Map.h"
 #include "gameMath.h"
 
-// Standard libraries
-#include <algorithm>
-#include <string>
 
-#define TIMEOFDAY ((float)glfwGetTime() * dayNightCycleSpeed)
+#define TIMEOFDAY glm::radians((float)glfwGetTime() * dayNightCycleSpeed)
 
 SokobanApplication* gApp = nullptr;
 
@@ -160,6 +161,11 @@ SokobanApplication::run()
 
         keyboardInput();
 
+        // ---------
+        // Camera
+        // ---------
+        shader->setFloat3("u_cameraPosition", camera->getPosition());
+
         // Sun
         drawSun();
 
@@ -231,8 +237,8 @@ SokobanApplication::drawSun()
         return;
     }
 
-    // Ambient color
-    auto ambientColor =
+    // Light color
+    auto lightColor =
       glm::vec3(1.0f) -
       glm::vec3(std::cos(TIMEOFDAY) * 0.1f,
                 (std::cos(TIMEOFDAY) + std::sin(TIMEOFDAY)) * 0.1f,
@@ -241,18 +247,20 @@ SokobanApplication::drawSun()
     // The color temperature is colder in the evening and morning, and warmer
     // during the day
     float timeFactor = (std::sin(TIMEOFDAY) + 1.0f) * 0.5f;
-    ambientColor *= timeFactor;
-    shader->setFloat3("u_ambientColor", ambientColor);
-    RenderCommand::setClearColor(ambientColor);
+    lightColor *= timeFactor;
 
-    // Camera position for specularity
-    shader->setFloat3("u_cameraPosition", camera->getPosition());
+    // Set new background color
+    RenderCommand::setClearColor(lightColor);
 
-    // Light
+    // Other light attributes
+    shader->setFloat3("u_light.ambient", glm::vec3{ 0.2f });
+    shader->setFloat3("u_light.diffuse", glm::vec3(0.5f));
+    shader->setFloat3("u_light.specular", glm::vec3{ 0.0f });
+
+    spdlog::warn("Light color: {} {} {}", lightColor.x, lightColor.y, lightColor.z);
+
     light.setPosition(sun->getPosition());
     light.setEnableLighting(true);
-    light.setSpecularColor(glm::vec3(std::cos(TIMEOFDAY)));
-    light.setDiffuseColor(glm::vec3(std::cos(TIMEOFDAY)));
     light.update();
 
     // Disable lighting effects on the sun object only
@@ -270,43 +278,45 @@ SokobanApplication::keyboardInput()
     // Move camera
     // -------
 
-//    // Counterclockwise rotation
-//    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-//        //        gApp->rotateCamera(false);
-//        gApp->getCamera()->moveSideway(-1);
-//    }
-//
-//    // Clockwise rotation
-//    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-//        //        gApp->rotateCamera(true);
-//        gApp->getCamera()->moveSideway(1);
-//    }
-//
-//    float fovStep = 30.0f * gApp->getDeltaTime();
-//
-//    // Zoom in
-//    if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-//        //        Framework::PerspectiveCamera::Frustrum frustrum =
-//        //          gApp->getCamera()->getFrustrum();
-//        //        frustrum.angle =
-//        //          std::max(gApp->getCamera()->getFrustrum().angle - fovStep,
-//        //          05.0f);
-//        //        gApp->getCamera()->setFrustrum(frustrum);
-//
-//        gApp->getCamera()->moveUp(1.0f);
-//    }
-//
-//    // Zoom out
-//    if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-//        //        Framework::PerspectiveCamera::Frustrum frustrum =
-//        //          gApp->getCamera()->getFrustrum();
-//        //        frustrum.angle =
-//        //          std::min(gApp->getCamera()->getFrustrum().angle + fovStep,
-//        //          120.0f);
-//        //        gApp->getCamera()->setFrustrum(frustrum);
-//
-//        gApp->getCamera()->moveUp(-1.0f);
-//    }
+    //    // Counterclockwise rotation
+    //    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+    //        //        gApp->rotateCamera(false);
+    //        gApp->getCamera()->moveSideway(-1);
+    //    }
+    //
+    //    // Clockwise rotation
+    //    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+    //        //        gApp->rotateCamera(true);
+    //        gApp->getCamera()->moveSideway(1);
+    //    }
+    //
+    //    float fovStep = 30.0f * gApp->getDeltaTime();
+    //
+    //    // Zoom in
+    //    if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+    //        //        Framework::PerspectiveCamera::Frustrum frustrum =
+    //        //          gApp->getCamera()->getFrustrum();
+    //        //        frustrum.angle =
+    //        //          std::max(gApp->getCamera()->getFrustrum().angle -
+    //        fovStep,
+    //        //          05.0f);
+    //        //        gApp->getCamera()->setFrustrum(frustrum);
+    //
+    //        gApp->getCamera()->moveUp(1.0f);
+    //    }
+    //
+    //    // Zoom out
+    //    if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+    //        //        Framework::PerspectiveCamera::Frustrum frustrum =
+    //        //          gApp->getCamera()->getFrustrum();
+    //        //        frustrum.angle =
+    //        //          std::min(gApp->getCamera()->getFrustrum().angle +
+    //        fovStep,
+    //        //          120.0f);
+    //        //        gApp->getCamera()->setFrustrum(frustrum);
+    //
+    //        gApp->getCamera()->moveUp(-1.0f);
+    //    }
 
     // ----------
     // Player movement
@@ -329,7 +339,8 @@ SokobanApplication::keyboardInput()
         player->move({ -moveBy, 0.0f, 0.0f });
     }
 
-//    camera->setPosition({ player->getPosition().x, player->getPosition().y, camera->getPosition().z });
+    //    camera->setPosition({ player->getPosition().x,
+    //    player->getPosition().y, camera->getPosition().z });
 }
 
 void
@@ -340,28 +351,28 @@ SokobanApplication::movePlayer(glm::vec3 direction)
     bool canMove = true;
 
     // Only move the player if there is no wall or pillar in the way
-//    canMove = !(playerPos.x + direction.x == 0 ||
-//                playerPos.x + direction.x == mapSize - 1 ||
-//                playerPos.z + direction.z == 0 ||
-//                playerPos.z + direction.z == mapSize - 1);
+    //    canMove = !(playerPos.x + direction.x == 0 ||
+    //                playerPos.x + direction.x == mapSize - 1 ||
+    //                playerPos.z + direction.z == 0 ||
+    //                playerPos.z + direction.z == mapSize - 1);
 
-//    if (canMove) { // Pillars
-        for (const auto& pillar : pillars) {
-            if (pillar->getPosition().x == playerPos.x + direction.x &&
-                pillar->getPosition().z == playerPos.z + direction.z) {
+    //    if (canMove) { // Pillars
+    for (const auto& pillar : pillars) {
+        if (pillar->getPosition().x == playerPos.x + direction.x &&
+            pillar->getPosition().z == playerPos.z + direction.z) {
 
-                canMove = false;
-                break;
-            }
+            canMove = false;
+            break;
         }
-//    }
+    }
+    //    }
 
     // Only move the player if nothing blocked the way
-//    if (canMove) {
-        if (moveBox(direction)) {
-            player->move(direction);
-        }
-//    }
+    //    if (canMove) {
+    if (moveBox(direction)) {
+        player->move(direction);
+    }
+    //    }
 }
 
 /**
