@@ -108,6 +108,7 @@ private:
     // Textures and shaders
     // -----------
     Framework::Model backpackModel;
+    Framework::Model betina;
 
     // -----------
     // Camera

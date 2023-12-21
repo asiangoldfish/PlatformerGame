@@ -153,6 +153,8 @@ SokobanApplication::init()
     // Backpack
     backpackModel = Framework::Model(
       RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
+    betina = Framework::Model(
+      RESOURCES_DIR + std::string("models/betina/betina.obj"));
 
     // ---------
     // Rendering
@@ -218,10 +220,12 @@ SokobanApplication::run()
           { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
         backpackModel.draw(*shader);
 
-        backpackModel.setPosition({ pointLight.getPosition().x,
-                                    pointLight.getPosition().y + 3.0f,
+        betina.setPosition({ pointLight.getPosition().x,
+                                    pointLight.getPosition().y - 4.0f,
                                     10.0f });
-        backpackModel.draw(*shader);
+        betina.draw(*shader);
+
+
 
         // ------
         // Delta time
