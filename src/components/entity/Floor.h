@@ -5,10 +5,9 @@
 #include <glm/glm.hpp>
 
 // Framework
-#include "Entity.h"
-#include "GeometricTools.h"
+#include "Framework.h"
 
-class Floor : public Entity
+class Floor : public Framework::Entity
 {
 public:
     Floor() = default;

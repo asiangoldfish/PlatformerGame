@@ -1,8 +1,12 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+// C++ libraries
 #include <string>
+
+// External
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace Framework {
     class Shader;
@@ -31,8 +35,30 @@ namespace Framework {
         Texture() = default;
         virtual ~Texture();
 
-        /** Create a white texture in memory */
-        void createWhiteTexture(Shader* shader, const std::string& name);
+        /**
+         * Create a new texture and set a uniform colour by hexadecimal values
+         * to it
+         * @param shader The shader used to upload this texture to
+         * @param name The texture's name. Used to identify it when binding.
+         * @param textureSlot Texture slot to assign it.
+         */
+        void createTexture(Shader* shader,
+                           const std::string& name,
+                           uint32_t color,
+                           int slot);
+
+        /**
+         * Create a texture and set a uniform colour by RGB values to it.
+         *
+         * @param shader The shader used to upload this texture to
+         * @param name The texture's name. Used to identify it when binding.
+         * @param color The colour values that the texture slot contain
+         * @param textureSlot Texture slot to assign it.
+         */
+        void createTexture(Shader* shader,
+                           const std::string& name,
+                           glm::vec3 color,
+                           int slot);
 
         /** Load a 2-dimensional texture from disk */
         void loadTexture2D(Shader* _shader,
@@ -58,7 +84,7 @@ namespace Framework {
          * Unbind the texture
          * @param slot Texture slot to unbind
          */
-        void unbind();
+        //        void unbind();
 
         /**
          * Set the texture's type.
@@ -67,6 +93,15 @@ namespace Framework {
          * fragment shader.
          */
         void setType(TextureType newType) { type = newType; };
+
+        /** Get the texture's file path on disk */
+        [[nodiscard]] const std::string& getFilepath() const
+        {
+            return filepath;
+        }
+
+        [[nodiscard]] int getId() const { return id; }
+        const std::string& getName() const { return name; }
 
     private:
         /** Gives the TextureManager access to Texture's private members */
@@ -77,6 +112,14 @@ namespace Framework {
 
         /** The texture's name. Acts as an interface to make binding easier */
         std::string name;
+
+    private:
+        /** Filepath that the texture is located at on disk */
+        std::string filepath;
+
+        /** As an option to identifying the texture by name, it can also be
+         * identified by id */
+        int id = -1;
 
         /** The texture's ID. This is used whenever binding it */
         uint32_t textureID;

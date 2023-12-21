@@ -64,10 +64,10 @@ namespace Framework {
         ShaderDataType type;
 
         /** Size occupied by the attribute in bytes. */
-        GLuint size;
+        uint32_t size;
 
         /** At what byte does this attribute start at. */
-        GLuint offset;
+        uint32_t offset;
 
         /** Should the attribute be normalized? */
         GLboolean normalized;

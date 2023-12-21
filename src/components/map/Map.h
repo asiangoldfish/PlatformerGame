@@ -11,9 +11,8 @@
 
 namespace Framework {
     class Shader;
+    class Entity;
 }
-
-class Entity;
 
 class Map
 {
@@ -54,13 +53,15 @@ public:
     /** Get the map's width */
     int getWidth() const { return width; }
 
-    [[nodiscard]] Entity* getPlayer() const { return player; }
+    [[nodiscard]] Framework::Entity* getPlayer() { return player; }
+
+    [[nodiscard]] Framework::Entity* getBaseNode() { return baseNode; }
 
 private:
     /** <mapName, filepath> */
     std::map<std::string, std::string> mapsCollection;
-    Entity* baseNode = nullptr;
-    Entity* player = nullptr;
+    Framework::Entity* baseNode = nullptr;
+    Framework::Entity* player = nullptr;
 
     Framework::Shader* shader = nullptr;
 

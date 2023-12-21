@@ -1,10 +1,10 @@
 #ifndef SOKOBAN_APPLICATION_H
 #define SOKOBAN_APPLICATION_H
 
-#include "GLFWApplication.h"
-#include "TextureManager.h"
-#include "Light.h"
-#include "Cube.h"
+#include <string>
+#include <memory>
+
+#include "Framework.h"
 
 // Globals
 const int mapSize = 10.f;
@@ -14,6 +14,7 @@ const float tileSize = 1.0f;
 // Forward declarations
 // ---------
 class Floor;
+class Cube;
 class Map;
 
 namespace Framework
@@ -84,9 +85,6 @@ public:
     void setIsRightButtonPressed(const bool isPressed) { isRightButtonPressed = isPressed; }
 
 private:
-    void drawSun();
-
-private:
     // ----------
     // Entities
     // ----------
@@ -107,6 +105,11 @@ private:
     Framework::Shader* shader = nullptr;
 
     // -----------
+    // Textures and shaders
+    // -----------
+    Framework::Model backpackModel;
+
+    // -----------
     // Camera
     // -----------
     float degreesDirection = 1;
@@ -116,10 +119,10 @@ private:
     float cameraSpeed = 0.1f;
     float worldCenter = (float)mapSize / 2.0f;  // Position in which the camera should always look at
 
-    Framework::Light light;
-    Cube* sun;
-    float sunDistance = 30.0f;
-    float dayNightCycleSpeed = 25.0f;
+    Framework::DirectionalLight sun;
+    Framework::PointLight pointLight;
+
+
 
     float deltaTime;
     float lastFrameTime;

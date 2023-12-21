@@ -7,6 +7,8 @@
 
 #include "assertions.h"
 
+#include "Log.h"
+
 namespace Framework {
     // Output messages from OpenGL
     static void GLAPIENTRY messageCallback(GLenum source, GLenum type,
@@ -92,6 +94,8 @@ namespace Framework {
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(messageCallback, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
+        INFO("Application {} initiated", appName);
 
         return true;
     }

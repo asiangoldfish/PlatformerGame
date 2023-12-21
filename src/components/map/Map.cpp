@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Map.h"
+#include "Entity.h"
 #include "Cube.h"
 #include "Shader.h"
 
@@ -12,7 +13,7 @@ Map::Map(Framework::Shader* shader)
     this->shader = shader;
 
     // This node is empty. All it does is containing other child nodes.
-    baseNode = new Entity();
+    baseNode = new Framework::Entity();
 }
 
 // Delete associated entity nodes
@@ -79,20 +80,20 @@ Map::loadMap(const std::string& name)
                 switch (toupper(c)) {
                     case 'W':
                         entity = new Cube(shader);
-                        entity->setColor(glm::vec3{ 0.8f });
                         entity->setPosition({ index, height, 0 });
-                        entity->setTextureName("wall");
+                        entity->getMaterial()
+                          .getProperties()
+                          .diffuseTextureName = "wall";
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
                         entity = new Cube(shader);
-                        entity->setColor(glm::vec3{ 1.0f });
                         entity->setPosition({ index, height, 1 });
-                        entity->setTextureName("wall");
+                        entity->getMaterial()
+                          .getProperties()
+                          .diffuseTextureName = "wall";
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
-
-                        entity->getMaterial().getProperties().setShininess(250.0f);
 
                         wallFound = true;
                         break;
@@ -103,7 +104,13 @@ Map::loadMap(const std::string& name)
                         if (wallFound) {
                             entity = new Cube(shader);
                             entity->setPosition({ index, height, -1 });
-                            entity->setTextureName("background");
+                            entity->setTextureName("player");
+                            entity->getMaterial()
+                              .getProperties()
+                              .diffuseTextureName = "coral_stone_diff";
+                            entity->getMaterial()
+                              .getProperties()
+                              .specularTextureName = "coral_stone_spec";
                             entity->setParent(baseNode);
                             baseNode->addChild(entity);
                         }
@@ -117,7 +124,7 @@ Map::loadMap(const std::string& name)
                         entity->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
                         entity->setTextureName("player");
                         entity->setParent(baseNode);
-                        entity->setMaterial(Rendering::MaterialPreset::CHROME);
+                        entity->setMaterial(Framework::MaterialPreset::CHROME);
 
                         baseNode->addChild(entity);
 
@@ -126,7 +133,13 @@ Map::loadMap(const std::string& name)
                         // Spawn background
                         entity = new Cube(shader);
                         entity->setPosition({ index, height, -1 });
-                        entity->setTextureName("background");
+                        entity->setTextureName("player");
+                        entity->getMaterial()
+                          .getProperties()
+                          .diffuseTextureName = "coral_stone_diff";
+                        entity->getMaterial()
+                          .getProperties()
+                          .specularTextureName = "coral_stone_spec";
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
                         break;

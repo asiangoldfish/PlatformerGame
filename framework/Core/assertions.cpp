@@ -1,8 +1,9 @@
 #include "assertions.h"
+#include "Log.h"
 
 void framework_assert(std::string msg) {
     if (!msg.empty()) {
-        std::cout << msg << std::endl;
+        WARN(msg);
     }
 
     __breakpoint();

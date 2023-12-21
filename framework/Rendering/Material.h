@@ -6,9 +6,13 @@
 #ifndef PLATFORMERGAME_MATERIAL_H
 #define PLATFORMERGAME_MATERIAL_H
 
+// C++ libraries
+#include <string>
+
+// External
 #include <glm/glm.hpp>
 
-namespace Rendering {
+namespace Framework {
 
     enum class MaterialPreset
     {
@@ -53,20 +57,46 @@ namespace Rendering {
      */
     struct MaterialProperties
     {
-        glm::vec3 ambient, diffuse, specular;
-        float shininess;
+        glm::vec3 ambient = glm::vec3(1.0f);
+        glm::vec3 diffuse = glm::vec3(1.0f);
+        glm::vec3 specular = glm::vec3(1.0f);
+
+        // --------
+        // Textures by file path
+        //
+        // The name of the textures. These can then be loaded with the
+        // TextureManager by name.
+        // --------
+        std::string diffuseTextureName;
+        std::string specularTextureName;
+
+        float shininess = 1.0f;
 
         void setAmbient(const glm::vec3& value) { ambient = value; }
         void setDiffuse(const glm::vec3& value) { diffuse = value; }
         void setSpecular(const glm::vec3& value) { specular = value; }
         void setShininess(const float value) { shininess = value; }
+
+        // ------------
+        // Textures by path
+        // ------------
+        [[nodiscard]] bool isDiffuseTextureSet() const
+        {
+            return !diffuseTextureName.empty();
+        }
+        void removeDiffuseTexture() { diffuseTextureName.clear(); }
+
+        [[nodiscard]] bool isSpecularTextureSet() const
+        {
+            return !specularTextureName.empty();
+        }
+        void removeSpecularTexture() { specularTextureName.clear(); }
     };
 
     class Material
     {
     public:
-        Material(
-          const MaterialPreset& preset = MaterialPreset::CUSTOM);
+        Material(const MaterialPreset& preset = MaterialPreset::CUSTOM);
 
         /**
          * Define the material's properties with a preset.
@@ -74,7 +104,7 @@ namespace Rendering {
          */
         void setMaterialPreset(const MaterialPreset& preset);
 
-        MaterialProperties getProperties() const { return properties; }
+        MaterialProperties& getProperties() { return properties; }
 
     private:
         /**
@@ -87,6 +117,6 @@ namespace Rendering {
         MaterialProperties properties;
     };
 
-} // Rendering
+} // Framework
 
 #endif // PLATFORMERGAME_MATERIAL_H

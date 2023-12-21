@@ -1,16 +1,13 @@
 #ifndef LAB_CUBE_H
 #define LAB_CUBE_H
 
-#include "Entity.h"
-#include "GeometricTools.h"
+#include "Framework.h"
 
-#include <vector>
-
-class Cube : public Entity
+class Cube : public Framework::Entity
 {
 public:
     Cube() = default;
-    Cube(Framework::Shader* shader)
+    explicit Cube(Framework::Shader* shader)
     {
         initDrawable(shader, GeometricTools::UnitCubeGeometry3D(), GeometricTools::UnitCubeGeometry3DIndices());
     }
@@ -22,8 +19,8 @@ public:
     void setOriginalPosition(const glm::vec3& pos) { originalPosition = pos; }
 
 private:
-    glm::vec4 originalColor;
-    glm::vec3 originalPosition;
+    glm::vec4 originalColor = glm::vec4(1.0f);
+    glm::vec3 originalPosition = glm::vec4(0.0f);
 };
 
 #endif // LAB_CUBE_H

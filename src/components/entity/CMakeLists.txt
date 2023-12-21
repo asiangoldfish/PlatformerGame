@@ -1,11 +1,8 @@
 project(COMPONENT_entity)
 
 add_library(${PROJECT_NAME} STATIC
-    Entity.h Entity.cpp
+    Cube.h
     Floor.h Floor.cpp
-    Physics.h Physics.cpp
-    Material.h
-    Material.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -22,9 +19,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     glad
     glm
     stb
+    spdlog
 
     # Internal
-    GeometricTools
-    Rendering
-
+    Framework
 )

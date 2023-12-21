@@ -11,7 +11,7 @@
 #include <iostream>
 
 // Debug trace/breakpoint trap
-#define DEBUG_DISABLED
+//#define DEBUG_DISABLED
 #ifdef DEBUG_DISABLED
     #define __breakpoint()
 #elif defined(_WIN32) || defined(_WIN64)

@@ -5,12 +5,15 @@
  * Code that uses the source will mention this.
  */
 
+#pragma once
+
 #include <glm/glm.hpp>
 
 namespace Framework {
-	
-	class Camera {
-	public:
+
+    class Camera
+    {
+    public:
         Camera() = default;
         virtual ~Camera() = default;
 
@@ -22,9 +25,11 @@ namespace Framework {
          */
         void initializeCamera() { computeViewMatrix(); }
 
-		inline glm::mat4 getViewMatrix() const { return viewMatrix; }
-		inline glm::mat4 getProjectionMatrix() const { return projectionMatrix; }
-
+        inline glm::mat4 getViewMatrix() const { return viewMatrix; }
+        inline glm::mat4 getProjectionMatrix() const
+        {
+            return projectionMatrix;
+        }
 
         // -------------
         // Camera Movement
@@ -37,7 +42,7 @@ namespace Framework {
         // -------------
         // Camera Rotation
         // -------------
-		inline float getYaw() const { return yaw; }
+        inline float getYaw() const { return yaw; }
         inline void setYaw(const float yaw) { this->yaw = yaw; }
 
         inline float getPitch() const { return pitch; }
@@ -46,7 +51,7 @@ namespace Framework {
         // -------------
         // Camera Position
         // -------------
-		inline const glm::vec3& getPosition() { return position;  }
+        inline const glm::vec3& getPosition() { return position; }
         inline void setPosition(const glm::vec3& pos)
         {
             position = pos;
@@ -68,22 +73,21 @@ namespace Framework {
         // -------------
         void setLookAtCenter(const glm::vec3& center) { lookAtCenter = center; }
 
-	private:
-		/**
-		 * @brief Computes the camera's front vector and view matrix
-		*/
-		virtual void computeViewMatrix() = 0;
+    private:
+        /**
+         * @brief Computes the camera's front vector and view matrix
+         */
+        virtual void computeViewMatrix() = 0;
 
     protected:
         float yaw = 0.0f;
         float pitch = 0.0f;
         glm::vec3 cameraFront = glm::vec3(0.0f);
-        glm::mat4 viewMatrix  = glm::mat4(1.0f);
+        glm::mat4 viewMatrix = glm::mat4(1.0f);
         glm::vec3 cameraUp = { 0.0f, 1.0f, 0.0f };
         glm::mat4 projectionMatrix = glm::mat4(1.0f);
         glm::vec3 position = glm::vec3(0.0f);
-        float nearClip = 0.0f,
-                farClip = 0.0f;
+        float nearClip = 0.0f, farClip = 0.0f;
 
         // When enablePanning is off, determine where the camera should look at
         glm::vec3 lookAtCenter = glm::vec3(0.0f);

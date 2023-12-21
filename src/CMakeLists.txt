@@ -9,17 +9,8 @@ add_executable(${PROJECT_NAME}
 add_subdirectory(components)
 
 target_link_libraries(${PROJECT_NAME}
-    # External
-    glfw
-    glad
-    glm
-    stb
-
     # Framework
-    Core
-    GLFWApplication
-    GeometricTools
-    Rendering
+    Framework
 
     # Components
     COMPONENT_entity

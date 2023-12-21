@@ -144,7 +144,7 @@ namespace Framework {
                                      const glm::vec3 &vector) {
         int location = glGetUniformLocation(shaderProgram,name.c_str());
         if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
+            framework_assert("Unable to upload uniform " + name);
         }
         
         glUniform3f(location, vector.x, vector.y, vector.z);

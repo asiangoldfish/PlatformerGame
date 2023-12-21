@@ -9,11 +9,7 @@
 #include <string>
 
 // Framework API
-#include "Log.h"
-#include "PerspectiveCamera.h"
-#include "RenderCommands.h"
-#include "Shader.h"
-#include "Input.h"
+#include "Framework.h"
 
 // App Components
 #include "Cube.h"
@@ -21,28 +17,21 @@
 #include "Map.h"
 #include "gameMath.h"
 
-
 #define TIMEOFDAY glm::radians((float)glfwGetTime() * dayNightCycleSpeed)
 
 SokobanApplication* gApp = nullptr;
 
 // Function prototypes
-void
+static void
 cursorPos_callback(GLFWwindow* window, double xpos, double ypos);
-void
+static void
 cursorMouseButton_callback(GLFWwindow* window, int, int, int);
 static void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void
-spawnWall(glm::vec3 newPos, glm::vec3 newColor);
-void
-spawnPillar(Cube& targetPillar);
 static void
-spawnDestinations(Cube& destination);
+mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset);
 static void
-spawnBoxes(Cube& box);
-static void
-spawnPlayer(Cube& player);
+framebufferSize_callback(GLFWwindow* window, int width, int height);
 
 bool
 SokobanApplication::init()
@@ -59,6 +48,8 @@ SokobanApplication::init()
     glfwSetKeyCallback(getWindow(), keyCallback);
     glfwSetCursorPosCallback(getWindow(), cursorPos_callback);
     glfwSetMouseButtonCallback(getWindow(), cursorMouseButton_callback);
+    glfwSetScrollCallback(getWindow(), mouseScrollBack_callback);
+    glfwSetFramebufferSizeCallback(getWindow(), framebufferSize_callback);
 
     // -----------
     // Textures and shaders
@@ -72,39 +63,82 @@ SokobanApplication::init()
     shader->bind();
     Framework::TextureManager::setShader(shader);
 
-    Framework::TextureManager::createTexture("no-texture");
+    Framework::TextureManager::createTexture("no-texture", glm::vec3(1.0f), 0);
+    Framework::TextureManager::createTexture(
+      "no-texture-diff", glm::vec3(1.0f), 0);
+    Framework::TextureManager::createTexture(
+      "no-texture-spec", glm::vec3(0.5f), 1);
 
     Framework::TextureManager::loadTexture(
       "floor",
       TEXTURES_DIR + std::string("floor.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D);
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
 
     Framework::TextureManager::loadTexture(
       "wall",
       TEXTURES_DIR + std::string("wall.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D);
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
 
     Framework::TextureManager::loadTexture(
       "player",
       TEXTURES_DIR + std::string("player.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D);
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
 
     Framework::TextureManager::loadTexture(
       "background",
       TEXTURES_DIR + std::string("destination.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D);
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
 
     Framework::TextureManager::loadTexture(
       "pillar",
       TEXTURES_DIR + std::string("pillar.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D);
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
 
     Framework::TextureManager::loadTexture(
       "box",
       TEXTURES_DIR + std::string("box.jpg"),
-      Framework::TextureManager::TextureFormat::CubeMap);
+      Framework::TextureManager::TextureFormat::CubeMap,
+      0);
+
+    // Load metal plate textures
+    Framework::TextureManager::loadTexture(
+      "metal_plate_diff",
+      TEXTURES_DIR +
+        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"),
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
+
+    Framework::TextureManager::loadTexture(
+      "metal_plate_spec",
+      TEXTURES_DIR +
+        std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg"),
+      Framework::TextureManager::TextureFormat::Texture2D,
+      1);
+
+    // Coral stone
+    Framework::TextureManager::loadTexture(
+      "coral_stone_diff",
+      TEXTURES_DIR +
+        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"),
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
+
+    Framework::TextureManager::loadTexture(
+      "coral_stone_spec",
+      TEXTURES_DIR +
+        // Roughness is the inverse of spec
+        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"),
+      Framework::TextureManager::TextureFormat::Texture2D,
+      1);
 
     getShader()->setInt("u_enableTexture", getEnableTexture());
+    getShader()->setInt("u_material.diffuse", 0);
+    getShader()->setInt("u_material.specular", 1);
 
     // ------------
     // Map
@@ -116,7 +150,9 @@ SokobanApplication::init()
     // -------
     // Entities
     // -------
-    // Player
+    // Backpack
+    backpackModel = Framework::Model(
+      RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
 
     // ---------
     // Rendering
@@ -125,7 +161,7 @@ SokobanApplication::init()
     camera = std::make_shared<Framework::PerspectiveCamera>(
       Framework::PerspectiveCamera::Frustrum(
         40.0f, getWindowSize().x, getWindowSize().y, 0.01f, 400.0f),
-      glm::vec3{ 5, map->getHeight() + 3, 20 });
+      glm::vec3{ 5, map->getHeight() + 3, 5 });
     //    camera->setLookAtCenter({ worldCenter - 0.5f, 0.0f, worldCenter - 0.5f
     //    });
     camera->rotate({ -90.0f, 0.0f });
@@ -137,15 +173,20 @@ SokobanApplication::init()
     // -------------
     // Lighting
     // -------------
-    light.setEnableLighting(true);
-    light.setShader(shader);
+    sun.setShader(shader);
+    sun.setAmbient(glm::vec3{ 0.3f, 0.4f, 0.8f });
+    sun.setDiffuse(glm::vec3{ 0.6f });
+    sun.setSpecular(glm::vec3{ 0.0f });
+    sun.setDirection({ 0.0f, -1.0f, -1.f });
 
-    // Sun
-    sun = new Cube(gApp->getShader());
-    sun->setTextureName("no-texture");
-    sun->setPosition(
-      { mapSize / 2.0f, 0.0f, sunDistance });  // Start in the morning
-    sun->setColor({ 0.7f, 0.4f, 0.0f, 1.0f }); // Orange color
+    pointLight.setShader(shader);
+    pointLight.setAmbient(glm::vec3{ 0.5f });
+    pointLight.setDiffuse(glm::vec3{ 0.4f, 0.5f, 0.8f });
+    pointLight.setSpecular(glm::vec3{ 0.2f });
+    pointLight.setPosition(glm::vec3{ 5.0f, -4.0f, 5.0f });
+    pointLight.setLinear(0.45f);
+    pointLight.setQuadratic(0.07f);
+    pointLight.setBrightness(3.0f);
 
     RenderCommand::setClearColor(glm::vec3{ 0.1f });
 
@@ -167,7 +208,20 @@ SokobanApplication::run()
         shader->setFloat3("u_cameraPosition", camera->getPosition());
 
         // Sun
-        drawSun();
+        sun.draw();
+
+        // Point light
+        pointLight.draw();
+        map->getPlayer()->setPosition(pointLight.getPosition());
+
+        backpackModel.setPosition(
+          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
+        backpackModel.draw(*shader);
+
+        backpackModel.setPosition({ pointLight.getPosition().x,
+                                    pointLight.getPosition().y + 3.0f,
+                                    10.0f });
+        backpackModel.draw(*shader);
 
         // ------
         // Delta time
@@ -215,59 +269,10 @@ SokobanApplication::shutdown()
     delete shader;
     shader = nullptr;
 
-    delete sun;
-    sun = nullptr;
-
     delete map;
     map = nullptr;
 
     Framework::TextureManager::clearTextures();
-}
-
-void
-SokobanApplication::drawSun()
-{
-
-    // Move the sun across the sky
-    sun->setPosition({ std::cos(lerp(TIMEOFDAY)) * sunDistance,
-                       std::sin(lerp(TIMEOFDAY)) * sunDistance,
-                       sun->getPosition().z });
-
-    if (!shader) {
-        return;
-    }
-
-    // Light color
-    auto lightColor =
-      glm::vec3(1.0f) -
-      glm::vec3(std::cos(TIMEOFDAY) * 0.1f,
-                (std::cos(TIMEOFDAY) + std::sin(TIMEOFDAY)) * 0.1f,
-                std::sin(TIMEOFDAY * 2) * 0.25f);
-
-    // The color temperature is colder in the evening and morning, and warmer
-    // during the day
-    float timeFactor = (std::sin(TIMEOFDAY) + 1.0f) * 0.5f;
-    lightColor *= timeFactor;
-
-    // Set new background color
-    RenderCommand::setClearColor(lightColor);
-
-    // Other light attributes
-    shader->setFloat3("u_light.ambient", glm::vec3{ 0.2f });
-    shader->setFloat3("u_light.diffuse", glm::vec3(0.5f));
-    shader->setFloat3("u_light.specular", glm::vec3{ 0.0f });
-
-    spdlog::warn("Light color: {} {} {}", lightColor.x, lightColor.y, lightColor.z);
-
-    light.setPosition(sun->getPosition());
-    light.setEnableLighting(true);
-    light.update();
-
-    // Disable lighting effects on the sun object only
-    Framework::TextureManager::bind("no-texture");
-    shader->setInt("u_enableLighting", 0);
-    sun->draw();
-    shader->setInt("u_enableLighting", 1);
 }
 
 /** Keyboard input function. Called every frame */
@@ -327,34 +332,35 @@ SokobanApplication::keyboardInput()
 
     // Up
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        player->move({ 0.0f, moveBy, 0.0f });
+        //        player->move({ 0.0f, moveBy, 0.0f });
+        camera->moveForward(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-        player->move({ 0.0f, -moveBy, 0.0f });
+        //        player->move({ 0.0f, -moveBy, 0.0f });
+        camera->moveForward(-moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        player->move({ moveBy, 0.0f, 0.0f });
+        //        player->move({ moveBy, 0.0f, 0.0f });
+        camera->moveSideway(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        player->move({ -moveBy, 0.0f, 0.0f });
+        //        player->move({ -moveBy, 0.0f, 0.0f });
+        camera->moveSideway(-moveBy);
     }
-
-    //    camera->setPosition({ player->getPosition().x,
-    //    player->getPosition().y, camera->getPosition().z });
+    if (glfwGetKey(getWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
+        camera->moveUp(moveBy);
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
+        camera->moveUp(-moveBy);
+    }
 }
 
 void
 SokobanApplication::movePlayer(glm::vec3 direction)
 {
-    Entity* player = map->getPlayer();
+    Framework::Entity* player = map->getPlayer();
     glm::vec3 playerPos = player->getPosition();
     bool canMove = true;
-
-    // Only move the player if there is no wall or pillar in the way
-    //    canMove = !(playerPos.x + direction.x == 0 ||
-    //                playerPos.x + direction.x == mapSize - 1 ||
-    //                playerPos.z + direction.z == 0 ||
-    //                playerPos.z + direction.z == mapSize - 1);
 
     //    if (canMove) { // Pillars
     for (const auto& pillar : pillars) {
@@ -491,7 +497,6 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
     // Move camera rotation
     if (gApp && gApp->getIsRightButtonPressed()) {
         // Cursor is hidden and within window bounds
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Make sure mouse is within bounds
         if (xpos < 0) {
@@ -514,9 +519,13 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 
         glfwSetCursorPos(
           window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
-    } else {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+}
+
+void
+mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    gApp->getCamera()->moveForward(yoffset);
 }
 
 // Source: https://www.glfw.org/docs/3.0/group__input.html
@@ -535,6 +544,8 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
                          gApp->getWindowSize().x / 2.0f,
                          gApp->getWindowSize().y / 2.0f);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
@@ -544,7 +555,7 @@ void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // Quit application
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
     }
 
@@ -558,205 +569,24 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 }
 
 void
-spawnWall(glm::vec3 newPos, glm::vec3 newColor)
+framebufferSize_callback(GLFWwindow* window, int width, int height)
 {
-    Cube* newWall = new Cube(gApp->getShader());
+    glViewport(0, 0, width, height);
 
-    newWall->setScale(1.0f);
-    newWall->setColor(glm::vec4(newColor, 1.0f));
-    newWall->setPosition(newPos);
-    gApp->getWalls().push_back(newWall);
-}
+    auto camera = gApp->getCamera();
 
-/**
- * Spawn a pillar, but ensure that it does not collide with walls or other
- * pillars
- * @param targetPillar The selected pillar to spawn
- */
-void
-spawnPillar(Cube& targetPillar)
-{
-    glm::vec3 newPos = glm::vec3(std::round(rng(1, mapSize - 2)),
-                                 targetPillar.getPosition().y,
-                                 std::round(rng(1, mapSize - 2)));
+    // Match the camera frustrum's width and height to the new window size
+    Framework::PerspectiveCamera::Frustrum frustrum = camera->getFrustrum();
 
-    bool newPositionFound =
-      true; // If an empty position is found, then this is true
-    for (const auto& pillar : gApp->getPillars()) {
-        if (&targetPillar != pillar) { // Ensure they are not the same pillars
-            if (newPos.x == pillar->getPosition().x &&
-                newPos.z == pillar->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
+    frustrum.width = width;
+    frustrum.height = height;
+    camera->setFrustrum(frustrum);
 
-    if (!newPositionFound) {
-        // Recursively check for new position again
-        spawnPillar(targetPillar);
-    } else {
-        // Set new position
-        targetPillar.setPosition(newPos);
-    }
-}
+    // We must compute the projection matrix again for the change to take
+    // effect.
+    camera->computeProjectionMatrix();
 
-/**
- * Create destinations
- * They must not conflict with the positions of walls and pillars
- * @param n Max destinations to spawn
- * @param currentIndex The current destination index. This is used for
- * recursively finding a new available position.
- */
-void
-spawnDestinations(Cube& destination)
-{
-    glm::vec3 newPos = glm::vec3(std::round(rng(1, mapSize - 1)),
-                                 destination.getPosition().y,
-                                 std::round(rng(1, mapSize - 1)));
-
-    bool newPositionFound = true;
-    for (const auto& targetDest : gApp->getDestinations()) {
-        if (&destination != targetDest) {
-            // Ensure they are not the same entity
-            if (newPos.x == targetDest->getPosition().x &&
-                newPos.z == targetDest->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    // Check collision with pillars
-    if (newPositionFound) {
-        for (const auto& pillar : gApp->getPillars()) {
-            if (newPos.x == pillar->getPosition().x &&
-                newPos.z == pillar->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    if (!newPositionFound) {
-        // Recursively check for new position again
-        spawnDestinations(destination);
-    } else { // Set new position
-        destination.setPosition(newPos);
-    }
-}
-
-/**
- * Spawn player
- * They must not conflict with anything's positions
- * @param currentIndex The current destination index. This is used for
- * recursively finding a new available position.
- */
-void
-spawnBoxes(Cube& box)
-{
-    glm::vec3 newPos = glm::vec3(std::round(rng(1, mapSize - 1)),
-                                 box.getScale().y / 2.0f,
-                                 std::round(rng(1, mapSize - 1)));
-
-    // Ensure it does not overlap other walls
-    bool newPositionFound = true;
-
-    // Do not collision with self
-    for (const auto& targetBox : gApp->getBoxes()) {
-        if (&box != targetBox) {
-            if (newPos.x == targetBox->getPosition().x &&
-                newPos.z == targetBox->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    // Check collision with pillars
-    if (newPositionFound) {
-        for (const auto& pillar : gApp->getPillars()) {
-            if (newPos.x == pillar->getPosition().x &&
-                newPos.z == pillar->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    // Check collision with destinations
-    if (newPositionFound) {
-        for (const auto& destination : gApp->getDestinations()) {
-            if (newPos.x == destination->getPosition().x &&
-                newPos.z == destination->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    if (!newPositionFound) { // Recursively check for new position again
-        spawnBoxes(box);
-    } else { // Set new position
-        box.setPosition(newPos);
-    }
-}
-
-/**
- * Create box
- * They must not conflict with the positions of walls and pillars
- * @param currentIndex The current destination index. This is used for
- * recursively finding a new available position.
- */
-void
-spawnPlayer(Cube& player)
-{
-#define RANDOM_POSITION std::round(rng(1, mapSize - 1))
-    glm::vec3 newPos =
-      glm::vec3(RANDOM_POSITION, player.getPosition().y, RANDOM_POSITION);
-
-    // Sometimes the rng fails. Clamp the values if that happens.
-    newPos.x = std::clamp(newPos.x, 1.0f, 8.0f);
-    newPos.z = std::clamp(newPos.z, 1.0f, 8.0f);
-
-    // Ensure it does not overlap other walls
-    bool newPositionFound =
-      true; // If an empty position is found, then this is true
-
-    // Check collision with pillars
-    for (const auto& pillar : gApp->getPillars()) {
-        if (newPos.x == pillar->getPosition().x &&
-            newPos.z == pillar->getPosition().z) {
-            newPositionFound = false;
-            break;
-        }
-    }
-
-    // Check collision with boxes
-    if (newPositionFound) {
-        for (const auto& box : gApp->getBoxes()) {
-            if (newPos.x == box->getPosition().x &&
-                newPos.z == box->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    // Check collision with destinations
-    if (newPositionFound) {
-        for (const auto& destination : gApp->getDestinations()) {
-            if (newPos.x == destination->getPosition().x &&
-                newPos.z == destination->getPosition().z) {
-                newPositionFound = false;
-                break;
-            }
-        }
-    }
-
-    if (!newPositionFound) { // Recursively check for new position again
-        spawnPlayer(player);
-    } else { // Set new position
-        player.setPosition(newPos);
-    }
+    INFO("Changed window size! Width: {} and height: {}",
+         gApp->getCamera()->getFrustrum().width,
+         gApp->getCamera()->getFrustrum().height);
 }
