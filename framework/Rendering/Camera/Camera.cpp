@@ -32,7 +32,7 @@ namespace Framework {
 
 		// Clamp so the camera doesn't go upside down
 		if (pitch - rotation.y >= -90 && pitch - rotation.y <= 90) {
-			pitch -= rotation.y;
+			pitch += rotation.y;
 		}
 		computeViewMatrix();
 	}

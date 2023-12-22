@@ -1,9 +1,13 @@
-#ifndef ORTHOGRAPHIC_CAMERA_H
-#define ORTHOGRAPHIC_CAMERA_H
+#pragma once
 
-#include "Camera.h"
-#include "glm/fwd.hpp"
+// C++ libraries
 #include <array>
+
+// External libraries
+#include "glm/fwd.hpp"
+
+// Framework
+#include "Camera.h"
 
 namespace Framework
 {
@@ -14,7 +18,6 @@ namespace Framework
         };
 
     public:
-        OrthographicCamera() = default;
         OrthographicCamera(const OrthographicCamera& other);
         OrthographicCamera(
             const Frustrum& frustrum = {
@@ -22,6 +25,8 @@ namespace Framework
             },
             const glm::vec3& position = glm::vec3(0.0f)
         );
+
+        void update(Shader& shader) override {};
 
         void setFrustrum(const Frustrum& frust) {
             this->frustrum = frust;
@@ -34,6 +39,3 @@ namespace Framework
         Frustrum frustrum;
     };
 }
-
-
-#endif // ORTHOGRAPHIC_CAMERA_H

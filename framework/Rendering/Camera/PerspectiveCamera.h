@@ -11,10 +11,11 @@ namespace Framework {
     class PerspectiveCamera : public Camera {
         // Camera(const glm::vec3& position, float yaw, float pitch, float nearClip, float farClip);
     public:
-        struct Frustrum {
+        struct Frustum
+        {
             float angle, width, height, nearClip, farClip;
-            Frustrum() = default;
-            Frustrum(
+            Frustum() = default;
+            Frustum(
                 float angle,
                 float width,
                 float height,
@@ -30,7 +31,7 @@ namespace Framework {
     public:
         /** Perspective camera constructor */
         PerspectiveCamera(
-            const Frustrum& frustrum = { 45.0f, -1.0f, 1.0f, -1.0f, 1.0f },
+            const Frustum& frustrum = { 45.0f, 1280.0f, 720.0f, 0.1f, 100.0f },
             const glm::vec3& position = glm::vec3(0.0f)
         );
 
@@ -45,12 +46,12 @@ namespace Framework {
          */
         PerspectiveCamera(const PerspectiveCamera& camera);
 
-        void setFrustrum(const Frustrum& frust) {
-            this->frustrum = frust;
+        void setFrustum(const Frustum& frust) {
+            this->frustum = frust;
             computeProjectionMatrix();
         }
 
-        Frustrum getFrustrum() { return frustrum; }
+        Frustum getFrustum() { return frustum; }
 
         void setLookAt(const glm::vec3& vec) {
             this->lookAt = vec;
@@ -60,12 +61,13 @@ namespace Framework {
         }
 
         void computeProjectionMatrix();
+        void update(Shader& shader) override;
 
     protected:
         virtual void computeViewMatrix() override;
 
     protected:
         glm::vec3 lookAt, upVector;
-        Frustrum frustrum;
+        Frustum frustum;
     };
 } // Framework

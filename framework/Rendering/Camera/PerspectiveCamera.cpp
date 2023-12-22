@@ -10,10 +10,10 @@
 
 namespace Framework {
     PerspectiveCamera::PerspectiveCamera(
-            const PerspectiveCamera::Frustrum &frustrum,
+            const PerspectiveCamera::Frustum&frustrum,
             const glm::vec3 &position
             )
-            : frustrum(frustrum)
+            : frustum(frustrum)
     {
         // Use the frustrum to construct the projection matrix
         computeProjectionMatrix();
@@ -28,7 +28,7 @@ namespace Framework {
     {
         lookAt = camera.lookAt;
         upVector = camera.upVector;
-        frustrum = camera.frustrum;
+        frustum = camera.frustum;
     }
 
     void PerspectiveCamera::computeViewMatrix() {
@@ -51,10 +51,17 @@ namespace Framework {
 
     void PerspectiveCamera::computeProjectionMatrix() {
         projectionMatrix = glm::perspective(
-            glm::radians(frustrum.angle),
-            (float)frustrum.width/(float)frustrum.height,
-            frustrum.nearClip,
-            frustrum.farClip
+            glm::radians(frustum.angle),
+            (float)frustum.width/(float)frustum.height,
+                           frustum.nearClip,
+                           frustum.farClip
         );
+    }
+
+    void PerspectiveCamera::update(Shader& shader) {
+        shader.bind();
+        shader.setMat4("u_projection", getProjectionMatrix());
+        shader.setMat4("u_view", getViewMatrix());
+        shader.setFloat3("u_cameraPosition", getPosition());
     }
 } // Framework

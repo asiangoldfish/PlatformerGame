@@ -8,6 +8,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "Shader.h"
 
 namespace Framework {
 
@@ -30,6 +31,8 @@ namespace Framework {
         {
             return projectionMatrix;
         }
+
+        virtual void update(Shader& shader) = 0;
 
         // -------------
         // Camera Movement
