@@ -103,6 +103,7 @@ private:
     // Textures and shaders
     // -----------
     Framework::Shader* shader = nullptr;
+    Framework::Shader* singleColorShader = nullptr;
 
     // -----------
     // Textures and shaders

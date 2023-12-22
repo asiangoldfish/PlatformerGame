@@ -2,7 +2,7 @@ project(COMPONENT_entity)
 
 add_library(${PROJECT_NAME} STATIC
     Cube.h
-    Floor.h Floor.cpp
+    Floor.h     Floor.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

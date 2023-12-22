@@ -1,9 +1,11 @@
-#ifndef PERSPECTIVE_CAMERA_H
-#define PERSPECTIVE_CAMERA_H
+#pragma once
 
-#include "Camera.h"
-#include <array>
+// External libraries
 #include <glm/glm.hpp>
+
+// Framework
+#include "pch.h"
+#include "Camera.h"
 
 namespace Framework {
     class PerspectiveCamera : public Camera {
@@ -67,5 +69,3 @@ namespace Framework {
         Frustrum frustrum;
     };
 } // Framework
-
-#endif // PERSPECTIVE_CAMERA_H

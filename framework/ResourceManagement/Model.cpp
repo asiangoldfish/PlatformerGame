@@ -117,8 +117,12 @@ namespace Framework {
     // Draw the model to screen
     void Model::draw(Shader& shader)
     {
-        glm::mat4 trans = glm::translate(glm::mat4(1.0f), position);
-        shader.setMat4("u_model", trans);
+        glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), this->scale);
+
+        glm::mat4 transformationMatrix = translate * scale;
+
+        shader.setMat4("u_model", transformationMatrix);
 
         for (auto& mesh : meshes) {
             mesh.draw(shader);

@@ -1,14 +1,19 @@
-#include "Shader.h"
-#include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+// C++ libraries
 #include <cassert>
-#include "assertions.h"
+#include <iostream>
 #include <fstream>
 #include <string>
 
-namespace Framework {
+// External libraries
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
+// Framework
+#include "Shader.h"
+#include "assertions.h"
+#include "Log.h"
+
+namespace Framework {
     Shader::Shader(
         const std::string &vertexSrc,
         const std::string &fragmentSrc,
@@ -114,7 +119,7 @@ namespace Framework {
         return result;
     }
 
-    void Shader::setInt(const std::string& name, const int value) {
+    void Shader::setInt(const std::string& name, const int value) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         if (location < 0) {
             framework_warn("Unable to upload uniform " + name);
@@ -122,7 +127,7 @@ namespace Framework {
         glUniform1i(location, value);
     }
 
-    void Shader::setFloat(const std::string& name,const float value) {
+    void Shader::setFloat(const std::string& name,const float value) const {
         int location = glGetUniformLocation(shaderProgram,name.c_str());
         if (location < 0) {
             framework_warn("Unable to upload uniform " + name);
@@ -132,7 +137,7 @@ namespace Framework {
 
 
     void Shader::setFloat2(const std::string &name,
-                                     const glm::vec2 &vector) {
+                                     const glm::vec2 &vector) const {
         int location = glGetUniformLocation(shaderProgram,name.c_str());
         if (location < 0) {
             framework_warn("Unable to upload uniform " + name);
@@ -141,7 +146,7 @@ namespace Framework {
     }
 
     void Shader::setFloat3(const std::string &name,
-                                     const glm::vec3 &vector) {
+                                     const glm::vec3 &vector) const {
         int location = glGetUniformLocation(shaderProgram,name.c_str());
         if (location < 0) {
             framework_assert("Unable to upload uniform " + name);
@@ -151,7 +156,7 @@ namespace Framework {
     }
 
     void Shader::setFloat4(const std::string& name,
-        const glm::vec4& vector) {
+        const glm::vec4& vector) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         if (location < 0) {
             framework_warn("Unable to upload uniform " + name);
@@ -161,12 +166,17 @@ namespace Framework {
     }
 
     void Shader::setMat4(const std::string &name,
-                                   const glm::mat4 &matrix) {
+                                   const glm::mat4 &matrix) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         if (location < 0) {
             framework_warn("Unable to upload uniform " + name);
         }
         
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::setVisualizeMode(RenderCommand::VisualizeMode mode) const {
+        int location = glGetUniformLocation(shaderProgram, "u_visualizeMode");
+        glUniform1i(location, (int)mode);
     }
 } // namespace Framework

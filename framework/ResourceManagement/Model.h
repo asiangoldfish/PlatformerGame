@@ -66,7 +66,8 @@ namespace Framework {
     class Model
     {
     public:
-        /** Construct an empty model. To load a model, use the copy constructor to load a model */
+        /** Construct an empty model. To load a model, use the copy constructor
+         * to load a model */
         Model() = default;
 
         /**
@@ -90,6 +91,11 @@ namespace Framework {
         void draw(Shader& shader);
 
         void setPosition(const glm::vec3& pos) { position = pos; }
+        void setScale(const glm::vec3& value) { scale = value; }
+        void setScale(const float value)
+        {
+            scale = glm::vec3(value, value, value);
+        }
 
     private:
         /**
@@ -124,6 +130,7 @@ namespace Framework {
         std::vector<Mesh> meshes;
         std::string directory;
 
-        glm::vec3 position;
+        glm::vec3 position{0.0f};
+        glm::vec3 scale{1.0f};
     };
 } // Framework

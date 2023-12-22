@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include <memory>
+#include "RenderCommands.h"
 
 namespace Framework {
     /**
@@ -51,25 +52,25 @@ namespace Framework {
         void unbind() const;
 
         // Uniforms
-        void setInt(const std::string& name, const int value);
-        void setFloat(const std::string& name,const float value);
+        void setInt(const std::string& name, const int value) const;
+        void setFloat(const std::string& name,const float value) const;
         void setFloat2(
             const std::string& name,
             const glm::vec2& vector
-        );
+        ) const;
         void setFloat3(
             const std::string& name,
             const glm::vec3& vector
-        );
+        ) const;
         void setFloat4(
             const std::string& name,
             const glm::vec4& vector
-        );
+        ) const;
 
         void setMat4(
             const std::string& name,
             const glm::mat4& matrix
-        );
+        ) const;
 
         /**
          * Shorthand to create a shared pointer to a Shader object.
@@ -87,6 +88,11 @@ namespace Framework {
             bool isFilepath = false) {
             return std::make_shared<Shader>(vertexSrc, fragmentSrc, isFilepath);
         }
+
+        /**
+         * Upload the uniform set by RenderCommands::VisualizeMode.
+         */
+        void setVisualizeMode(RenderCommand::VisualizeMode mode) const;
 
     private:
         /** Compile a shader */

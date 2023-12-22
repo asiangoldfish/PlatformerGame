@@ -1,9 +1,13 @@
-#include "PerspectiveCamera.h"
+// C++ library
+#include <cmath>
+#include <iostream>
+
+// External libraries
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <cmath>
+// Framework
+#include "PerspectiveCamera.h"
 
-#include <iostream>
 namespace Framework {
     PerspectiveCamera::PerspectiveCamera(
             const PerspectiveCamera::Frustrum &frustrum,
@@ -15,6 +19,8 @@ namespace Framework {
         computeProjectionMatrix();
 
         this->position = position;
+
+        INFO("PerspectiveCamera initialized");
     }
 
     PerspectiveCamera::PerspectiveCamera(const PerspectiveCamera &camera)

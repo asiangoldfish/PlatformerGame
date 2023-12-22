@@ -20,6 +20,9 @@ uniform bool u_enableLighting       = true;
 
 uniform vec3 u_cameraPosition = vec3(0.0f);// For specular illumination
 
+/** Determines how to render objects, like coloured or by depth */
+uniform int u_visualizeMode = 0;
+
 /**
  * Material properties grouped into a single structure.
  */
@@ -60,7 +63,18 @@ uniform int numOfPointLights = 0;
 vec3 computeDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection);
 vec3 computePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
+vec4 renderColoredMode();
+vec4 renderDepthTestingMode(float nearClip, float farClip);
+
 void main() {
+    switch (u_visualizeMode) {
+        case 0: FragColor = renderColoredMode(); break;
+        case 1: FragColor = renderDepthTestingMode(0.1, 100.0); break;
+    }
+
+}
+
+vec4 renderColoredMode() {
     vec4 tex = vec4(1.0f);
     vec4 baseColor;
 
@@ -86,7 +100,16 @@ void main() {
     //    FragColor = baseColor *
     //    (u_enableLighting ? vec4(out_ambient + out_diffuse + out_specular, 1) : vec4(1));
 
-    FragColor = baseColor * vec4(result, 1.0);
+    return baseColor * vec4(result, 1.0);
+}
+
+vec4 renderDepthTestingMode(float nearClip, float farClip) {
+    float depth = gl_FragCoord.z / farClip;
+    float ndc = depth * 2.0 - 1.0;
+    float linearDepth =
+        (2.0 * nearClip * farClip) / (farClip + nearClip - ndc * (farClip - nearClip));
+
+    return vec4(vec3(linearDepth), 1.0);
 }
 
 // FUNCTION: Directional light

@@ -59,6 +59,11 @@ SokobanApplication::init()
       RESOURCES_DIR + std::string("shaders/fragment.glsl"),
       true);
 
+    singleColorShader = new Framework::Shader(
+      RESOURCES_DIR + std::string("shaders/vertex.glsl"),
+      RESOURCES_DIR + std::string("shaders/shaderSingleColor.glsl"),
+      true);
+
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
     Framework::TextureManager::setShader(shader);
@@ -153,8 +158,8 @@ SokobanApplication::init()
     // Backpack
     backpackModel = Framework::Model(
       RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
-    betina = Framework::Model(
-      RESOURCES_DIR + std::string("models/betina/betina.obj"));
+    betina =
+      Framework::Model(RESOURCES_DIR + std::string("models/betina/betina.obj"));
 
     // ---------
     // Rendering
@@ -163,7 +168,7 @@ SokobanApplication::init()
     camera = std::make_shared<Framework::PerspectiveCamera>(
       Framework::PerspectiveCamera::Frustrum(
         40.0f, getWindowSize().x, getWindowSize().y, 0.01f, 400.0f),
-      glm::vec3{ 5, map->getHeight() + 3, 5 });
+      glm::vec3{ 5, map->getHeight() + 3, 10 });
     //    camera->setLookAtCenter({ worldCenter - 0.5f, 0.0f, worldCenter - 0.5f
     //    });
     camera->rotate({ -90.0f, 0.0f });
@@ -191,7 +196,7 @@ SokobanApplication::init()
     pointLight.setBrightness(3.0f);
 
     RenderCommand::setClearColor(glm::vec3{ 0.1f });
-
+    shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
     return true;
 }
 
@@ -207,6 +212,7 @@ SokobanApplication::run()
         // ---------
         // Camera
         // ---------
+        shader->bind();
         shader->setFloat3("u_cameraPosition", camera->getPosition());
 
         // Sun
@@ -215,17 +221,6 @@ SokobanApplication::run()
         // Point light
         pointLight.draw();
         map->getPlayer()->setPosition(pointLight.getPosition());
-
-        backpackModel.setPosition(
-          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
-        backpackModel.draw(*shader);
-
-        betina.setPosition({ pointLight.getPosition().x,
-                                    pointLight.getPosition().y - 4.0f,
-                                    10.0f });
-        betina.draw(*shader);
-
-
 
         // ------
         // Delta time
@@ -240,8 +235,31 @@ SokobanApplication::run()
         shader->setMat4("u_projection", camera->getProjectionMatrix());
         shader->setMat4("u_view", camera->getViewMatrix());
 
+        shader->bind();
         map->update();
         map->draw();
+
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+        backpackModel.setScale(1.0f);
+        betina.setPosition({ pointLight.getPosition().x,
+                             pointLight.getPosition().y - 4.0f,
+                             10.0f });
+        betina.draw(*shader);
+
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        backpackModel.setScale(1.5f);
+        betina.draw(*singleColorShader);
+
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+        backpackModel.setScale(1.0f);
+        backpackModel.setPosition(
+          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
+        backpackModel.draw(*shader);
 
         glfwSwapBuffers(getWindow());
     }
@@ -272,6 +290,9 @@ SokobanApplication::shutdown()
 
     delete shader;
     shader = nullptr;
+
+    delete singleColorShader;
+    singleColorShader = nullptr;
 
     delete map;
     map = nullptr;
