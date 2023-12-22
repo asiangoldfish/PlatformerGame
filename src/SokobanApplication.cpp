@@ -59,62 +59,17 @@ SokobanApplication::init()
       RESOURCES_DIR + std::string("shaders/fragment.glsl"),
       true);
 
-    singleColorShader = new Framework::Shader(
-      RESOURCES_DIR + std::string("shaders/vertex.glsl"),
-      RESOURCES_DIR + std::string("shaders/shaderSingleColor.glsl"),
-      true);
-
-    screenShader = new Framework::Shader(
-      RESOURCES_DIR + std::string("shaders/screenShaderVertex.glsl"),
-      RESOURCES_DIR + std::string("shaders/screenShaderFrag.glsl"),
-      true);
-
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
     Framework::TextureManager::setShader(shader);
 
+#pragma region Textures
     Framework::TextureManager::createTexture(
       "no-texture", glm::vec3(1.0f), { 1, 1 }, 0);
     Framework::TextureManager::createTexture(
       "no-texture-diff", glm::vec3(1.0f), { 1, 1 }, 0);
     Framework::TextureManager::createTexture(
       "no-texture-spec", glm::vec3(0.5f), { 1, 1 }, 1);
-
-    Framework::TextureManager::loadTexture(
-      "floor",
-      TEXTURES_DIR + std::string("floor.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
-
-    Framework::TextureManager::loadTexture(
-      "wall",
-      TEXTURES_DIR + std::string("wall.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
-
-    Framework::TextureManager::loadTexture(
-      "player",
-      TEXTURES_DIR + std::string("player.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
-
-    Framework::TextureManager::loadTexture(
-      "background",
-      TEXTURES_DIR + std::string("destination.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
-
-    Framework::TextureManager::loadTexture(
-      "pillar",
-      TEXTURES_DIR + std::string("pillar.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
-
-    Framework::TextureManager::loadTexture(
-      "box",
-      TEXTURES_DIR + std::string("box.jpg"),
-      Framework::TextureManager::TextureFormat::CubeMap,
-      0);
 
     // Load metal plate textures
     Framework::TextureManager::loadTexture(
@@ -151,6 +106,8 @@ SokobanApplication::init()
     getShader()->setInt("u_material.diffuse", 0);
     getShader()->setInt("u_material.specular", 1);
 
+#pragma endregion
+
     // ------------
     // Map
     // ------------
@@ -159,27 +116,12 @@ SokobanApplication::init()
     map->loadMap("test");
 
     // -------
-    // Framebuffer
-    // -------
-    framebuffer = new Framework::Framebuffer();
-
-    // -------
     // Entities
     // -------
 
     // Backpack
     backpackModel = Framework::Model(
       RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
-    betina =
-      Framework::Model(RESOURCES_DIR + std::string("models/betina/betina.obj"));
-
-    reflectionCube = new Cube(shader);
-    reflectionCube->setPosition({ 6.0f, -5.0f, 3.0f });
-    reflectionCube->setColor({ 1.0f, 1.0f, 1.0f });
-
-    floor = new Floor(screenShader, { 2, 2 }, getWindowSize());
-    floor->getMaterial().getProperties().diffuseTextureId =
-      (int)framebuffer->getColorAttachment();
 
     // ---------
     // Rendering
@@ -211,9 +153,6 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
-    reflectionCube->setPosition(getCamera()->getPosition());
-    reflectionCube->move({ 0.0f, 0.0f, -2.0f });
-
     RenderCommand::setClearColor(glm::vec3{ 0.1f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
     return true;
@@ -223,6 +162,7 @@ void
 SokobanApplication::run()
 {
     while (!glfwWindowShouldClose(getWindow())) {
+        RenderCommand::clear();
         glfwPollEvents();
         keyboardInput();
 
@@ -235,7 +175,7 @@ SokobanApplication::run()
 
         // Point light
         pointLight.draw();
-        map->getPlayer()->setPosition(pointLight.getPosition());
+//        map->getPlayer()->setPosition(pointLight.getPosition());
 
         // ------
         // Delta time
@@ -249,16 +189,11 @@ SokobanApplication::run()
         // --------
         map->update();
         map->draw();
-
-        betina.setPosition({ pointLight.getPosition().x,
-                             pointLight.getPosition().y - 4.0f,
-                             10.0f });
-        betina.draw(*shader);
-
-        backpackModel.setScale(1.0f);
-        backpackModel.setPosition(
-          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
-        backpackModel.draw(*shader);
+//
+//        backpackModel.setScale(1.0f);
+//        backpackModel.setPosition(
+//          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
+//        backpackModel.draw(*shader);
 
         glfwSwapBuffers(getWindow());
     }
@@ -267,37 +202,11 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    for (auto& wall : walls) {
-        delete wall;
-        wall = nullptr;
-    }
-
-    for (auto& box : boxes) {
-        delete box;
-        box = nullptr;
-    }
-
-    for (auto& pillar : pillars) {
-        delete pillar;
-        pillar = nullptr;
-    }
-
-    for (auto& destination : destinations) {
-        delete destination;
-        destination = nullptr;
-    }
-
     delete shader;
     shader = nullptr;
 
-    delete singleColorShader;
-    singleColorShader = nullptr;
-
     delete map;
     map = nullptr;
-
-    delete reflectionCube;
-    reflectionCube = nullptr;
 
     Framework::TextureManager::clearTextures();
 }
@@ -306,50 +215,6 @@ SokobanApplication::shutdown()
 void
 SokobanApplication::keyboardInput()
 {
-    // -------
-    // Move camera
-    // -------
-
-    //    // Counterclockwise rotation
-    //    if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-    //        //        gApp->rotateCamera(false);
-    //        gApp->getCamera()->moveSideway(-1);
-    //    }
-    //
-    //    // Clockwise rotation
-    //    if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-    //        //        gApp->rotateCamera(true);
-    //        gApp->getCamera()->moveSideway(1);
-    //    }
-    //
-    //    float fovStep = 30.0f * gApp->getDeltaTime();
-    //
-    //    // Zoom in
-    //    if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-    //        //        Framework::PerspectiveCamera::Frustrum frustrum =
-    //        //          gApp->getCamera()->getFrustrum();
-    //        //        frustrum.angle =
-    //        //          std::max(gApp->getCamera()->getFrustrum().angle -
-    //        fovStep,
-    //        //          05.0f);
-    //        //        gApp->getCamera()->setFrustrum(frustrum);
-    //
-    //        gApp->getCamera()->moveUp(1.0f);
-    //    }
-    //
-    //    // Zoom out
-    //    if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-    //        //        Framework::PerspectiveCamera::Frustrum frustrum =
-    //        //          gApp->getCamera()->getFrustrum();
-    //        //        frustrum.angle =
-    //        //          std::min(gApp->getCamera()->getFrustrum().angle +
-    //        fovStep,
-    //        //          120.0f);
-    //        //        gApp->getCamera()->setFrustrum(frustrum);
-    //
-    //        gApp->getCamera()->moveUp(-1.0f);
-    //    }
-
     // ----------
     // Player movement
     // ----------
@@ -473,6 +338,8 @@ framebufferSize_callback(GLFWwindow* window, int width, int height)
     // We must compute the projection matrix again for the change to take
     // effect.
     camera->computeProjectionMatrix();
+
+    gApp->setWindowSize({ width, height });
 
     INFO("Changed window size! Width: {} and height: {}",
          camera->getFrustum().width,

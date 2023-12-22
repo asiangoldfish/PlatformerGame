@@ -1,6 +1,7 @@
 set(MODULE_NAME Core)
 
 add_library(${MODULE_NAME} STATIC
+    Core.h
     GLFWApplication.h
     GLFWApplication.cpp
     assertions.h            assertions.cpp

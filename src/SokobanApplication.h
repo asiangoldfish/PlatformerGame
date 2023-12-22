@@ -61,19 +61,8 @@ public:
     [[nodiscard]] Framework::Shader* getShader() const { return shader; }
 
     // Textures
-    bool getEnableTexture() { return enableTexture; }
+    bool getEnableTexture() const { return enableTexture; }
     void setEnableTexture(const bool enable) { enableTexture = enable; }
-
-    // -----------
-    // Entities
-    // -----------
-    std::vector<Cube*>& getWalls() { return walls; }
-    std::vector<Cube*>& getPillars() { return pillars; }
-    std::vector<Cube*>& getDestinations() { return destinations; }
-    std::vector<Cube*>& getBoxes() { return boxes; }
-
-    bool moveBox(glm::vec3 direction);
-    void movePlayer(glm::vec3 direction);
 
     // --------
     // Inputs
@@ -81,8 +70,14 @@ public:
     /** Called every frame */
     void keyboardInput();
 
-    [[nodiscard]] bool getIsRightButtonPressed() const { return isRightButtonPressed; }
-    void setIsRightButtonPressed(const bool isPressed) { isRightButtonPressed = isPressed; }
+    [[nodiscard]] bool getIsRightButtonPressed() const
+    {
+        return isRightButtonPressed;
+    }
+    void setIsRightButtonPressed(const bool isPressed)
+    {
+        isRightButtonPressed = isPressed;
+    }
 
 private:
     // ----------
@@ -90,29 +85,15 @@ private:
     // ----------
     Floor* floor = nullptr;
 
-    std::vector<Cube*> walls;
-    std::vector<Cube*> boxes;
-    std::vector<Cube*> pillars;
-    std::vector<Cube*> destinations;
-
-    const int maxDestinations = 6;
-    const int maxPillars = 6;
-    const int maxBoxes = 6;
-
     // -----------
     // Textures and shaders
     // -----------
     Framework::Shader* shader = nullptr;
-    Framework::Shader* singleColorShader = nullptr;
-    Framework::Shader* screenShader = nullptr;
 
     // -----------
     // Models
     // -----------
     Framework::Model backpackModel;
-    Framework::Model betina;
-
-    Cube* reflectionCube;
 
     // -----------
     // Camera
@@ -132,12 +113,6 @@ private:
     // Map
     // ---------------
     Map* map = nullptr;
-
-    // ----------
-    // Framebuffer
-    // ----------
-    Framework::Framebuffer* framebuffer;
 };
-
 
 #endif // SOKOBAN_APPLICATION_H

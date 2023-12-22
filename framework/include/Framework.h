@@ -1,6 +1,7 @@
 #pragma once
 
 // Core
+#include "Core.h"
 #include "GLFWApplication.h"
 #include "Input.h"
 #include "Log.h"
