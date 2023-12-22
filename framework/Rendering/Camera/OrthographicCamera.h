@@ -2,7 +2,7 @@
 #define ORTHOGRAPHIC_CAMERA_H
 
 #include "Camera.h"
-#include <glm/fwd.hpp>
+#include "glm/fwd.hpp"
 #include <array>
 
 namespace Framework

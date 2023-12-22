@@ -14,8 +14,8 @@
 #include "Buffers/BufferLayout.h"
 #include "Buffers/Framebuffer.h"
 
-#include "OrthographicCamera.h"
-#include "PerspectiveCamera.h"
+#include "Camera/OrthographicCamera.h"
+#include "Camera/PerspectiveCamera.h"
 #include "RenderCommands.h"
 #include "Shader.h"
 #include "TextureManager.h"

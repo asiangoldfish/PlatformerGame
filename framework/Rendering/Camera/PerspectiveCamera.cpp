@@ -3,7 +3,7 @@
 #include <iostream>
 
 // External libraries
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/gtc/matrix_transform.hpp"
 
 // Framework
 #include "PerspectiveCamera.h"

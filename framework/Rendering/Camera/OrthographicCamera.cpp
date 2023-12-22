@@ -1,6 +1,5 @@
 #include "OrthographicCamera.h"
-#include <glm/gtc/matrix_transform.hpp>
-
+#include "glm/gtc/matrix_transform.hpp"
 
 Framework::OrthographicCamera::OrthographicCamera(
         const Framework::OrthographicCamera &other)
@@ -21,4 +20,3 @@ Framework::OrthographicCamera::OrthographicCamera(
 void Framework::OrthographicCamera::computeViewMatrix() {
     viewMatrix = glm::lookAt(position, {0, 0, 1}, {0, 1, 0});
 }
-

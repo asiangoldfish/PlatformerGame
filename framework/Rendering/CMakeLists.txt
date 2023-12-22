@@ -9,9 +9,9 @@ add_library(${MODULE_NAME} STATIC
     Buffers/Framebuffer.h   Buffers/Framebuffer.cpp
 
     # Camera
-    Camera.h                Camera.cpp
-    OrthographicCamera.h    OrthographicCamera.cpp
-    PerspectiveCamera.h     PerspectiveCamera.cpp
+    Camera/Camera.h Camera/Camera.cpp
+    Camera/OrthographicCamera.h Camera/OrthographicCamera.cpp
+    Camera/PerspectiveCamera.h Camera/PerspectiveCamera.cpp
 
     # Shading
     ShaderDataTypes.h

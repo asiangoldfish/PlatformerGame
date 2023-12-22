@@ -1,7 +1,7 @@
 #pragma once
 
 // External libraries
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 // Framework
 #include "pch.h"
