@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 namespace Framework {
     VertexBuffer::VertexBuffer(const void *vertices, GLsizei size, GLenum drawMethod) {

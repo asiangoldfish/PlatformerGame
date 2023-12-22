@@ -1,18 +1,23 @@
 set(MODULE_NAME Rendering)
 
 add_library(${MODULE_NAME} STATIC
-    VertexBuffer.h          VertexBuffer.cpp
-    IndexBuffer.h           IndexBuffer.cpp
-    BufferLayout.h
-    ShaderDataTypes.h
-    VertexArray.h           VertexArray.cpp
-    Shader.h                Shader.cpp
+    # Buffers
+    Buffers/VertexBuffer.h  Buffers/VertexBuffer.cpp
+    Buffers/IndexBuffer.h   Buffers/IndexBuffer.cpp
+    Buffers/BufferLayout.h
+    Buffers/VertexArray.h   Buffers/VertexArray.cpp
+    Buffers/Framebuffer.h   Buffers/Framebuffer.cpp
+
+    # Camera
     Camera.h                Camera.cpp
-    RenderCommands.h
-    Texture.h               Texture.cpp
-    TextureManager.h        TextureManager.cpp
     OrthographicCamera.h    OrthographicCamera.cpp
     PerspectiveCamera.h     PerspectiveCamera.cpp
+
+    # Shading
+    ShaderDataTypes.h
+    Shader.h                Shader.cpp
+    Texture.h               Texture.cpp
+    TextureManager.h        TextureManager.cpp
     Material.h              Material.cpp
 
     # Lighting
@@ -20,6 +25,9 @@ add_library(${MODULE_NAME} STATIC
     Light/DirectionalLight.h    Light/DirectionalLight.cpp
     Light/SpotLight.h           Light/SpotLight.cpp
     Light/PointLight.h          Light/PointLight.cpp
+
+    # Miscellaneous
+    RenderCommands.h
 )
 
 target_include_directories(${MODULE_NAME}

@@ -1,7 +1,7 @@
 #ifndef INDEX_BUFFER_H
 #define INDEX_BUFFER_H
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <memory>
 
 namespace Framework {
