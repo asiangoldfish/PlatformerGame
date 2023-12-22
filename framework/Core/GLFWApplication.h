@@ -63,6 +63,7 @@ namespace Framework {
         inline GLFWwindow* getWindow() const { return window; }
 
         const glm::vec2 getWindowSize()& { return windowSize; }
+        void setWindowSize(const glm::vec2 size) { windowSize = size; }
 
     private:
         /** Application name. This is also the window class. */

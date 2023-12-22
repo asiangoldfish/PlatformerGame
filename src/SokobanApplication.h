@@ -17,25 +17,26 @@ class Floor;
 class Cube;
 class Map;
 
-namespace Framework
-{
+namespace Framework {
     class Shader;
     class PerspectiveCamera;
     class TextureManager;
 }
 
-class SokobanApplication : public Framework::GLFWApplication {
+class SokobanApplication : public Framework::GLFWApplication
+{
 public:
     /**
      * Constructor. Remember to call init() before using the application.
      * @param name Window class and application name
      * @param version Application version
      */
-    SokobanApplication(
-        const std::string& name,
-        const std::string& version,
-        glm::vec2 windowSize = glm::vec2(1024, 1024))
-        : GLFWApplication(name, version, windowSize) {}
+    SokobanApplication(const std::string& name,
+                       const std::string& version,
+                       glm::vec2 windowSize = glm::vec2(1024, 1024))
+      : GLFWApplication(name, version, windowSize)
+    {
+    }
 
     ~SokobanApplication() override = default;
 
@@ -43,22 +44,21 @@ public:
     bool init() override;
     /** Game loop. Runs until the application quits. */
     void run() override;
-    /** Shutdown procedure. Must be called before deleting the Sokoban Application object. */
+    /** Shutdown procedure. Must be called before deleting the Sokoban
+     * Application object. */
     void shutdown() override;
 
     // ---------
     // Camera and rendering
     // ---------
     // Camera
-    void rotateCamera(bool rotateRight);
-    float getCameraDistance() const { return cameraDistance; }
-
-    float getCameraSpeed() const { return cameraSpeed; }
+    [[nodiscard]] Framework::ref<Framework::CameraController>& getCameraController()
+    {
+        return cameraController;
+    }
 
     float getDeltaTime() const { return deltaTime; }
-    Framework::PerspectiveCamera* getCamera() { return camera.get(); }
-    float getWorldCenter() const { return worldCenter; }
-    Framework::Shader* getShader() const { return shader; }
+    [[nodiscard]] Framework::Shader* getShader() const { return shader; }
 
     // Textures
     bool getEnableTexture() { return enableTexture; }
@@ -117,18 +117,13 @@ private:
     // -----------
     // Camera
     // -----------
-    float degreesDirection = 1;
-    float degrees = 10.0f;
-    std::shared_ptr<Framework::PerspectiveCamera> camera;
-    float cameraDistance = 20.0f;
-    float cameraSpeed = 0.1f;
-    float worldCenter = (float)mapSize / 2.0f;  // Position in which the camera should always look at
+    Framework::ref<Framework::CameraController> cameraController;
 
     Framework::DirectionalLight sun;
     Framework::PointLight pointLight;
 
-    float deltaTime;
-    float lastFrameTime;
+    float deltaTime = 0.0f;
+    float lastFrameTime = 0.0f;
     bool enableTexture = true;
 
     bool isRightButtonPressed = false;

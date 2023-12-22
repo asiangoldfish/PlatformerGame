@@ -1,8 +1,7 @@
 #include "Camera.h"
-#include <cmath>
 
 #include "glm/gtc/matrix_transform.hpp"
-#include <iostream>
+#include "pch.h"
 
 namespace Framework {
 	void Camera::moveForward(const float speed)
@@ -31,9 +30,9 @@ namespace Framework {
 		yaw += rotation.x;
 
 		// Clamp so the camera doesn't go upside down
-		if (pitch - rotation.y >= -90 && pitch - rotation.y <= 90) {
-			pitch += rotation.y;
-		}
+                pitch += rotation.y;
+                pitch = std::clamp(pitch, -89.9f, 89.9f);
+
 		computeViewMatrix();
 	}
 }

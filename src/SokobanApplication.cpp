@@ -185,14 +185,10 @@ SokobanApplication::init()
     // Rendering
     // ---------
     // Configure camera
-    camera = std::make_shared<Framework::PerspectiveCamera>(
-      Framework::PerspectiveCamera::Frustrum(
-        40.0f, getWindowSize().x, getWindowSize().y, 0.01f, 400.0f),
-      glm::vec3{ 5, map->getHeight() + 3, 10 });
-    //    camera->setLookAtCenter({ worldCenter - 0.5f, 0.0f, worldCenter - 0.5f
-    //    });
-    camera->rotate({ -90.0f, 0.0f });
-    camera->initializeCamera();
+    cameraController = Framework::createRef<Framework::CameraController>(
+      Framework::CameraType::PERSPECTIVE);
+    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
+    cameraController->rotate({ -90.0f, 0.0f });
 
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -229,13 +225,10 @@ SokobanApplication::run()
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
         keyboardInput();
-        RenderCommand::clear();
 
-        // ---------
-        // Camera
-        // ---------
         shader->bind();
-        shader->setFloat3("u_cameraPosition", camera->getPosition());
+
+        cameraController->update(*shader);
 
         // Sun
         sun.draw();
@@ -254,10 +247,6 @@ SokobanApplication::run()
         // --------
         // Camera uploads
         // --------
-        shader->setMat4("u_projection", camera->getProjectionMatrix());
-        shader->setMat4("u_view", camera->getViewMatrix());
-
-        shader->bind();
         map->update();
         map->draw();
 
@@ -370,162 +359,23 @@ SokobanApplication::keyboardInput()
 
     // Up
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        //        player->move({ 0.0f, moveBy, 0.0f });
-        camera->moveForward(moveBy);
+        cameraController->moveForward(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-        //        player->move({ 0.0f, -moveBy, 0.0f });
-        camera->moveForward(-moveBy);
+        cameraController->moveForward(-moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        //        player->move({ moveBy, 0.0f, 0.0f });
-        camera->moveSideway(moveBy);
+        cameraController->moveSideway(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        //        player->move({ -moveBy, 0.0f, 0.0f });
-        camera->moveSideway(-moveBy);
+        cameraController->moveSideway(-moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
-        camera->moveUp(moveBy);
+        cameraController->moveUp(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
-        camera->moveUp(-moveBy);
+        cameraController->moveUp(-moveBy);
     }
-}
-
-void
-SokobanApplication::movePlayer(glm::vec3 direction)
-{
-    Framework::Entity* player = map->getPlayer();
-    glm::vec3 playerPos = player->getPosition();
-    bool canMove = true;
-
-    //    if (canMove) { // Pillars
-    for (const auto& pillar : pillars) {
-        if (pillar->getPosition().x == playerPos.x + direction.x &&
-            pillar->getPosition().z == playerPos.z + direction.z) {
-
-            canMove = false;
-            break;
-        }
-    }
-    //    }
-
-    // Only move the player if nothing blocked the way
-    //    if (canMove) {
-    if (moveBox(direction)) {
-        player->move(direction);
-    }
-    //    }
-}
-
-/**
- * Move a box that the player is facing and is next to.
- * @param direction Direction in which the player is moving in
- * @return true if there is no boxes in the way or the box can move. False if
- * not
- */
-bool
-SokobanApplication::moveBox(glm::vec3 direction)
-{
-    glm::vec3 playerNewPos = map->getPlayer()->getPosition() + direction;
-
-    bool canMove = true;
-    Cube* adjacentBox = nullptr;
-
-    // Figure out if the player is pushing a box. To do this, we check whether
-    // the player's position plus direction has an entity.
-    for (const auto& box : boxes) { // Box
-        // Check whether the player is adjacent to this box
-        if (playerNewPos.x == box->getPosition().x &&
-            playerNewPos.z == box->getPosition().z) {
-            adjacentBox = box;
-            break;
-        }
-    }
-
-    // If there is no adjacent box, then return true
-    if (!adjacentBox) {
-        return true;
-    }
-
-    bool newPositionFound =
-      true; // If an empty position is found, then this is true
-
-    // There is an adjacent box in the direction that the player faces. We now
-    // check if we can move this box. We do this by checking whether there is an
-    // adjacent wall or pillar in the direction we will move in. Check for walls
-    glm::vec3 boxNewPosition = adjacentBox->getPosition() + direction;
-    // Walls are positioned with x equals 0 or 9, and the same for z.
-    newPositionFound = !(boxNewPosition.x == 0 || boxNewPosition.x == 9 ||
-                         boxNewPosition.z == 0 || boxNewPosition.z == 9);
-
-    if (newPositionFound) {
-        for (const auto& pillar : gApp->getPillars()) { // Pillar
-            if (boxNewPosition.x == pillar->getPosition().x &&
-                boxNewPosition.z == pillar->getPosition().z) {
-                newPositionFound = false; // A pillar was found
-                break;
-            }
-        }
-    }
-
-    // Check for other boxes
-    if (newPositionFound) {
-        for (const auto& box : gApp->getBoxes()) { // Boxes
-            if (adjacentBox !=
-                box) { // Avoid checking against the *adjacentBox* itself
-                if (boxNewPosition.x == box->getPosition().x &&
-                    boxNewPosition.z == box->getPosition().z) {
-                    newPositionFound = false; // A pillar was found
-                    break;
-                }
-            }
-        }
-    }
-
-    // If no walls, other boxes or pillars are in the way, then return true.
-    // Else return false
-    if (newPositionFound) {
-        adjacentBox->move(direction);
-
-        // If overlapping a destination, change color to dark blue
-        bool foundDestination = false;
-        for (const auto& destination : gApp->getDestinations()) { // Pillar
-            if (boxNewPosition.x == destination->getPosition().x &&
-                boxNewPosition.z == destination->getPosition().z) {
-                foundDestination = true;
-                break;
-            }
-        }
-
-        foundDestination
-          ? adjacentBox->setColor({ 0.0f, 0.0f, 1.0f, 1.0f })
-          : adjacentBox->setColor(adjacentBox->getOriginalColor());
-        return true;
-    } else {
-        return false;
-    }
-}
-
-void
-SokobanApplication::rotateCamera(bool rotateRight)
-{
-    // Create a "clock" that circulates between 0 and 360 time units
-    if (degrees >= 360.0f) {
-        degreesDirection = -1;
-    } else if (degrees <= 0) {
-        degreesDirection = 1;
-    }
-
-    float rotationSpeed = 45.0f;
-    degrees += rotationSpeed * getDeltaTime() * (rotateRight ? 1.0f : -1.0f);
-    const float distance = getCameraDistance();
-
-    float xPos = worldCenter + glm::cos(glm::radians(degrees)) * distance;
-    float zPos = worldCenter + glm::sin(glm::radians(degrees)) * distance;
-
-    getCamera()->setPosition({ xPos, getCamera()->getPosition().y, zPos });
 }
 
 // Source: https://www.glfw.org/docs/3.3/input_guide.html#cursor_pos
@@ -550,10 +400,11 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
         }
 
         glfwGetCursorPos(window, &xpos, &ypos);
-        glm::vec2 rotation = { xpos - gApp->getWindowSize().x / 2,
-                               ypos - gApp->getWindowSize().y / 2 };
+        glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
+                               ypos - gApp->getWindowSize().y / 2 } *
+                             glm::vec2(gApp->getCameraController()->getCameraSpeed());
 
-        gApp->getCamera()->rotate(rotation * gApp->getCameraSpeed());
+        gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
 
         glfwSetCursorPos(
           window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
@@ -563,7 +414,7 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 void
 mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    gApp->getCamera()->moveForward(yoffset);
+    gApp->getCameraController()->moveForward(yoffset);
 }
 
 // Source: https://www.glfw.org/docs/3.0/group__input.html
@@ -609,20 +460,21 @@ framebufferSize_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 
-    auto camera = gApp->getCamera();
+    Framework::ref<Framework::PerspectiveCamera> camera =
+      gApp->getCameraController()->getPerspectiveCamera();
 
-    // Match the camera frustrum's width and height to the new window size
-    Framework::PerspectiveCamera::Frustrum frustrum = camera->getFrustrum();
+    // Match the camera frustum's width and height to the new window size
+    Framework::PerspectiveCamera::Frustum frustum = camera->getFrustum();
 
-    frustrum.width = width;
-    frustrum.height = height;
-    camera->setFrustrum(frustrum);
+    frustum.width = static_cast<float>(width);
+    frustum.height = static_cast<float>(height);
+    camera->setFrustum(frustum);
 
     // We must compute the projection matrix again for the change to take
     // effect.
     camera->computeProjectionMatrix();
 
     INFO("Changed window size! Width: {} and height: {}",
-         gApp->getCamera()->getFrustrum().width,
-         gApp->getCamera()->getFrustrum().height);
+         camera->getFrustum().width,
+         camera->getFrustum().height);
 }
