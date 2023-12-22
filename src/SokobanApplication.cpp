@@ -64,15 +64,21 @@ SokobanApplication::init()
       RESOURCES_DIR + std::string("shaders/shaderSingleColor.glsl"),
       true);
 
+    screenShader = new Framework::Shader(
+      RESOURCES_DIR + std::string("shaders/screenShaderVertex.glsl"),
+      RESOURCES_DIR + std::string("shaders/screenShaderFrag.glsl"),
+      true);
+
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
     Framework::TextureManager::setShader(shader);
 
-    Framework::TextureManager::createTexture("no-texture", glm::vec3(1.0f), 0);
     Framework::TextureManager::createTexture(
-      "no-texture-diff", glm::vec3(1.0f), 0);
+      "no-texture", glm::vec3(1.0f), { 1, 1 }, 0);
     Framework::TextureManager::createTexture(
-      "no-texture-spec", glm::vec3(0.5f), 1);
+      "no-texture-diff", glm::vec3(1.0f), { 1, 1 }, 0);
+    Framework::TextureManager::createTexture(
+      "no-texture-spec", glm::vec3(0.5f), { 1, 1 }, 1);
 
     Framework::TextureManager::loadTexture(
       "floor",
@@ -153,13 +159,27 @@ SokobanApplication::init()
     map->loadMap("test");
 
     // -------
+    // Framebuffer
+    // -------
+    framebuffer = new Framework::Framebuffer();
+
+    // -------
     // Entities
     // -------
+
     // Backpack
     backpackModel = Framework::Model(
       RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
     betina =
       Framework::Model(RESOURCES_DIR + std::string("models/betina/betina.obj"));
+
+    reflectionCube = new Cube(shader);
+    reflectionCube->setPosition({ 6.0f, -5.0f, 3.0f });
+    reflectionCube->setColor({ 1.0f, 1.0f, 1.0f });
+
+    floor = new Floor(screenShader, { 2, 2 }, getWindowSize());
+    floor->getMaterial().getProperties().diffuseTextureId =
+      (int)framebuffer->getColorAttachment();
 
     // ---------
     // Rendering
@@ -195,6 +215,9 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
+    reflectionCube->setPosition(getCamera()->getPosition());
+    reflectionCube->move({ 0.0f, 0.0f, -2.0f });
+
     RenderCommand::setClearColor(glm::vec3{ 0.1f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
     return true;
@@ -204,10 +227,9 @@ void
 SokobanApplication::run()
 {
     while (!glfwWindowShouldClose(getWindow())) {
-        RenderCommand::clear();
         glfwPollEvents();
-
         keyboardInput();
+        RenderCommand::clear();
 
         // ---------
         // Camera
@@ -239,23 +261,11 @@ SokobanApplication::run()
         map->update();
         map->draw();
 
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF);
-        backpackModel.setScale(1.0f);
         betina.setPosition({ pointLight.getPosition().x,
                              pointLight.getPosition().y - 4.0f,
                              10.0f });
         betina.draw(*shader);
 
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        glStencilMask(0x00);
-        glDisable(GL_DEPTH_TEST);
-        backpackModel.setScale(1.5f);
-        betina.draw(*singleColorShader);
-
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glEnable(GL_DEPTH_TEST);
         backpackModel.setScale(1.0f);
         backpackModel.setPosition(
           { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
@@ -296,6 +306,9 @@ SokobanApplication::shutdown()
 
     delete map;
     map = nullptr;
+
+    delete reflectionCube;
+    reflectionCube = nullptr;
 
     Framework::TextureManager::clearTextures();
 }
@@ -588,8 +601,6 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_T && action == GLFW_PRESS) {
         gApp->setEnableTexture(!gApp->getEnableTexture());
         gApp->getShader()->setInt("u_enableTexture", gApp->getEnableTexture());
-
-        // Toggle color for all entities except floor
     }
 }
 

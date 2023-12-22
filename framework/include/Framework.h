@@ -11,12 +11,15 @@
 #include "GeometricTools.h"
 
 // Rendering
-#include "BufferLayout.h"
+#include "Buffers/BufferLayout.h"
+#include "Buffers/Framebuffer.h"
+
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
 #include "RenderCommands.h"
 #include "Shader.h"
 #include "TextureManager.h"
+
 
 #include "Light/DirectionalLight.h"
 #include "Light/PointLight.h"

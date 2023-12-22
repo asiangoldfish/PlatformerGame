@@ -35,7 +35,7 @@ namespace Framework {
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
-            if (texture->id == id) {
+            if (texture->textureID == id) {
                 t = texture;
                 break;
             }
@@ -73,36 +73,35 @@ namespace Framework {
                 break;
         }
 
-        t->id = static_cast<int>(textures.size());
         textures.push_back(t);
 
-        return t->id;
+        return t->textureID;
     }
 
     int TextureManager::createTexture(const std::string& name,
                                       uint32_t hexColors,
+                                      glm::vec2 size,
                                       int textureSlot)
     {
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        t->createTexture(shader, name, hexColors, textureSlot);
+        t->createTexture(shader, name, hexColors, size, textureSlot);
         t->setType(Texture::TextureType::WhiteTexture);
-        t->id = static_cast<int>(textures.size());
         textures.push_back(t);
 
-        return t->id;
+        return static_cast<int>(t->textureID);
     }
 
     int TextureManager::createTexture(const std::string& name,
                                       glm::vec3 rgbColors,
+                                      glm::vec2 size,
                                       int textureSlot)
     {
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        t->createTexture(shader, name, rgbColors, textureSlot);
+        t->createTexture(shader, name, rgbColors, size, textureSlot);
         t->setType(Texture::TextureType::WhiteTexture);
-        t->id = static_cast<int>(textures.size());
         textures.push_back(t);
 
-        return t->id;
+        return static_cast<int>(t->textureID);
     }
     const std::vector<std::shared_ptr<Texture>>& TextureManager::getTextures()
     {

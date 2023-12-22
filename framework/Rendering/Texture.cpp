@@ -37,10 +37,15 @@ namespace Framework {
     void Texture::createTexture(Shader* shader,
                                 const std::string& name,
                                 uint32_t color,
+                                glm::vec2 size,
                                 int slot)
     {
-        width = 1;
-        height = 1;
+        // Clamp size to at least 1
+        size.x = size.x < 1.0f ? 1.0f : size.x;
+        size.y = size.y < 1.0f ? 1.0f : size.y;
+
+        width = static_cast<int>(size.x);
+        height = static_cast<int>(size.y);
         internalFormat = GL_RGB8;
         dataFormat = GL_RGB;
 
@@ -83,9 +88,10 @@ namespace Framework {
     void Texture::createTexture(Shader* shader,
                                 const std::string& name,
                                 glm::vec3 color,
+                                glm::vec2 size,
                                 int slot)
     {
-        createTexture(shader, name, rgbToHex(color), slot);
+        createTexture(shader, name, rgbToHex(color), size, slot);
     }
 
     void Texture::loadTexture2D(Shader* _shader,

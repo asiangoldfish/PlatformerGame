@@ -263,7 +263,7 @@ namespace Framework {
                   TextureManager::Texture2D,
                   slot);
             } else {
-                texture.id = foundTexture->getId();
+                texture.id = foundTexture->getTextureId();
             }
             texture.type = typeName;
             textures.push_back(texture);

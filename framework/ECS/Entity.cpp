@@ -12,9 +12,9 @@
 // Framework
 //----------
 // OpenGL
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "Buffers/VertexArray.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/IndexBuffer.h"
 
 // Rendering
 #include "RenderCommands.h"
@@ -77,14 +77,18 @@ namespace Framework {
             // We allow the user to either upload a texture or set it by value
             // -----
             // Diffuse
-            if (material.getProperties().isDiffuseTextureSet()) {
+            if (material.getProperties().diffuseTextureId != -1) {
+                Framework::TextureManager::bind(material.getProperties().diffuseTextureId);
+            } else if (material.getProperties().isDiffuseTextureSet()) {
                 Framework::TextureManager::bind(
                   material.getProperties().diffuseTextureName);
             } else {
                 Framework::TextureManager::bind("no-texture-diff");
             }
             // Specular
-            if (material.getProperties().isSpecularTextureSet()) {
+            if (material.getProperties().specularTextureId != -1) {
+                Framework::TextureManager::bind(material.getProperties().specularTextureId);
+            } else if (material.getProperties().isSpecularTextureSet()) {
                 Framework::TextureManager::bind(
                   material.getProperties().specularTextureName);
             } else {

@@ -69,6 +69,8 @@ namespace Framework {
         // --------
         std::string diffuseTextureName;
         std::string specularTextureName;
+        int diffuseTextureId = -1;
+        int specularTextureId = -1;
 
         float shininess = 1.0f;
 

@@ -45,7 +45,8 @@ namespace Framework {
         void createTexture(Shader* shader,
                            const std::string& name,
                            uint32_t color,
-                           int slot);
+                           glm::vec2 size = glm::vec2(1.0f),
+                           int slot = 0);
 
         /**
          * Create a texture and set a uniform colour by RGB values to it.
@@ -58,7 +59,8 @@ namespace Framework {
         void createTexture(Shader* shader,
                            const std::string& name,
                            glm::vec3 color,
-                           int slot);
+                           glm::vec2 size = glm::vec2(1.0f),
+                           int slot = 0);
 
         /** Load a 2-dimensional texture from disk */
         void loadTexture2D(Shader* _shader,
@@ -100,7 +102,7 @@ namespace Framework {
             return filepath;
         }
 
-        [[nodiscard]] int getId() const { return id; }
+        [[nodiscard]] int getTextureId() const { return textureID; }
         const std::string& getName() const { return name; }
 
     private:
@@ -116,10 +118,6 @@ namespace Framework {
     private:
         /** Filepath that the texture is located at on disk */
         std::string filepath;
-
-        /** As an option to identifying the texture by name, it can also be
-         * identified by id */
-        int id = -1;
 
         /** The texture's ID. This is used whenever binding it */
         uint32_t textureID;

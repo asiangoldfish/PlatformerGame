@@ -56,13 +56,19 @@ namespace Framework {
          * @param textureSlot The slot to put the texture in.
          */
         static int loadTexture(const std::string& name,
-                                const std::string& filepath,
-                                TextureFormat format,
-                                int textureSlot,
-                                bool invertPixels = false);
+                               const std::string& filepath,
+                               TextureFormat format,
+                               int textureSlot,
+                               bool invertPixels = false);
 
-        static int createTexture(const std::string& name, uint32_t hexColors, int textureSlot = 0);
-        static int createTexture(const std::string& name, glm::vec3 rgbColors, int textureSlot = 0);
+        static int createTexture(const std::string& name,
+                                 uint32_t hexColors,
+                                 glm::vec2 size,
+                                 int textureSlot = 0);
+        static int createTexture(const std::string& name,
+                                 glm::vec3 rgbColors,
+                                 glm::vec2 size,
+                                 int textureSlot = 0);
 
         /** Bind a texture by name */
         static void bind(const std::string& name);

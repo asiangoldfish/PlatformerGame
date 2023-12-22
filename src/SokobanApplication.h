@@ -104,12 +104,15 @@ private:
     // -----------
     Framework::Shader* shader = nullptr;
     Framework::Shader* singleColorShader = nullptr;
+    Framework::Shader* screenShader = nullptr;
 
     // -----------
-    // Textures and shaders
+    // Models
     // -----------
     Framework::Model backpackModel;
     Framework::Model betina;
+
+    Cube* reflectionCube;
 
     // -----------
     // Camera
@@ -124,8 +127,6 @@ private:
     Framework::DirectionalLight sun;
     Framework::PointLight pointLight;
 
-
-
     float deltaTime;
     float lastFrameTime;
     bool enableTexture = true;
@@ -137,6 +138,10 @@ private:
     // ---------------
     Map* map = nullptr;
 
+    // ----------
+    // Framebuffer
+    // ----------
+    Framework::Framebuffer* framebuffer;
 };
 
 
