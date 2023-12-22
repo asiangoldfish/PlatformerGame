@@ -85,9 +85,14 @@ namespace Framework {
         // Load OpenGL functions in runtime
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-        glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND); // For transparency
+        glEnable(GL_DEPTH_TEST);
+
+        // Culling
         glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
+
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         // Uncomment this only for debugging
