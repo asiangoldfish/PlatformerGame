@@ -3,14 +3,14 @@
 //
 
 #include "TextureManager.h"
-
+#include "Log.h"
 #include "Shader.h"
 
 namespace Framework {
     Shader* TextureManager::shader = nullptr;
     std::vector<std::shared_ptr<Texture>> TextureManager::textures;
 
-    void TextureManager::bind(const std::string& name)
+    void TextureManager::bind(const std::string& name, Shader* shader)
     {
         std::shared_ptr<Texture> t = nullptr;
 
@@ -24,11 +24,11 @@ namespace Framework {
             index++;
         }
         if (t) {
-            t->bind();
+            t->bind(shader);
         }
     }
 
-    void TextureManager::bind(int id)
+    void TextureManager::bind(int id, Shader* shader)
     {
         std::shared_ptr<Texture> t = nullptr;
 
@@ -42,7 +42,7 @@ namespace Framework {
             index++;
         }
         if (t) {
-            t->bind();
+            t->bind(shader);
         }
     }
 
@@ -75,7 +75,20 @@ namespace Framework {
 
         textures.push_back(t);
 
-        return t->textureID;
+        return static_cast<int>(t->textureID);
+    }
+
+    int TextureManager::loadCubemap(Shader* shader_,
+                                    const std::string& name,
+                                    std::vector<std::string> filepaths,
+                                    TextureManager::TextureFormat format,
+                                    int textureSlot)
+    {
+        std::shared_ptr<Texture> t = std::make_shared<Texture>();
+        t->loadCubeMap(shader_, name, filepaths, textureSlot);
+        t->setType(Texture::TextureType::CubeMap);
+        textures.push_back(t);
+        return static_cast<int>(t->textureID);
     }
 
     int TextureManager::createTexture(const std::string& name,

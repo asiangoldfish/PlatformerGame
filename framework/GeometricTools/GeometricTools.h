@@ -237,6 +237,62 @@ namespace GeometricTools {
 
         return container;
     }
+
+    /**
+     * Generate skybox vertices
+     *
+     * The following attributes are generated:
+     * - Position (x, y, z)
+     *
+     * To generate the indices, use SkyboxGeometryIndices()
+     *
+     * @return Position attributes
+     */
+    inline std::vector<float> SkyboxGeometryVertices()
+    {
+        return {
+            // Front
+            -0.5f,	-0.5f, -0.5f,
+            0.5f,	-0.5f, -0.5f,
+            0.5f,	0.5f,  -0.5f,
+            -0.5f,	0.5f,  -0.5f,
+
+            // Rear
+            -0.5f,	-0.5f,	0.5f,
+            0.5f,	-0.5f,	0.5f,
+            0.5f,	0.5f,	0.5f,
+            -0.5f,	0.5f,	0.5f,
+
+            // Top
+            -0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	 0.5f,
+            -0.5f,	0.5f,	 0.5f,
+
+            // Bottom
+            -0.5f,      -0.5f,	-0.5f,
+            0.5f,	-0.5f,	-0.5f,
+            0.5f,	-0.5f,	 0.5f,
+            -0.5f,      -0.5f,	 0.5f,
+
+            // Right
+            -0.5f,	-0.5f,	-0.5f,
+            -0.5f,	0.5f,	-0.5f,
+            -0.5f,	0.5f,	0.5f,
+            -0.5f,	-0.5f,	0.5f,
+
+            // Left
+            0.5f,	-0.5f,	-0.5f,
+            0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	0.5f,
+            0.5f,	-0.5f,	0.5f,
+        };
+    }
+
+    inline std::vector<unsigned int> SkyboxGeometryIndices()
+    {
+        return UnitCubeGeometry3DIndices();
+    }
 }
 
 #endif // GEOMETRIC_TOOLS_H

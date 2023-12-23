@@ -47,7 +47,7 @@ namespace Framework {
     
     private:
         /** This index buffer's ID */
-        GLuint indexBufferID;
+        GLuint indexBufferID = 0;
         /** How many indices there are in the buffer */
         GLuint count;
     };

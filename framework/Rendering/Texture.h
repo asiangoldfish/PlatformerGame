@@ -3,6 +3,7 @@
 
 // C++ libraries
 #include <string>
+#include <vector>
 
 // External
 #include <glad/glad.h>
@@ -42,7 +43,7 @@ namespace Framework {
          * @param name The texture's name. Used to identify it when binding.
          * @param textureSlot Texture slot to assign it.
          */
-        void createTexture(Shader* shader,
+        uint32_t createTexture(Shader* shader,
                            const std::string& name,
                            uint32_t color,
                            glm::vec2 size = glm::vec2(1.0f),
@@ -56,31 +57,35 @@ namespace Framework {
          * @param color The colour values that the texture slot contain
          * @param textureSlot Texture slot to assign it.
          */
-        void createTexture(Shader* shader,
+        uint32_t createTexture(Shader* shader,
                            const std::string& name,
                            glm::vec3 color,
                            glm::vec2 size = glm::vec2(1.0f),
                            int slot = 0);
 
         /** Load a 2-dimensional texture from disk */
-        void loadTexture2D(Shader* _shader,
+        uint32_t loadTexture2D(Shader* _shader,
                            const std::string& name,
                            const std::string& filepath,
                            int slot = 0);
 
         /** Load a cube map from disk */
-        void loadCubeMap(Shader* _shader,
+        uint32_t loadCubeMap(Shader* _shader,
                          const std::string& name,
                          const std::string& filepath,
                          int slot = 0);
 
+        uint32_t loadCubeMap(Shader* _shader,
+                         const std::string& name,
+                         const std::vector<std::string>& filepaths,
+                         int slot = 0);
         /**
          * Bind the texture
          * @param slot Texture slot to bind
          * TODO: Add support for multiple textures
          * TODO: Make an assertion when an empty texture is bound
          */
-        void bind();
+        void bind(Shader* shader);
 
         /**
          * Unbind the texture
@@ -102,8 +107,8 @@ namespace Framework {
             return filepath;
         }
 
-        [[nodiscard]] int getTextureId() const { return textureID; }
-        const std::string& getName() const { return name; }
+        [[nodiscard]] uint32_t getTextureId() const { return textureID; }
+        [[nodiscard]] const std::string& getName() const { return name; }
 
     private:
         /** Gives the TextureManager access to Texture's private members */

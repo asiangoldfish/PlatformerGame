@@ -64,7 +64,7 @@ namespace Framework {
         void update(Shader& shader) override;
 
     protected:
-        virtual void computeViewMatrix() override;
+        void computeViewMatrix() override;
 
     protected:
         glm::vec3 lookAt, upVector;

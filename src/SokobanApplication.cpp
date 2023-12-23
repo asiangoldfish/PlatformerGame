@@ -59,6 +59,11 @@ SokobanApplication::init()
       RESOURCES_DIR + std::string("shaders/fragment.glsl"),
       true);
 
+    skyboxShader = new Framework::Shader(
+      RESOURCES_DIR + std::string("shaders/skyboxVertex.glsl"),
+      RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"),
+      true);
+
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
     Framework::TextureManager::setShader(shader);
@@ -102,6 +107,23 @@ SokobanApplication::init()
       Framework::TextureManager::TextureFormat::Texture2D,
       1);
 
+    // Wall
+    Framework::TextureManager::loadTexture(
+      "wall",
+      TEXTURES_DIR +
+        std::string("wall.jpg"),
+      Framework::TextureManager::TextureFormat::Texture2D,
+      0);
+
+    auto faces = {
+        TEXTURES_DIR + std::string("skybox/demo/right.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/left.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/top.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/bottom.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/front.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
+    };
+
     getShader()->setInt("u_enableTexture", getEnableTexture());
     getShader()->setInt("u_material.diffuse", 0);
     getShader()->setInt("u_material.specular", 1);
@@ -129,7 +151,8 @@ SokobanApplication::init()
     // Configure camera
     cameraController = Framework::createRef<Framework::CameraController>(
       Framework::CameraType::PERSPECTIVE);
-    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
+    //    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
+    cameraController->setPosition({ .0f, 0.0f, 3.0f });
     cameraController->rotate({ -90.0f, 0.0f });
 
     // Screen
@@ -153,7 +176,25 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
-    RenderCommand::setClearColor(glm::vec3{ 0.1f });
+    // Skybox
+    int skyboxId =
+      //      Framework::TextureManager::loadTexture(
+      //      "metal_plate_diff",
+      //      TEXTURES_DIR +
+      //        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"),
+      //      Framework::TextureManager::TextureFormat::Texture2D,
+      //      0);
+
+      Framework::TextureManager::loadCubemap(skyboxShader,
+                                             "skybox_demo",
+                                             faces,
+                                             Framework::TextureManager::CubeMap,
+                                             0);
+    skybox = new Framework::Skybox(skyboxId);
+    skybox->setScale(-20.0f);
+    skybox->setPosition({ 0.0f, 0.0f, 0.0f });
+
+    RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
     return true;
 }
@@ -166,16 +207,19 @@ SokobanApplication::run()
         glfwPollEvents();
         keyboardInput();
 
-        shader->bind();
+        cameraController->update(*skyboxShader);
+        skybox->draw(*skyboxShader);
 
-        cameraController->update(*shader);
+        //        shader->bind();
+
+        //        cameraController->update(*shader);
 
         // Sun
         sun.draw();
 
         // Point light
-        pointLight.draw();
-//        map->getPlayer()->setPosition(pointLight.getPosition());
+        //        pointLight.draw();
+        //        map->getPlayer()->setPosition(pointLight.getPosition());
 
         // ------
         // Delta time
@@ -189,11 +233,12 @@ SokobanApplication::run()
         // --------
         map->update();
         map->draw();
-//
-//        backpackModel.setScale(1.0f);
-//        backpackModel.setPosition(
-//          { pointLight.getPosition().x, pointLight.getPosition().y, 5.0f });
-//        backpackModel.draw(*shader);
+        //
+        //        backpackModel.setScale(1.0f);
+        //        backpackModel.setPosition(
+        //          { pointLight.getPosition().x,
+        //          pointLight.getPosition().y, 5.0f });
+        //        backpackModel.draw(*shader);
 
         glfwSwapBuffers(getWindow());
     }
@@ -202,11 +247,10 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    delete shader;
-    shader = nullptr;
-
-    delete map;
-    map = nullptr;
+    DELETE(shader);
+    DELETE(map);
+    DELETE(skybox);
+    DELETE(skyboxShader);
 
     Framework::TextureManager::clearTextures();
 }

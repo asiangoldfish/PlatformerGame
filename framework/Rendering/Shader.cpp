@@ -42,7 +42,7 @@ namespace Framework {
             glDeleteShader(fragmentShader);
         } else {        // Failed to compile and link shader program
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+            framework_assert(std::string("ERROR::SHADER::PROGRAM::LINKING_FAILED\n") + infoLog);
         }
     }
 

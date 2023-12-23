@@ -27,6 +27,7 @@
 #include "Light/DirectionalLight.h"
 #include "Light/PointLight.h"
 #include "Light/SpotLight.h"
+#include "Light/Skybox.h"
 
 // ECS
 #include "Entity.h"

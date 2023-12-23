@@ -90,6 +90,9 @@ private:
     // -----------
     Framework::Shader* shader = nullptr;
 
+    Framework::Shader* skyboxShader = nullptr;
+    Framework::Skybox* skybox = nullptr;
+
     // -----------
     // Models
     // -----------

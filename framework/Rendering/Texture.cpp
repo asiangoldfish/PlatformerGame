@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "assertions.h"
 #include "Shader.h"
+#include "Log.h"
 
 namespace Framework {
 
@@ -34,7 +35,7 @@ namespace Framework {
         glDeleteTextures(1, &textureID);
     }
 
-    void Texture::createTexture(Shader* shader,
+    uint32_t Texture::createTexture(Shader* shader,
                                 const std::string& name,
                                 uint32_t color,
                                 glm::vec2 size,
@@ -83,18 +84,20 @@ namespace Framework {
         this->name = name;
         textureTarget = GL_TEXTURE_2D;
         this->shader = shader;
+
+        return textureID;
     }
 
-    void Texture::createTexture(Shader* shader,
+    uint32_t Texture::createTexture(Shader* shader,
                                 const std::string& name,
                                 glm::vec3 color,
                                 glm::vec2 size,
                                 int slot)
     {
-        createTexture(shader, name, rgbToHex(color), size, slot);
+        return createTexture(shader, name, rgbToHex(color), size, slot);
     }
 
-    void Texture::loadTexture2D(Shader* _shader,
+    uint32_t Texture::loadTexture2D(Shader* _shader,
                                 const std::string& name,
                                 const std::string& filepath,
                                 int slot)
@@ -152,9 +155,11 @@ namespace Framework {
         type = TextureType::Texture2D;
         this->name = name;
         textureTarget = GL_TEXTURE_2D;
+
+        return textureID;
     }
 
-    void Texture::loadCubeMap(Shader* _shader,
+    uint32_t Texture::loadCubeMap(Shader* _shader,
                               const std::string& name_,
                               const std::string& filepath,
                               int slot)
@@ -220,9 +225,11 @@ namespace Framework {
         stbi_image_free(pixels);
         type = TextureType::CubeMap;
         this->name = name_;
+
+        return textureID;
     }
 
-    void Texture::bind()
+    void Texture::bind(Shader* shader)
     {
         int samplerSwitch;
 
@@ -237,12 +244,52 @@ namespace Framework {
                 samplerSwitch = 0;
                 break;
             default:
-                0;
+                samplerSwitch = 0;
         }
 
         shader->bind();
 
         glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(textureTarget, textureID);
+    }
+
+    uint32_t Texture::loadCubeMap(Shader* _shader,
+                              const std::string& name,
+                              const std::vector<std::string>& filepaths,
+                              int slot)
+    {
+        textureSlot = slot;
+        this->shader = shader;
+
+        glActiveTexture(GL_TEXTURE0 + textureSlot);
+        glGenTextures(1, &textureID);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+        for (uint32_t i = 0; i < filepaths.size(); i++) {
+            int width, heigth, nrChannels;
+
+            unsigned char* data = stbi_load(filepaths[i].c_str(), &width, &height, &nrChannels, 0);
+
+            if (data) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            } else {
+                WARN("CubeMap failed ton load at path '{}'", filepaths[i]);
+            }
+            stbi_image_free(data);
+        }
+
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                        GL_CLAMP_TO_EDGE);
+
+        glActiveTexture(GL_TEXTURE0);
+        type = TextureType::CubeMap;
+        textureTarget = GL_TEXTURE_CUBE_MAP;
+        return textureID;
     }
 }

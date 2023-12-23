@@ -26,6 +26,7 @@ add_library(${MODULE_NAME} STATIC
     Light/DirectionalLight.h    Light/DirectionalLight.cpp
     Light/SpotLight.h           Light/SpotLight.cpp
     Light/PointLight.h          Light/PointLight.cpp
+    Light/Skybox.h              Light/Skybox.cpp
 
     # Miscellaneous
     RenderCommands.h
@@ -47,4 +48,5 @@ target_link_libraries(${MODULE_NAME} PUBLIC
     spdlog
 
     Core
+    GeometricTools
 )

@@ -61,6 +61,12 @@ namespace Framework {
                                int textureSlot,
                                bool invertPixels = false);
 
+        static int loadCubemap(Shader* shader_,
+                               const std::string& name,
+                               std::vector<std::string> filepaths,
+                               TextureFormat format,
+                               int textureSlot);
+
         static int createTexture(const std::string& name,
                                  uint32_t hexColors,
                                  glm::vec2 size,
@@ -71,10 +77,10 @@ namespace Framework {
                                  int textureSlot = 0);
 
         /** Bind a texture by name */
-        static void bind(const std::string& name);
+        static void bind(const std::string& name, Shader* shader = nullptr);
 
         /** Bind a texture by id */
-        static void bind(int id);
+        static void bind(int id, Shader* shader = nullptr);
 
         static void setShader(Shader* s) { shader = s; }
 
