@@ -4,16 +4,15 @@
 Framework::OrthographicCamera::OrthographicCamera(
         const Framework::OrthographicCamera &other)
         : Camera(other) {
-    frustrum = other.frustrum;
+    frustum = other.frustum;
 }
 
 Framework::OrthographicCamera::OrthographicCamera(
-        const Framework::OrthographicCamera::Frustrum &frustrum,
+        const Framework::OrthographicCamera::Frustum& frustum,
         const glm::vec3 &position) {
 
     // Use the frustrum to construct the projection matrix
-    projectionMatrix = glm::ortho(
-        frustrum.left, frustrum.right, frustrum.bottom, frustrum.top
+    projectionMatrix = glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top
     );
 }
 

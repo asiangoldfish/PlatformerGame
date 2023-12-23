@@ -61,11 +61,6 @@ namespace Framework {
             computeViewMatrix();
         }
 
-        inline float getNearClip() const { return nearClip; }
-        inline virtual void setNearClip(const float val) { nearClip = val; }
-        inline float getFarClip() const { return farClip; }
-        inline virtual void setFarClip(const float val) { farClip = val; }
-
         void setEnablePanning(bool enable) { enablePanning = enable; }
 
         // -------------
@@ -87,7 +82,6 @@ namespace Framework {
         glm::vec3 cameraUp = { 0.0f, 1.0f, 0.0f };
         glm::mat4 projectionMatrix = glm::mat4(1.0f);
         glm::vec3 position = glm::vec3(0.0f);
-        float nearClip = 0.0f, farClip = 0.0f;
 
         // When enablePanning is off, determine where the camera should look at
         glm::vec3 lookAtCenter = glm::vec3(0.0f);

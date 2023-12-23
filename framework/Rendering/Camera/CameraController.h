@@ -3,11 +3,11 @@
 #include "pch.h"
 #include "Core.h"
 #include "Shader.h"
+#include "Camera.h"
 
 namespace Framework {
     class PerspectiveCamera;
     class OrthographicCamera;
-    class Camera;
 
     enum class CameraType
     {
@@ -28,11 +28,11 @@ namespace Framework {
         explicit CameraController(CameraType type);
         virtual ~CameraController() = default;
 
-        [[nodiscard]] ref<PerspectiveCamera> getPerspectiveCamera() const
+        [[nodiscard]] ref<PerspectiveCamera>& getPerspectiveCamera()
         {
             return perspectiveCamera;
         }
-        [[nodiscard]] ref<OrthographicCamera> getOrthographicCamera() const
+        [[nodiscard]] ref<OrthographicCamera>& getOrthographicCamera()
         {
             return orthographicCamera;
         }
@@ -53,6 +53,9 @@ namespace Framework {
         void moveSideway(float value);
         void moveUp(float value);
         void setPosition(glm::vec3 newPosition);
+
+        [[nodiscard]] float getNearClip();
+        [[nodiscard]] float getFarClip();
 
         /**
          * Get the camera movement's speed.

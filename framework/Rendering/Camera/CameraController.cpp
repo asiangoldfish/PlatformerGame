@@ -17,9 +17,14 @@ namespace Framework {
          */
         switch (cameraType) {
             case CameraType::PERSPECTIVE:
-                perspectiveCamera = createRef<PerspectiveCamera>();
+                perspectiveCamera = createRef<PerspectiveCamera>(
+                  PerspectiveCamera::Frustum{
+                    45.0f, 1280.0f, 720.0f, 0.1f, 100.0f },
+                  glm::vec3(0.0f));
+
                 selectedCamera = perspectiveCamera.get();
                 break;
+
             case CameraType::ORTHOGRAPHIC:
                 orthographicCamera = createRef<OrthographicCamera>();
                 selectedCamera = orthographicCamera.get();
@@ -53,12 +58,22 @@ namespace Framework {
             selectedCamera->setPosition(newPosition);
         }
     }
-    void CameraController::setNearClip(const float val)
+
+    float CameraController::getNearClip()
     {
-        selectedCamera->setNearClip(val);
+        if (selectedCamera == (Camera*)perspectiveCamera.get()) {
+            return perspectiveCamera->getFrustum().nearClip;
+        } else {
+            return orthographicCamera->getFrustum().near;
+        }
     }
-    void CameraController::setFarClip(const float val)
+
+    float CameraController::getFarClip()
     {
-        selectedCamera->setFarClip(val);
+        if (selectedCamera == (Camera*)perspectiveCamera.get()) {
+            return perspectiveCamera->getFrustum().farClip;
+        } else {
+            return orthographicCamera->getFrustum().far;
+        }
     }
 }
