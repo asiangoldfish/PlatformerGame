@@ -110,6 +110,47 @@ namespace RenderCommand {
     {
         glDepthMask(flag);
     }
+
+    static GLenum currentlyUsedDepthFunc = GL_LESS;
+
+    /**
+     * Get the current depth testing function.
+     *
+     * Available functions:
+     * <ul>
+     * <li>GL_NEVER</li>
+     * <li>GL_ALWAYS</li>
+     * <li>GL_LESS</li>
+     * <li>GL_EQUAL</li>
+     * <li>GL_LEQUAL</li>
+     * <li>GL_GREATER</li>
+     * <li>GL_NOTEQUAL</li>
+     * <li>GL_GEQUAL</li>
+     * </ul>
+     * @return The currently used function
+     */
+    inline GLenum getCurrentDepthFunc() {
+        return currentlyUsedDepthFunc;
+    }
+
+    /**
+     * Set the current depth testing function.
+     *
+     * Available functions:
+     * <ul>
+     * <li>GL_NEVER</li>
+     * <li>GL_ALWAYS</li>
+     * <li>GL_LESS</li>
+     * <li>GL_EQUAL</li>
+     * <li>GL_LEQUAL</li>
+     * <li>GL_GREATER</li>
+     * <li>GL_NOTEQUAL</li>
+     * <li>GL_GEQUAL</li>
+     * </ul>
+     */
+    inline void setCurrentDepthFunc(GLenum func) {
+        currentlyUsedDepthFunc = func;
+    }
 }
 
 #endif // RENDER_COMMANDS_H

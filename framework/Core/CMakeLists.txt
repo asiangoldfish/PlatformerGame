@@ -17,4 +17,6 @@ target_link_libraries(${MODULE_NAME} PRIVATE
     glad
     glm
     spdlog
+
+    Rendering
 )

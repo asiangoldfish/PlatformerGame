@@ -61,13 +61,23 @@ namespace Framework {
     void Skybox::draw(Shader& shader)
     {
         shader.bind();
-//        glCullFace(GL_FRONT);
+
+        // We want to change the depth testing before rendering the skybox. By
+        // doing this, we save on performance by limiting how many fragments we
+        // are testing against.
+        auto oldDepthTestingFunc = RenderCommand::getCurrentDepthFunc();
+        RenderCommand::setCurrentDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_FALSE);
+
 
         // Upload all required uniforms
         shader.setMat4("u_model", modelMatrix);
         TextureManager::bind(textureId, &shader);
         RenderCommand::drawIndex(*vertexArray);
-//        glCullFace(GL_BACK);
+
+        glDepthMask(GL_TRUE);
+
+        RenderCommand::setCurrentDepthFunc(oldDepthTestingFunc);
     }
 
     void Skybox::recalculateModelMatrix()

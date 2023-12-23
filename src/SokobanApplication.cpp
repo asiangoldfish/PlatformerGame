@@ -143,7 +143,7 @@ SokobanApplication::init()
     cameraController = Framework::createRef<Framework::CameraController>(
       Framework::CameraType::PERSPECTIVE);
     //    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
-    cameraController->setPosition({ .0f, 0.0f, 3.0f });
+    cameraController->setPosition({ 0.0f, 0.0f, 0.0f });
     cameraController->rotate({ -90.0f, 0.0f });
 
     // Screen
@@ -183,7 +183,7 @@ SokobanApplication::init()
                                              Framework::TextureManager::CubeMap,
                                              0);
     skybox = new Framework::Skybox(skyboxId);
-    skybox->setScale(-20.0f);
+    skybox->setScale(700.0f);
     skybox->setPosition({ 0.0f, 0.0f, 0.0f });
 
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
@@ -199,9 +199,12 @@ SokobanApplication::run()
         glfwPollEvents();
         keyboardInput();
 
+        cameraController->setFarClip(701.0f);
         cameraController->update(*skyboxShader);
         skybox->draw(*skyboxShader);
 
+        cameraController->setFarClip(100.0f);
+//        cameraController->update(*shader);
         //        shader->bind();
 
         //        cameraController->update(*shader);

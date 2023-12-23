@@ -54,9 +54,6 @@ namespace Framework {
         void moveUp(float value);
         void setPosition(glm::vec3 newPosition);
 
-        [[nodiscard]] float getNearClip();
-        [[nodiscard]] float getFarClip();
-
         /**
          * Get the camera movement's speed.
          */
@@ -68,8 +65,10 @@ namespace Framework {
          */
         void setCameraSpeed(const float speed) { cameraSpeed = speed; }
 
-        void setNearClip(const float val);
-        void setFarClip(const float val);
+        [[nodiscard]] float getNearClip();
+        void setNearClip(const float near);
+        [[nodiscard]] float getFarClip();
+        void setFarClip(const float far);
 
     private:
         Camera* selectedCamera = nullptr;

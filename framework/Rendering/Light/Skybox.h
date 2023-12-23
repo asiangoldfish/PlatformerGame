@@ -50,9 +50,9 @@ namespace Framework {
 
         inline void setScale(const float s)
         {
-            this->scale.x = -s;
+            this->scale.x = s;
             this->scale.y = -s;
-            this->scale.z = -s;
+            this->scale.z = s;
             recalculateModelMatrix();
         }
         inline void setScale(const glm::vec3& s) { this->scale = s; }

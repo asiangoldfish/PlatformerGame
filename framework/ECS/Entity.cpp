@@ -64,6 +64,7 @@ namespace Framework {
     void Entity::draw()
     {
         if (isDrawable) {
+            shader->bind();
             // Upload all required uniforms
             shader->setMat4("u_model", modelMatrix);
             shader->setFloat4("u_color", color);

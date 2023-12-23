@@ -12,5 +12,8 @@ uniform mat4 u_model;
 
 void main() {
     o_position = a_position;
-    gl_Position =  u_projection * u_view * u_model * vec4(a_position, 1.0);
+    vec4 pos = u_projection * u_view * u_model * vec4(a_position, 1.0);
+
+    // We need the 1.01 to avoid flickering with z-fighting
+    gl_Position = vec4(pos.xyw, pos.w * 1.01);
 }

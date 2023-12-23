@@ -1,13 +1,13 @@
-#include "GLFWApplication.h"
-
-#include <glad/glad.h>
-
-#include <iostream>
+// C++ libraries
 #include <csignal>
 
-#include "assertions.h"
+// External libraries
+#include <glad/glad.h>
 
+// Framwork
+#include "GLFWApplication.h"
 #include "Log.h"
+#include "RenderCommands.h"
 
 namespace Framework {
     // Output messages from OpenGL
@@ -86,7 +86,10 @@ namespace Framework {
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
         glEnable(GL_BLEND); // For transparency
+
+        // Depth testing
         glEnable(GL_DEPTH_TEST);
+        RenderCommand::setCurrentDepthFunc(GL_LESS);
 
         // Culling
         glEnable(GL_CULL_FACE);
