@@ -115,15 +115,6 @@ SokobanApplication::init()
       Framework::TextureManager::TextureFormat::Texture2D,
       0);
 
-    auto faces = {
-        TEXTURES_DIR + std::string("skybox/demo/right.jpg"),
-        TEXTURES_DIR + std::string("skybox/demo/left.jpg"),
-        TEXTURES_DIR + std::string("skybox/demo/top.jpg"),
-        TEXTURES_DIR + std::string("skybox/demo/bottom.jpg"),
-        TEXTURES_DIR + std::string("skybox/demo/front.jpg"),
-        TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
-    };
-
     getShader()->setInt("u_enableTexture", getEnableTexture());
     getShader()->setInt("u_material.diffuse", 0);
     getShader()->setInt("u_material.specular", 1);
@@ -177,14 +168,15 @@ SokobanApplication::init()
     pointLight.setBrightness(3.0f);
 
     // Skybox
+    auto faces = {
+        TEXTURES_DIR + std::string("skybox/demo/right.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/left.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/bottom.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/top.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/front.jpg"),
+        TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
+    };
     int skyboxId =
-      //      Framework::TextureManager::loadTexture(
-      //      "metal_plate_diff",
-      //      TEXTURES_DIR +
-      //        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"),
-      //      Framework::TextureManager::TextureFormat::Texture2D,
-      //      0);
-
       Framework::TextureManager::loadCubemap(skyboxShader,
                                              "skybox_demo",
                                              faces,
@@ -309,9 +301,10 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
         }
 
         glfwGetCursorPos(window, &xpos, &ypos);
-        glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
-                               ypos - gApp->getWindowSize().y / 2 } *
-                             glm::vec2(gApp->getCameraController()->getCameraSpeed());
+        glm::vec2 rotation =
+          glm::vec2{ xpos - gApp->getWindowSize().x / 2,
+                     ypos - gApp->getWindowSize().y / 2 } *
+          glm::vec2(gApp->getCameraController()->getCameraSpeed());
 
         gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
 

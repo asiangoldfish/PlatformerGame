@@ -63,6 +63,9 @@ namespace Framework {
         void computeProjectionMatrix();
         void update(Shader& shader) override;
 
+        void setNearClip(const float val) override;
+        void setFarClip(const float val) override;
+
     protected:
         void computeViewMatrix() override;
 

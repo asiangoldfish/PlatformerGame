@@ -1,6 +1,7 @@
 #include "CameraController.h"
 #include "PerspectiveCamera.h"
 #include "OrthographicCamera.h"
+#include "Camera.h"
 
 namespace Framework {
     void CameraController::update(Shader& shader)
@@ -14,7 +15,7 @@ namespace Framework {
         /*
          * Based on the selected camera, instantiate the correct type.
          */
-        switch(cameraType) {
+        switch (cameraType) {
             case CameraType::PERSPECTIVE:
                 perspectiveCamera = createRef<PerspectiveCamera>();
                 selectedCamera = perspectiveCamera.get();
@@ -46,9 +47,18 @@ namespace Framework {
         selectedCamera->moveUp(value);
     }
 
-    void CameraController::setPosition(glm::vec3 newPosition) {
-        if(selectedCamera) {
+    void CameraController::setPosition(glm::vec3 newPosition)
+    {
+        if (selectedCamera) {
             selectedCamera->setPosition(newPosition);
         }
+    }
+    void CameraController::setNearClip(const float val)
+    {
+        selectedCamera->setNearClip(val);
+    }
+    void CameraController::setFarClip(const float val)
+    {
+        selectedCamera->setFarClip(val);
     }
 }

@@ -28,8 +28,14 @@ namespace Framework {
         explicit CameraController(CameraType type);
         virtual ~CameraController() = default;
 
-        [[nodiscard]] ref<PerspectiveCamera> getPerspectiveCamera() const { return perspectiveCamera; }
-        [[nodiscard]] ref<OrthographicCamera> getOrthographicCamera() const { return orthographicCamera; }
+        [[nodiscard]] ref<PerspectiveCamera> getPerspectiveCamera() const
+        {
+            return perspectiveCamera;
+        }
+        [[nodiscard]] ref<OrthographicCamera> getOrthographicCamera() const
+        {
+            return orthographicCamera;
+        }
 
         /** Upload data to the GPU */
         void update(Shader& shader);
@@ -38,8 +44,8 @@ namespace Framework {
          * Rotate the camera.
          *
          * The values are set in world space.
-         * @param value The values to set the new camera rotation by. The x-value is horizontal rotation, while the
-         *              y-value is vertical.
+         * @param value The values to set the new camera rotation by. The
+         * x-value is horizontal rotation, while the y-value is vertical.
          */
         void rotate(glm::vec2 value);
 
@@ -59,12 +65,16 @@ namespace Framework {
          */
         void setCameraSpeed(const float speed) { cameraSpeed = speed; }
 
+        void setNearClip(const float val);
+        void setFarClip(const float val);
+
     private:
         Camera* selectedCamera = nullptr;
         ref<PerspectiveCamera> perspectiveCamera;
         ref<OrthographicCamera> orthographicCamera;
 
-        /** Determines which camera to possess and initializing the correct data accordingly */
+        /** Determines which camera to possess and initializing the correct data
+         * accordingly */
         CameraType cameraType;
         bool degreesDirection = true;
         float degrees = 0.0f;

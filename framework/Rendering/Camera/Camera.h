@@ -61,13 +61,10 @@ namespace Framework {
             computeViewMatrix();
         }
 
-        // -------------
-        // Camera Position
-        // -------------
         inline float getNearClip() const { return nearClip; }
-        inline void setNearClip(const float val) { nearClip = val; }
+        inline virtual void setNearClip(const float val) { nearClip = val; }
         inline float getFarClip() const { return farClip; }
-        inline void setFarClip(const float val) { nearClip = val; }
+        inline virtual void setFarClip(const float val) { farClip = val; }
 
         void setEnablePanning(bool enable) { enablePanning = enable; }
 

@@ -62,6 +62,20 @@ namespace Framework {
         shader.bind();
         shader.setMat4("u_projection", getProjectionMatrix());
         shader.setMat4("u_view", getViewMatrix());
-        shader.setFloat3("u_cameraPosition", getPosition());
+//        shader.setFloat3("u_cameraPosition", getPosition());
+    }
+
+    void PerspectiveCamera::setNearClip(const float val)
+    {
+        Camera::setNearClip(val);
+        frustum.nearClip = val;
+        computeProjectionMatrix();
+    }
+
+    void PerspectiveCamera::setFarClip(const float val)
+    {
+        Camera::setFarClip(val);
+        frustum.farClip = val;
+        computeProjectionMatrix();
     }
 } // Framework
