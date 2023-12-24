@@ -1,39 +1,78 @@
+/**
+ * Messaging and debugging print outs to console.
+ *
+ * @details The macros in this file provide the same formatting options as the underlying logging system does. Visit
+ * <a href="https://github.com/gabime/spdlog">spdlog</a> for details.
+ *
+ * @example
+ * @code
+ * std::string hello = "Hello";
+ * INFO("{}, this is an example", hello);
+ *
+ * int someNumber = 3;
+ * ERROR("Error {}. A bad error", someNumber);
+ * @endcode
+ *
+ * @details Consider adding an error number system for <u>ERROR</u> and <u>FATAL</u> to precisely identify the cause of
+ * the corresponding errors or crashes.
+ */
+
 #pragma once
 
-#include <memory>
-
 #include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
-
 #include "assertions.h"
 
-namespace Framework
-{
-    class Log
-    {
-    public:
-        static void init();
+/**
+ * Trace code flow.
+ *
+ * @details Use this to learn the code flow of a particular part of the code base. It should be removed after use to
+ * avoid polluting the console.
+ */
+#define TRACE(...) spdlog::trace(__VA_ARGS__)
 
-        inline static std::shared_ptr<spdlog::logger>& getLogger()
-        {
-            return logger;
-        }
+/**
+ * Print some useful information.
+ *
+ * @details Use this to inform the user about something. It may help debugging a runtime error, but for the most part
+ * is used to inform the user about a process that has started or finished.
+ */
+#define INFO(...) spdlog::info(__VA_ARGS__)
 
-    private:
-        static std::shared_ptr<spdlog::logger> logger;
-    };
-}
+/**
+ * Print information for debugging.
+ *
+ * @details As the code for printing debugging log is stripped out of the release build, this macro serves as a log for
+ * developers only.
+ */
+#define DEBUG(...) spdlog::debug(__VA_ARGS__)
 
-//#define TRACE(...)      Framework::Log::getLogger()->trace(__VA_ARGS__)
-//#define INFO(...)       Framework::Log::getLogger()->info(__VA_ARGS__)
-//#define DEBUG(...)      Framework::Log::getLogger()->info(__VA_ARGS__)
-//#define WARN(...)       Framework::Log::getLogger()->warn(__VA_ARGS__)
-//#define ERROR(...)      Framework::Log::getLogger()->error(__VA_ARGS__)
-//#define FATAL(...)      Framework::Log::getLogger()->fatal(__VA_ARGS__)
+/**
+ * Print warning message.
+ *
+ * @details Warnings may be worth checking out, but is not necessarily critical to the operation of the application.
+ * It should be clear where the warning is produced, so it may bring value to tracing where an error might have occurred.
+ * While warnings may not always be optimal, it may also log when an action was unsuccessful, like a HTTP request.
+ * Despite this, as a general rule of thumb, try to limit the use of warnings.
+ */
+#define WARN(...) spdlog::warn(__VA_ARGS__)
 
-#define TRACE(...)      spdlog::trace(__VA_ARGS__)
-#define INFO(...)       spdlog::info(__VA_ARGS__)
-#define DEBUG(...)      spdlog::debug(__VA_ARGS__)
-#define WARN(...)       spdlog::warn(__VA_ARGS__)
-#define ERROR(...)      spdlog::error(__VA_ARGS__)
-#define FATAL(...)      spdlog::fatal(__VA_ARGS__); __breakpoint()
+/**
+ * Critical errors for developers and administrators.
+ *
+ * @details ERROR is reserved to log critical errors that should never occur. It may be a side effect of a function that
+ * should never happen. Developers should look into this and fix the error quickly, as it is disruptive for the
+ * operations of the application.
+ *
+ * @details While FATAL will cause a runtime error, ERROR will not. This is by design, so users can report what
+ * happens after the ERROR occurs. This may help developers debugging and fixing the problem.
+ */
+#define ERROR(...) spdlog::error(__VA_ARGS__)
+
+/**
+ * Fatal errors and runtime error.
+ *
+ * @details Use only when commands or functions fails and the application can no longer run because of this. Use cases
+ * can be to immediately crash the program to prevent data corruption or security vulnerabilities. These FATAL errors
+ * must be fixed quickly as possible.
+ */
+#define FATAL(...) spdlog::fatal(__VA_ARGS__); __breakpoint()
