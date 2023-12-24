@@ -17,11 +17,13 @@ out vec4 o_color;
 out vec2 o_texCoord;
 out vec3 o_normal; // NB! Normal attribute converted from vec3 to outputting as vec4
 out vec4 o_fragPosition;
+out vec3 o_modelPosition;  // Position vertex attributes with model matrix
 
 void main() {
     o_color    = a_color;
     o_texCoord = a_texCoord;
     o_position = a_position;
+    o_modelPosition = vec3(u_model * vec4(a_position, 1.0));
 
     // We fetch the rotation matrix from normal. This way, we prevent changing its direction.
     o_normal = mat3(transpose(inverse(u_model))) * a_normal;

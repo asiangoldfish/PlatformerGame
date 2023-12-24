@@ -5,6 +5,7 @@ in vec3 o_position;
 in vec4 o_color;
 in vec4 o_fragPosition;
 in vec3 o_normal;
+in vec3 o_modelPosition;
 
 out vec4 FragColor;
 
@@ -22,6 +23,8 @@ uniform vec3 u_cameraPosition = vec3(0.0f);// For specular illumination
 
 /** Determines how to render objects, like coloured or by depth */
 uniform int u_visualizeMode = 0;
+
+layout(location = 0) uniform samplerCube u_skybox;
 
 /**
  * Material properties grouped into a single structure.
@@ -96,11 +99,11 @@ vec4 renderColoredMode() {
         result += computePointLight(u_pointLight[i], normal, o_fragPosition.xyz, viewDir);
     }
 
-    // Compute the final colors
-    //    FragColor = baseColor *
-    //    (u_enableLighting ? vec4(out_ambient + out_diffuse + out_specular, 1) : vec4(1));
+    // Light from cubemap
+    vec3 I = normalize(o_modelPosition - u_cameraPosition);
+    vec3 R = reflect(I, normal);
 
-    return baseColor * vec4(result, 1.0);
+    return /* baseColor * vec4(result, 1.0) * */ vec4(texture(u_skybox, R).rgb, 1.0);
 }
 
 vec4 renderDepthTestingMode(float nearClip, float farClip) {

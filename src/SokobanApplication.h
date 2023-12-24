@@ -97,6 +97,7 @@ private:
     // Models
     // -----------
     Framework::Model backpackModel;
+    Cube* testCube;
 
     // -----------
     // Camera

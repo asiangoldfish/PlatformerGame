@@ -14,6 +14,18 @@ namespace Framework {
     {
         std::shared_ptr<Texture> t = nullptr;
 
+        Shader* shaderToUse = nullptr;
+
+        // Attempt to bind to the parameter shader. If it's null, then try to
+        // use our own. If still null, then throw error
+        if (shader) {
+            shaderToUse = shader;
+        } else if (TextureManager::shader) {
+            shaderToUse = TextureManager::shader;
+        } else {
+            framework_assert("TextureManager:: Unable to bind to shader. It is nullptr!");
+        }
+
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
@@ -24,7 +36,7 @@ namespace Framework {
             index++;
         }
         if (t) {
-            t->bind(shader);
+            t->bind(shaderToUse);
         }
     }
 

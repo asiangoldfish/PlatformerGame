@@ -52,6 +52,7 @@ namespace Framework {
         void moveForward(float value);
         void moveSideway(float value);
         void moveUp(float value);
+        const glm::vec3 getPosition() const;
         void setPosition(glm::vec3 newPosition);
 
         /**

@@ -68,6 +68,8 @@ namespace Framework {
         auto oldDepthTestingFunc = RenderCommand::getCurrentDepthFunc();
         RenderCommand::setCurrentDepthFunc(GL_LEQUAL);
         glDepthMask(GL_FALSE);
+        glFrontFace(GL_CCW);
+        glCullFace(GL_BACK);
 
 
         // Upload all required uniforms
@@ -75,8 +77,9 @@ namespace Framework {
         TextureManager::bind(textureId, &shader);
         RenderCommand::drawIndex(*vertexArray);
 
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
         glDepthMask(GL_TRUE);
-
         RenderCommand::setCurrentDepthFunc(oldDepthTestingFunc);
     }
 

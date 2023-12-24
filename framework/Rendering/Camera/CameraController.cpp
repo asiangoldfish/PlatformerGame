@@ -49,6 +49,15 @@ namespace Framework {
         selectedCamera->moveUp(value);
     }
 
+    const glm::vec3 CameraController::getPosition() const
+    {
+        if (selectedCamera) {
+            return selectedCamera->getPosition();
+        }
+
+        return glm::vec3{ 0.0f };
+    }
+
     void CameraController::setPosition(glm::vec3 newPosition)
     {
         if (selectedCamera) {
