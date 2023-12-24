@@ -165,7 +165,7 @@ namespace Framework {
         std::vector<std::string> filePaths = {
             filepath_, filepath_, filepath_, filepath_, filepath_, filepath_
         };
-        loadCubeMap(name_, filePaths);
+        return loadCubeMap(name_, filePaths);
     };
 
     uint32_t Texture::loadCubeMap(const std::string& name_,
@@ -220,14 +220,13 @@ namespace Framework {
         return textureID;
     }
 
-    void Texture::bind(const Shader& shader, int textureSlot) const
+    void Texture::bind(int textureSlot) const
     {
         if (textureSlot < 0) {
             WARN("Texture::bind: textureSlot < 0. It must be >= 1.");
             return;
         }
 
-        shader.bind();
         glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(textureTarget, textureID);
     }

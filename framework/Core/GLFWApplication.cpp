@@ -104,7 +104,7 @@ namespace Framework {
         glDebugMessageCallback(messageCallback, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
-        INFO("Application {} initiated", appName);
+        INFO("GLFWApplication \'{}\' successfully initiated", appName);
 
         return true;
     }

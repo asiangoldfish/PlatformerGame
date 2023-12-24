@@ -136,20 +136,15 @@ namespace Framework {
         /**
          * Bind the texture.
          *
-         * @details Binding to multiple shaders is enabled. Pass the shader
-         * of choice when binding. To apply the texture to multiple shaders,
-         * call this method for each shader to bind to.
-         *
          * @details To bind to a unit, pass the desire slot number as
          * <i>textureSlot</i>.
          *
-         * @param Shader The shader to bind this texture to.
          * @param textureSlot The texture slot or unit to bind to. Internally,
          * <i>glActiveTexture(GL_TEXTURE0 + i)</i> is called.
          *
          * @warning If the texture slot is less than 0, a warning is printed on console.
          */
-        void bind(const Shader& shader, int textureSlot) const;
+        void bind(int textureSlot) const;
 
         /** Get the texture's file path on disk. */
         [[nodiscard]] const std::string &getFilepath() const {

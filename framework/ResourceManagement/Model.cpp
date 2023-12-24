@@ -42,7 +42,7 @@ namespace Framework {
             //                                 name);
             //            }
 
-            TextureManager::bind(shader, textures[i].id, 0);
+            TextureManager::bind((uint32_t)textures[i].id, 0);
         }
 
         glActiveTexture(GL_TEXTURE0);

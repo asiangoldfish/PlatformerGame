@@ -55,6 +55,8 @@ SokobanApplication::init()
     glfwSetScrollCallback(getWindow(), mouseScrollBack_callback);
     glfwSetFramebufferSizeCallback(getWindow(), framebufferSize_callback);
 
+    INFO("GLFW callback functions successfully bound");
+
     // -----------
     // Textures and shaders
     // -----------
@@ -74,10 +76,6 @@ SokobanApplication::init()
 #pragma region Textures
     Framework::TextureManager::createTexture(
       "no-texture", glm::vec3(1.0f), { 1, 1 });
-    Framework::TextureManager::createTexture(
-      "no-texture-diff", glm::vec3(1.0f), { 1, 1 });
-    Framework::TextureManager::createTexture(
-      "no-texture-spec", glm::vec3(0.5f), { 1, 1 });
 
     // Load metal plate textures
     Framework::TextureManager::loadTexture2D(
@@ -177,6 +175,9 @@ SokobanApplication::init()
 
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
+
+    INFO("SokobanApplication successfully initiated");
+
     return true;
 }
 
@@ -187,6 +188,12 @@ SokobanApplication::run()
         RenderCommand::clear();
         glfwPollEvents();
         keyboardInput();
+        // ------
+        // Delta time
+        // ------
+        auto currentFrameTime = (float)glfwGetTime();
+        deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
 
         cameraController->setFarClip(701.0f);
         cameraController->update(*skyboxShader);
@@ -199,7 +206,7 @@ SokobanApplication::run()
         shader->setFloat3("u_cameraPosition",
                           getCameraController()->getPosition());
         //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
-        Framework::TextureManager::bind(*shader, "wall", 0);
+        Framework::TextureManager::bind("wall", 0);
         testCube->draw();
 
         //        cameraController->update(*shader);
@@ -214,12 +221,6 @@ SokobanApplication::run()
         //        pointLight.draw();
         //        map->getPlayer()->setPosition(pointLight.getPosition());
 
-        // ------
-        // Delta time
-        // ------
-        auto currentFrameTime = (float)glfwGetTime();
-        deltaTime = currentFrameTime - lastFrameTime;
-        lastFrameTime = currentFrameTime;
 
         // --------
         // Camera uploads
