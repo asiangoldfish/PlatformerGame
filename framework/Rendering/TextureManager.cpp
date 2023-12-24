@@ -7,126 +7,73 @@
 #include "Shader.h"
 
 namespace Framework {
-    Shader* TextureManager::shader = nullptr;
     std::vector<std::shared_ptr<Texture>> TextureManager::textures;
 
-    void TextureManager::bind(const std::string& name, Shader* shader)
+    void TextureManager::bind(const Shader& shader, const std::string& name, int textureSlot)
     {
-        std::shared_ptr<Texture> t = nullptr;
-
-        Shader* shaderToUse = nullptr;
-
-        // Attempt to bind to the parameter shader. If it's null, then try to
-        // use our own. If still null, then throw error
-        if (shader) {
-            shaderToUse = shader;
-        } else if (TextureManager::shader) {
-            shaderToUse = TextureManager::shader;
-        } else {
-            framework_assert("TextureManager:: Unable to bind to shader. It is nullptr!");
-        }
-
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
             if (texture->name == name) {
-                t = texture;
-                break;
+                texture->bind(shader, textureSlot);
+                return;
             }
             index++;
         }
-        if (t) {
-            t->bind(shaderToUse);
-        }
     }
 
-    void TextureManager::bind(int id, Shader* shader)
+    void TextureManager::bind(const Shader& shader, int id, int textureSlot)
     {
-        std::shared_ptr<Texture> t = nullptr;
-
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
             if (texture->textureID == id) {
-                t = texture;
-                break;
+                texture->bind(shader, textureSlot);
+                return;
             }
             index++;
         }
-        if (t) {
-            t->bind(shader);
-        }
     }
 
-    int TextureManager::loadTexture(const std::string& name,
-                                    const std::string& filepath,
-                                    TextureFormat format,
-                                    int textureSlot,
-                                    bool invertPixels)
+    uint32_t TextureManager::loadTexture2D(const std::string& name,
+                                      const std::string& filepath)
     {
         // If a texture with the same filepath already exists, then don't load
         // it.
 
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        switch (format) {
-            case Texture2D:
-                t->loadTexture2D(shader, name, filepath, textureSlot);
-                t->setType(Texture::TextureType::Texture2D);
-                break;
-            case Texture3D: // TODO: Implement
-                break;
-            case CubeMap:
-                t->loadCubeMap(shader, name, filepath, textureSlot);
-                t->setType(Texture::TextureType::CubeMap);
-                break;
-            case SkyBox: // TODO: Implement
-                break;
-            default:
-                break;
-        }
-
+        t->loadTexture2D(name, filepath);
         textures.push_back(t);
-
-        return static_cast<int>(t->textureID);
+        return t->textureID;
     }
 
-    int TextureManager::loadCubemap(Shader* shader_,
-                                    const std::string& name,
-                                    std::vector<std::string> filepaths,
-                                    TextureManager::TextureFormat format,
-                                    int textureSlot)
+    uint32_t TextureManager::loadCubeMap(const std::string& name,
+                                    const std::vector<std::string>& filePaths)
     {
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        t->loadCubeMap(shader_, name, filepaths, textureSlot);
-        t->setType(Texture::TextureType::CubeMap);
+        t->loadCubeMap(name, filePaths);
         textures.push_back(t);
-        return static_cast<int>(t->textureID);
+        return t->textureID;
     }
 
-    int TextureManager::createTexture(const std::string& name,
+    uint32_t TextureManager::createTexture(const std::string& name,
                                       uint32_t hexColors,
-                                      glm::vec2 size,
-                                      int textureSlot)
+                                      glm::vec2 size)
     {
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        t->createTexture(shader, name, hexColors, size, textureSlot);
-        t->setType(Texture::TextureType::WhiteTexture);
+        t->createTexture(name, hexColors, size);
         textures.push_back(t);
-
-        return static_cast<int>(t->textureID);
+        return t->textureID;
     }
 
-    int TextureManager::createTexture(const std::string& name,
+    uint32_t TextureManager::createTexture(const std::string& name,
                                       glm::vec3 rgbColors,
-                                      glm::vec2 size,
-                                      int textureSlot)
+                                      glm::vec2 size)
     {
         std::shared_ptr<Texture> t = std::make_shared<Texture>();
-        t->createTexture(shader, name, rgbColors, size, textureSlot);
-        t->setType(Texture::TextureType::WhiteTexture);
+        t->createTexture(name, rgbColors, size);
         textures.push_back(t);
-
-        return static_cast<int>(t->textureID);
+        return t->textureID;
     }
     const std::vector<std::shared_ptr<Texture>>& TextureManager::getTextures()
     {

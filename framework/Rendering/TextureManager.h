@@ -30,10 +30,7 @@ namespace Framework {
         enum TextureFormat
         {
             Texture2D = 0,
-            Texture3D,
             CubeMap,
-            SkyBox,
-            WhiteTexture
         };
 
     public:
@@ -55,34 +52,24 @@ namespace Framework {
          * supported formats.
          * @param textureSlot The slot to put the texture in.
          */
-        static int loadTexture(const std::string& name,
-                               const std::string& filepath,
-                               TextureFormat format,
-                               int textureSlot,
-                               bool invertPixels = false);
+        static uint32_t loadTexture2D(const std::string& name,
+                               const std::string& filepath);
 
-        static int loadCubemap(Shader* shader_,
-                               const std::string& name,
-                               std::vector<std::string> filepaths,
-                               TextureFormat format,
-                               int textureSlot);
+        static uint32_t loadCubeMap(const std::string& name,
+                                    const std::vector<std::string>& filePaths);
 
-        static int createTexture(const std::string& name,
+        static uint32_t createTexture(const std::string& name,
                                  uint32_t hexColors,
-                                 glm::vec2 size,
-                                 int textureSlot = 0);
-        static int createTexture(const std::string& name,
+                                 glm::vec2 size);
+        static uint32_t createTexture(const std::string& name,
                                  glm::vec3 rgbColors,
-                                 glm::vec2 size,
-                                 int textureSlot = 0);
+                                 glm::vec2 size);
 
         /** Bind a texture by name */
-        static void bind(const std::string& name, Shader* shader = nullptr);
+        static void bind(const Shader& shader, const std::string& name, int textureSlot);
 
         /** Bind a texture by id */
-        static void bind(int id, Shader* shader = nullptr);
-
-        static void setShader(Shader* s) { shader = s; }
+        static void bind(const Shader& shader, int id, int textureSlot);
 
         static void clearTextures() { textures.clear(); }
 
@@ -91,7 +78,6 @@ namespace Framework {
     private:
         // TODO: textures should be a map. This forces their name to be unique.
         static std::vector<std::shared_ptr<Texture>> textures;
-        static Shader* shader;
     };
 
 } // Framework

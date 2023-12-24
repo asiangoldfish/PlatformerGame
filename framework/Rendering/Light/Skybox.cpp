@@ -74,7 +74,7 @@ namespace Framework {
 
         // Upload all required uniforms
         shader.setMat4("u_model", modelMatrix);
-        TextureManager::bind(textureId, &shader);
+        TextureManager::bind(shader, textureId, 0);
         RenderCommand::drawIndex(*vertexArray);
 
         glCullFace(GL_FRONT);

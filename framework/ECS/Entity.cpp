@@ -11,6 +11,8 @@
 //----------
 // Framework
 //----------
+#include "Log.h"
+
 // OpenGL
 #include "Buffers/VertexArray.h"
 #include "Buffers/VertexBuffer.h"
@@ -81,6 +83,7 @@ namespace Framework {
             // We allow the user to either upload a texture or set it by value
             // -----
             // Diffuse
+            /*
             if (material.getProperties().diffuseTextureId != -1) {
                 Framework::TextureManager::bind(material.getProperties().diffuseTextureId);
             } else if (material.getProperties().isDiffuseTextureSet()) {
@@ -98,6 +101,7 @@ namespace Framework {
             } else {
                 Framework::TextureManager::bind("no-texture-spec");
             }
+             */
 
             // Shininess
             shader->setFloat("u_material.shininess",

@@ -24,12 +24,16 @@ SokobanApplication* gApp = nullptr;
 // Function prototypes
 static void
 cursorPos_callback(GLFWwindow* window, double xpos, double ypos);
+
 static void
 cursorMouseButton_callback(GLFWwindow* window, int, int, int);
+
 static void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 static void
 mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 static void
 framebufferSize_callback(GLFWwindow* window, int width, int height);
 
@@ -66,54 +70,40 @@ SokobanApplication::init()
 
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
-    Framework::TextureManager::setShader(shader);
 
 #pragma region Textures
     Framework::TextureManager::createTexture(
-      "no-texture", glm::vec3(1.0f), { 1, 1 }, 0);
+      "no-texture", glm::vec3(1.0f), { 1, 1 });
     Framework::TextureManager::createTexture(
-      "no-texture-diff", glm::vec3(1.0f), { 1, 1 }, 0);
+      "no-texture-diff", glm::vec3(1.0f), { 1, 1 });
     Framework::TextureManager::createTexture(
-      "no-texture-spec", glm::vec3(0.5f), { 1, 1 }, 1);
+      "no-texture-spec", glm::vec3(0.5f), { 1, 1 });
 
     // Load metal plate textures
-    Framework::TextureManager::loadTexture(
+    Framework::TextureManager::loadTexture2D(
       "metal_plate_diff",
       TEXTURES_DIR +
-        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
+        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"));
 
-    Framework::TextureManager::loadTexture(
+    Framework::TextureManager::loadTexture2D(
       "metal_plate_spec",
       TEXTURES_DIR +
-        std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      1);
+        std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg"));
 
     // Coral stone
-    Framework::TextureManager::loadTexture(
+    Framework::TextureManager::loadTexture2D(
       "coral_stone_diff",
       TEXTURES_DIR +
-        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
+        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"));
 
-    Framework::TextureManager::loadTexture(
+    Framework::TextureManager::loadTexture2D(
       "coral_stone_spec",
       TEXTURES_DIR +
-        // Roughness is the inverse of spec
-        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      1);
+        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"));
 
     // Wall
-    Framework::TextureManager::loadTexture(
-      "wall",
-      TEXTURES_DIR +
-        std::string("wall.jpg"),
-      Framework::TextureManager::TextureFormat::Texture2D,
-      0);
+    Framework::TextureManager::loadTexture2D(
+      "wall", TEXTURES_DIR + std::string("wall.jpg"));
 
     getShader()->setInt("u_enableTexture", getEnableTexture());
     getShader()->setInt("u_material.diffuse", 0);
@@ -133,8 +123,8 @@ SokobanApplication::init()
     // -------
 
     // Backpack
-    backpackModel = Framework::Model(
-      RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
+    //    backpackModel = Framework::Model(
+    //      RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
 
     // ---------
     // Rendering
@@ -167,6 +157,10 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
+    testCube = new Cube(shader);
+    testCube->setPosition({ 0.0f, 0.0f, -3.0f });
+    testCube->setScale(1.0f);
+
     // Skybox
     auto faces = {
         TEXTURES_DIR + std::string("skybox/demo/right.jpg"),
@@ -176,12 +170,7 @@ SokobanApplication::init()
         TEXTURES_DIR + std::string("skybox/demo/front.jpg"),
         TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
     };
-    int skyboxId =
-      Framework::TextureManager::loadCubemap(skyboxShader,
-                                             "skybox_demo",
-                                             faces,
-                                             Framework::TextureManager::CubeMap,
-                                             0);
+    int skyboxId = Framework::TextureManager::loadCubeMap("skybox_demo", faces);
     skybox = new Framework::Skybox(skyboxId);
     skybox->setScale(700.0f);
     skybox->setPosition({ 0.0f, 0.0f, 0.0f });
@@ -204,13 +193,22 @@ SokobanApplication::run()
         skybox->draw(*skyboxShader);
 
         cameraController->setFarClip(100.0f);
-//        cameraController->update(*shader);
+
+        shader->bind();
+        cameraController->update(*shader);
+        shader->setFloat3("u_cameraPosition",
+                          getCameraController()->getPosition());
+        //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
+        Framework::TextureManager::bind(*shader, "wall", 0);
+        testCube->draw();
+
+        //        cameraController->update(*shader);
         //        shader->bind();
 
         //        cameraController->update(*shader);
 
         // Sun
-        sun.draw();
+        //        sun.draw();
 
         // Point light
         //        pointLight.draw();
@@ -226,8 +224,8 @@ SokobanApplication::run()
         // --------
         // Camera uploads
         // --------
-        map->update();
-        map->draw();
+        //        map->update();
+        //                map->draw(); // TODO: Fix bug
         //
         //        backpackModel.setScale(1.0f);
         //        backpackModel.setPosition(
@@ -246,6 +244,7 @@ SokobanApplication::shutdown()
     DELETE(map);
     DELETE(skybox);
     DELETE(skyboxShader);
+    DELETE(testCube);
 
     Framework::TextureManager::clearTextures();
 }

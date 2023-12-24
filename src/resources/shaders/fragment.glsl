@@ -103,7 +103,7 @@ vec4 renderColoredMode() {
     vec3 I = normalize(o_modelPosition - u_cameraPosition);
     vec3 R = reflect(I, normal);
 
-    return /* baseColor * vec4(result, 1.0) * */ vec4(texture(u_skybox, R).rgb, 1.0);
+    return baseColor; // * vec4(result, 1.0); //vec4(texture(u_skybox, R).rgb, 1.0);
 }
 
 vec4 renderDepthTestingMode(float nearClip, float farClip) {

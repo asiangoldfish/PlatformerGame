@@ -42,7 +42,7 @@ namespace Framework {
             //                                 name);
             //            }
 
-            TextureManager::bind(textures[i].id);
+            TextureManager::bind(shader, textures[i].id, 0);
         }
 
         glActiveTexture(GL_TEXTURE0);
@@ -257,11 +257,13 @@ namespace Framework {
                 } else if (type == aiTextureType_SPECULAR) {
                     slot = 1;
                 }
-                texture.id = TextureManager::loadTexture(
-                  str.C_Str(),
-                  directory + '/' + std::string(str.C_Str()),
-                  TextureManager::Texture2D,
-                  slot);
+                // TODO: Fix the below
+//                texture.id = TextureManager::loadTexture(
+//                    shader,
+//                  str.C_Str(),
+//                  directory + '/' + std::string(str.C_Str()),
+//                  TextureManager::Texture2D,
+//                  slot);
             } else {
                 texture.id = foundTexture->getTextureId();
             }
