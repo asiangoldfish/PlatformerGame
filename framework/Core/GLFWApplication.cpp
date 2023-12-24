@@ -42,7 +42,6 @@ namespace Framework {
         // NOTE: DO NOT run any GLFW functions after calling glfwTerminate()!!
         glfwDestroyWindow(window);
         glfwTerminate();
-//        std::cout << "Destructor: GLFW App" << std::endl;
     }
 
     bool GLFWApplication::init()

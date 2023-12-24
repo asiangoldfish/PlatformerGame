@@ -34,6 +34,8 @@ namespace Framework
         }
         [[nodiscard]] Frustum& getFrustum() { return frustum; }
 
+        void updateViewportSize(glm::vec2 size) override {}
+
     private:
         void computeViewMatrix() override;
 

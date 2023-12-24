@@ -62,6 +62,8 @@ namespace Framework {
         void computeProjectionMatrix();
         void update(Shader& shader) override;
 
+        void updateViewportSize(glm::vec2 size) override;
+
     protected:
         void computeViewMatrix() override;
 

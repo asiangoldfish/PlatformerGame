@@ -176,7 +176,7 @@ SokobanApplication::init()
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
 
-    INFO("SokobanApplication successfully initiated");
+    INFO("Client application successfully initialized");
 
     return true;
 }
@@ -363,25 +363,7 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 void
 framebufferSize_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
-
-    Framework::ref<Framework::PerspectiveCamera> camera =
-      gApp->getCameraController()->getPerspectiveCamera();
-
-    // Match the camera frustum's width and height to the new window size
-    Framework::PerspectiveCamera::Frustum frustum = camera->getFrustum();
-
-    frustum.width = static_cast<float>(width);
-    frustum.height = static_cast<float>(height);
-    camera->setFrustum(frustum);
-
-    // We must compute the projection matrix again for the change to take
-    // effect.
-    camera->computeProjectionMatrix();
-
+    // Update the glWindow size
     gApp->setWindowSize({ width, height });
-
-    INFO("Changed window size! Width: {} and height: {}",
-         camera->getFrustum().width,
-         camera->getFrustum().height);
+    gApp->getCameraController()->getPerspectiveCamera()->updateViewportSize({ width, height });
 }

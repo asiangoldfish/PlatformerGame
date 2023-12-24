@@ -68,6 +68,8 @@ namespace Framework {
         // -------------
         void setLookAtCenter(const glm::vec3& center) { lookAtCenter = center; }
 
+        virtual void updateViewportSize(glm::vec2 size) = 0;
+
     private:
         /**
          * @brief Computes the camera's front vector and view matrix
