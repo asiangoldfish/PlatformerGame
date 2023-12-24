@@ -33,6 +33,9 @@ namespace Framework {
         this->shader = shader;
         drawType = GL_DYNAMIC_DRAW;
 
+        auto i = std::move(indices);
+        auto v = std::move(vertices);
+
         auto entityAttribLayout = Framework::BufferLayout({
           { Framework::ShaderDataType::Float3, "a_position" },
           { Framework::ShaderDataType::Float4, "a_color" },
@@ -44,10 +47,10 @@ namespace Framework {
         vertexArray->bind();
 
         indexBuffer =
-          new Framework::IndexBuffer(indices.data(), indices.size());
+          new Framework::IndexBuffer(i.data(), i.size());
 
         vertexBuffer = new Framework::VertexBuffer(
-          vertices.data(), vertices.size() * sizeof(float), drawType);
+          v.data(), v.size() * sizeof(float), drawType);
 
         vertexBuffer->setLayout(entityAttribLayout);
         vertexArray->setIndexBuffer(indexBuffer);
