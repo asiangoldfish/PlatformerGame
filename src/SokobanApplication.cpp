@@ -71,35 +71,20 @@ SokobanApplication::init()
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
 
-#pragma region Textures
-    Framework::TextureManager::createTexture(
-      "no-texture", glm::vec3(1.0f), { 1, 1 });
-
-    // Load metal plate textures
     Framework::TextureManager::loadTexture2D(
-      "metal_plate_diff",
-      TEXTURES_DIR +
-        std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg"));
-
-    Framework::TextureManager::loadTexture2D(
-      "metal_plate_spec",
-      TEXTURES_DIR +
-        std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg"));
-
-    // Coral stone
-    Framework::TextureManager::loadTexture2D(
-      "coral_stone_diff",
-      TEXTURES_DIR +
-        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"));
-
-    Framework::TextureManager::loadTexture2D(
-      "coral_stone_spec",
-      TEXTURES_DIR +
-        std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg"));
-
-    // Wall
-    Framework::TextureManager::loadTexture2D(
-      "wall", TEXTURES_DIR + std::string("wall.jpg"));
+      { { "metal_plate_diff",
+          TEXTURES_DIR +
+            std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg") },
+        { "metal_plate_spec",
+          TEXTURES_DIR +
+            std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg") },
+        { "coral_stone_diff",
+          TEXTURES_DIR +
+            std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg") },
+        { "coral_stone_spec",
+          TEXTURES_DIR +
+            std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg") },
+        { "wall", TEXTURES_DIR + std::string("wall.jpg") } });
 
     getShader()->setInt("u_enableTexture", getEnableTexture());
     getShader()->setInt("u_material.diffuse", 0);

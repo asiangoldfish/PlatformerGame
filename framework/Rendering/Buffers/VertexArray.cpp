@@ -11,8 +11,6 @@ namespace Framework {
 
     VertexArray::~VertexArray()
     {
-        // TODO: Deallocate VAO, VBO and EBO
-//        std::cout << "Destructor: Vertex Array Buffer Object" << std::endl;
         glDeleteBuffers(1, &vertexArrayID);
     }
 

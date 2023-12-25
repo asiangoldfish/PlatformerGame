@@ -52,6 +52,15 @@ namespace Framework {
         return t->textureID;
     }
 
+
+    void TextureManager::loadTexture2D(
+      const std::initializer_list<TexturePath>& texturePath)
+    {
+        for (const auto& tex : texturePath) {
+            loadTexture2D(tex.name, tex.filePath);
+        }
+    }
+
     uint32_t TextureManager::loadCubeMap(
       const std::string& name,
       const std::vector<std::string>& filePaths)

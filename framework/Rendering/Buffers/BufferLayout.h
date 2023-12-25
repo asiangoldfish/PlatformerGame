@@ -9,7 +9,6 @@
 #include <vector>
 
 namespace Framework {
-
     /** An attribute for a Vertex Buffer Object. */
     struct BufferAttribute {
         BufferAttribute(
@@ -67,7 +66,7 @@ namespace Framework {
         uint32_t size;
 
         /** At what byte does this attribute start at. */
-        uint32_t offset;
+        int64_t offset;
 
         /** Should the attribute be normalized? */
         GLboolean normalized;

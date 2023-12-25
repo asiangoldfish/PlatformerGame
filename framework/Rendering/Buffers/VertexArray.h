@@ -57,13 +57,13 @@ namespace Framework {
 
     private:
         /** This VAO's ID. Used to reference it in GLAD functions */
-        GLuint vertexArrayID;
+        uint32_t vertexArrayID = 0;
 
         /** Container with VBOs associated with this VAO */
         std::vector<VertexBuffer*> vertexBuffers;
 
         /** This VAO's associated EBO. */
-        IndexBuffer* indexBuffer;
+        IndexBuffer* indexBuffer = nullptr;
     };
 }
 
