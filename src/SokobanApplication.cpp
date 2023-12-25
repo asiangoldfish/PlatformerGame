@@ -191,9 +191,7 @@ SokobanApplication::run()
         // ------
         // Delta time
         // ------
-        auto currentFrameTime = (float)glfwGetTime();
-        deltaTime = currentFrameTime - lastFrameTime;
-        lastFrameTime = currentFrameTime;
+        timer.updateDeltaTime();
 
         cameraController->setFarClip(701.0f);
         cameraController->update(*skyboxShader);
@@ -259,7 +257,7 @@ SokobanApplication::keyboardInput()
     // ----------
     Cube* player = (Cube*)map->getPlayer();
     float movementSpeed = 3.0f;
-    float moveBy = deltaTime * movementSpeed;
+    float moveBy = timer.getDeltaTime() * movementSpeed;
 
     // Up
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {

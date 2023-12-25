@@ -57,7 +57,6 @@ public:
         return cameraController;
     }
 
-    float getDeltaTime() const { return deltaTime; }
     [[nodiscard]] Framework::Shader* getShader() const { return shader; }
 
     // Textures
@@ -107,8 +106,8 @@ private:
     Framework::DirectionalLight sun;
     Framework::PointLight pointLight;
 
-    float deltaTime = 0.0f;
-    float lastFrameTime = 0.0f;
+    Framework::Timer timer;
+
     bool enableTexture = true;
 
     bool isRightButtonPressed = false;

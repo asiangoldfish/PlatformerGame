@@ -1,58 +1,99 @@
-#ifndef __TIMER_H__
-#define __TIMER_H__
+#pragma once
+
+#include "pch.h"
 
 namespace Framework {
     /**
-     * Measure time in milliseconds or seconds
+     * Measure time.
+     *
+     * @details Track time elapsed from certain place in code to another. The class can be instanced, so multiple timers can be
+     * used to track time.
+     *
+     * @details By default, time is measured in milliseconds. When using <u>update()</u>, make sure to pass in number of
+     * millimeters to increment time by.
+     *
+     * @example Get elapsed time during the game's runtime.
+     * @code
+     * void run() {
+     *     Timer timer;
+     *     while (true) {
+     *         timer.update(timer.getDeltaTime());
+     *         float elapsedTime = timer.getElapsedTimeInSeconds();
+     *     }
+     * }
+     * @endcode
+     *
+     * @details The <u>Timer</u> supports getting delta time between frames.
+     *
+     * @example
+     * @code
+     * void run() {
+     *     Timer timer;
+     *     while true {
+     *         timer.updateDeltaTime();
+     *         float delta = timer.getDeltaTime();
+     *     }
+     * }
+     * @endcode
      */
-	class Timer {
-	public:
+    class Timer
+    {
+    public:
         /**
          * Construct the Timer class
          */
-		Timer();
+        Timer() = default;
 
         /**
          * Destruct the timer class
          */
-		virtual ~Timer() = default;
-
-		/**
-		 * Run this function to update the Timer's logic.
-		 *
-		 * Hint: Call this function on every frame to get the most accurate
-		 * result.
-		 * @param timestep Time to update the total elapsed time by
-		 */
-		inline void update(const float timestep) { elapsedTime += timestep; }
+        virtual ~Timer() = default;
 
         /**
-         * Set the Timer's elapsed time to 0, effectively resetting it.
+         * Update the timer's currently elapsed time.
+         *
+         * @details Call this function on every frame to get the most accurate result.
+         *
+         * @param milliseconds Milliseconds to increment <u>elapsedTime</u> by.
          */
-		void resetTimer();
-
-		/**
-		 * Get time elapsed between the previous and the current frame.
-		 * @return Time before previous and current frame.
-		 */
-		inline float getDeltaTime() const { return deltaTime; }
+        inline void update(const float milliseconds) { elapsedTime += milliseconds; }
 
         /**
-         * Get time elapsed since Timer was constructed or reset.
-         * @return Time elapsed since constructed or reset.
+         * Update the timer's delta time.
+         *
+         * @details This function is ideally called at the beginning of every frame.
          */
-		inline float getElapsedTimeInSeconds() const { return elapsedTime; }
+        void updateDeltaTime();
 
-	private:
-        /** Absolute time at last frame */
-		float lastFrame;
+        /**
+         * Get the time from the last frame to the current frame.
+         */
+        inline float getDeltaTime() { return deltaTime; }
 
-        /** Time between current and last frame */
-        float deltaTime;
+        /**
+         * Reset the <u>elapsedTime</u> to 0.
+         */
+        inline void resetTimer() { elapsedTime = 0.0f ;}
 
+        /**
+         * Get time elapsed since it was last reset.
+         */
+        inline float getElapsedTimeInSeconds() const { return elapsedTime / 1000.0f; }
+
+        /**
+         * Get time elapsed since it was last reset.
+         */
+        inline float getElapsedTimeInMilliseconds() const { return elapsedTime; }
+
+    private:
         /** Time since constructed or reset */
         float elapsedTime = 0.0f;
-	};
-}
 
-#endif // __TIMER_H__
+        /** Absolute time at last frame */
+        float lastFrame = 0.0f;
+
+        /** Time between current and last frame */
+        float deltaTime = 0.0f;
+
+    };
+}
