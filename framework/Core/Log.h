@@ -75,4 +75,4 @@
  * can be to immediately crash the program to prevent data corruption or security vulnerabilities. These FATAL errors
  * must be fixed quickly as possible.
  */
-#define FATAL(...) spdlog::fatal(__VA_ARGS__); __breakpoint()
+#define FATAL(...) spdlog::critical(__VA_ARGS__); __breakpoint()
