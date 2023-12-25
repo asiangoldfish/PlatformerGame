@@ -95,7 +95,7 @@ SokobanApplication::init()
     // ------------
     // Map
     // ------------
-    map = new Map(shader);
+    map = Framework::createRef<Map>(shader);
     map->addNewMap("test", RESOURCES_DIR + std::string("/maps/level.map"));
     map->loadMap("test");
 
@@ -138,7 +138,7 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
-    testCube = new Cube(shader);
+    testCube = Framework::createRef<Cube>(shader);
     testCube->setPosition({ 0.0f, 0.0f, -3.0f });
     testCube->setScale(1.0f);
 
@@ -221,9 +221,6 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    Framework::DELETE(map);
-    Framework::DELETE(testCube);
-
     Framework::TextureManager::clearTextures();
 }
 

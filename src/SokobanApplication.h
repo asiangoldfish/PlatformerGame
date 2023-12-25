@@ -79,24 +79,18 @@ public:
     }
 
 private:
-    // ----------
-    // Entities
-    // ----------
-    Floor* floor = nullptr;
-
     // -----------
     // Textures and shaders
     // -----------
     Framework::ref<Framework::Shader> shader = nullptr;
-
     Framework::ref<Framework::Shader> skyboxShader = nullptr;
     Framework::ref<Framework::Skybox> skybox = nullptr;
 
     // -----------
     // Models
     // -----------
-    Framework::Model backpackModel;
-    Cube* testCube;
+    Framework::ref<Framework::Model> backpackModel;
+    Framework::ref<Cube> testCube;
 
     // -----------
     // Camera
@@ -115,7 +109,7 @@ private:
     // ---------------
     // Map
     // ---------------
-    Map* map = nullptr;
+    Framework::ref<Map> map;
 };
 
 #endif // SOKOBAN_APPLICATION_H
