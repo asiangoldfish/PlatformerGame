@@ -239,11 +239,11 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    DELETE(shader);
-    DELETE(map);
-    DELETE(skybox);
-    DELETE(skyboxShader);
-    DELETE(testCube);
+    Framework::DELETE(shader);
+    Framework::DELETE(map);
+    Framework::DELETE(skybox);
+    Framework::DELETE(skyboxShader);
+    Framework::DELETE(testCube);
 
     Framework::TextureManager::clearTextures();
 }

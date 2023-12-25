@@ -1,7 +1,6 @@
 #pragma once
 
 #include "pch.h"
-#include "Core.h"
 #include "Shader.h"
 #include "Camera.h"
 

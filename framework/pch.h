@@ -10,4 +10,5 @@
 
 #include <cstdlib>
 
+#include "Memory.h"
 #include "Core/Log.h"
