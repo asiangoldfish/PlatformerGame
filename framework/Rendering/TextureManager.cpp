@@ -7,7 +7,7 @@
 #include "Shader.h"
 
 namespace Framework {
-    std::vector<std::shared_ptr<Texture>> TextureManager::textures;
+    std::vector<ref<Texture>> TextureManager::textures;
 
     void TextureManager::bind(const std::string& name,
                               int textureSlot)
@@ -46,7 +46,7 @@ namespace Framework {
         // If a texture with the same filepath already exists, then don't load
         // it.
 
-        std::shared_ptr<Texture> t = std::make_shared<Texture>();
+        ref<Texture> t = createRef<Texture>();
         t->loadTexture2D(name, filepath);
         textures.push_back(t);
         return t->textureID;
@@ -65,7 +65,7 @@ namespace Framework {
             return 0;
         }
 
-        std::shared_ptr<Texture> t = std::make_shared<Texture>();
+        ref<Texture> t = createRef<Texture>();
         t->loadCubeMap(name, filePaths);
         textures.push_back(t);
         return t->textureID;
@@ -75,7 +75,7 @@ namespace Framework {
                                            uint32_t hexColors,
                                            glm::vec2 size)
     {
-        std::shared_ptr<Texture> t = std::make_shared<Texture>();
+        ref<Texture> t = createRef<Texture>();
         t->createTexture(name, hexColors, size);
         textures.push_back(t);
         return t->textureID;
@@ -85,7 +85,7 @@ namespace Framework {
                                            glm::vec3 rgbColors,
                                            glm::vec2 size)
     {
-        std::shared_ptr<Texture> t = std::make_shared<Texture>();
+        ref<Texture> t = createRef<Texture>();
         t->createTexture(name, rgbColors, size);
         textures.push_back(t);
         return t->textureID;
@@ -119,7 +119,7 @@ namespace Framework {
         return false;
     }
 
-    const std::vector<std::shared_ptr<Texture>>& TextureManager::getTextures()
+    const std::vector<ref<Texture>>& TextureManager::getTextures()
     {
         return textures;
     }

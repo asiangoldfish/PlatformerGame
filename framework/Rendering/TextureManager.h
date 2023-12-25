@@ -1,9 +1,7 @@
 #ifndef TEXTURE_MANAGER_H
 #define TEXTURE_MANAGER_H
 
-// C++ libraries
-#include <memory>
-#include <vector>
+#include "pch.h"
 
 // External
 #include <glm/glm.hpp>

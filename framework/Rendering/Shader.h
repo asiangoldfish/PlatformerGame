@@ -1,11 +1,11 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "pch.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
-#include <memory>
 #include "RenderCommands.h"
 
 namespace Framework {
@@ -15,10 +15,6 @@ namespace Framework {
      * The shader is responsible for determining the rules for what is rendered
      * on the screen.
      *
-     * The supported shaders are as follows:
-     * - Vertex Shader
-     * - Fragment Shader
-     *
      * The Shader does not support hot swapping shader source code, so they must
      * be passed on initialization. Upon initialization, they will be compiled
      * and the source code are discarded. Only the Shader Program remains and
@@ -27,25 +23,23 @@ namespace Framework {
     class Shader {
     public:
         /**
-         * @brief Create a shader
+         * @brief Create a new shader
+         *
          * @param vertexSrc Source to vertex shader
          * @param fragmentSrc Source to fragment shader
-         * @param isFilepath If true: source are file paths. If false: source
-         * are literal strings.
+         * @param isFilepath If true: source are file paths. If false: source are literal strings.
          * 
          * @example vertexSrc = R"(#version core 330 int main(){})"
         */
         Shader(
             const std::string& vertexSrc, 
-            const std::string &fragmentSrc, 
-            bool isFilepath=false
+            const std::string &fragmentSrc
         );
         virtual ~Shader();
 
         /**
-         * Bind the Shader.
-         * The Shader must be bound whenever it is used, like uploading data to
-         * the GPU.
+         * Bind the <u<Shader</u>.
+         * @details Whenever the <u>Shader</u> is bound must be bound whenever it is used, like uploading data to the GPU.
          */
         void bind() const;
         /** Unbind the shader. */
@@ -83,10 +77,9 @@ namespace Framework {
          * @example
          * auto shader = Framework::Shader::create(vertexSrc, fragSrc);
          */
-        static std::shared_ptr<Shader> create(const std::string& vertexSrc, 
-            const std::string &fragmentSrc, 
-            bool isFilepath = false) {
-            return std::make_shared<Shader>(vertexSrc, fragmentSrc, isFilepath);
+        static ref<Shader> create(const std::string& vertexSrc,
+            const std::string &fragmentSrc) {
+            return createRef<Shader>(vertexSrc, fragmentSrc);
         }
 
         /**

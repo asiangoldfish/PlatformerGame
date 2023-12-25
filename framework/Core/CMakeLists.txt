@@ -16,11 +16,14 @@ PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${MODULE_NAME} PRIVATE
+target_link_libraries(${MODULE_NAME}
+PRIVATE
     glfw
     glad
     glm
-    spdlog
 
     Rendering
+
+PUBLIC
+    spdlog
 )

@@ -62,13 +62,11 @@ SokobanApplication::init()
     // -----------
     shader = new Framework::Shader(
       RESOURCES_DIR + std::string("shaders/vertex.glsl"),
-      RESOURCES_DIR + std::string("shaders/fragment.glsl"),
-      true);
+      RESOURCES_DIR + std::string("shaders/fragment.glsl"));
 
     skyboxShader = new Framework::Shader(
       RESOURCES_DIR + std::string("shaders/skyboxVertex.glsl"),
-      RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"),
-      true);
+      RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"));
 
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
@@ -219,7 +217,6 @@ SokobanApplication::run()
         //        pointLight.draw();
         //        map->getPlayer()->setPosition(pointLight.getPosition());
 
-
         // --------
         // Camera uploads
         // --------
@@ -363,5 +360,6 @@ framebufferSize_callback(GLFWwindow* window, int width, int height)
 {
     // Update the glWindow size
     gApp->setWindowSize({ width, height });
-    gApp->getCameraController()->getPerspectiveCamera()->updateViewportSize({ width, height });
+    gApp->getCameraController()->getPerspectiveCamera()->updateViewportSize(
+      { width, height });
 }
