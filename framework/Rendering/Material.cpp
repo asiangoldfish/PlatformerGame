@@ -1,7 +1,5 @@
-//
-// Created by khai on 19/12/23.
-//
 #include "Material.h"
+#include "TextureManager.h"
 
 namespace Framework {
     Material::Material(const MaterialPreset& preset)
@@ -193,5 +191,16 @@ namespace Framework {
     {
         materialPreset = preset;
         updateBasedOnPreset();
+    }
+
+    void Material::draw(const Shader& shader)
+    {
+        shader.setFloat3("u_material.ambient", properties.ambient);
+        shader.setFloat3("u_material.diffuse", properties.diffuse);
+        shader.setFloat3("u_material.specular", properties.specular);
+        shader.setFloat("u_material.shininess", properties.shininess);
+
+        TextureManager::bind(properties.diffuseTextureId, 0);
+        TextureManager::bind(properties.specularTextureId, 1);
     }
 } // Framework
