@@ -28,7 +28,7 @@
 
 namespace Framework {
     // Make the entity drawable
-    void Entity::initDrawable(Framework::Shader* shader,
+    void Entity::initDrawable(Framework::ref<Framework::Shader> shader,
                               std::vector<float> vertices,
                               std::vector<uint32_t> indices)
     {

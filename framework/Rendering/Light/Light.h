@@ -40,14 +40,14 @@ namespace Framework {
          * Currently, the Framework only supports a single shader.
          * @param s Address of the shader to upload properties to.
          */
-        void setShader(Shader* s) { this->shader = s; }
+        void setShader(ref<Shader> s) { this->shader = s; }
 
         void setAmbient(const glm::vec3& a) { ambient = a; }
         void setDiffuse(const glm::vec3& d) { diffuse = d; }
         void setSpecular(const glm::vec3& s) { specular = s; }
 
     protected:
-        Shader* shader = nullptr;
+        ref<Shader> shader = nullptr;
 
         // Light attributes
         glm::vec3 ambient{ 1.0f };

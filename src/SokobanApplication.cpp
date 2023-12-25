@@ -60,11 +60,11 @@ SokobanApplication::init()
     // -----------
     // Textures and shaders
     // -----------
-    shader = new Framework::Shader(
+    shader = Framework::createRef<Framework::Shader>(
       RESOURCES_DIR + std::string("shaders/vertex.glsl"),
       RESOURCES_DIR + std::string("shaders/fragment.glsl"));
 
-    skyboxShader = new Framework::Shader(
+    skyboxShader = Framework::createRef<Framework::Shader>(
       RESOURCES_DIR + std::string("shaders/skyboxVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"));
 
@@ -152,7 +152,7 @@ SokobanApplication::init()
         TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
     };
     int skyboxId = Framework::TextureManager::loadCubeMap("skybox_demo", faces);
-    skybox = new Framework::Skybox(skyboxId);
+    skybox = Framework::createRef<Framework::Skybox>(skyboxId);
     skybox->setScale(700.0f);
     skybox->setPosition({ 0.0f, 0.0f, 0.0f });
 
@@ -221,10 +221,7 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    Framework::DELETE(shader);
     Framework::DELETE(map);
-    Framework::DELETE(skybox);
-    Framework::DELETE(skyboxShader);
     Framework::DELETE(testCube);
 
     Framework::TextureManager::clearTextures();

@@ -8,7 +8,7 @@
 #include "Shader.h"
 
 // Constructor
-Map::Map(Framework::Shader* shader)
+Map::Map(Framework::ref<Framework::Shader> shader)
 {
     this->shader = shader;
 

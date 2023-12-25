@@ -57,7 +57,7 @@ public:
         return cameraController;
     }
 
-    [[nodiscard]] Framework::Shader* getShader() const { return shader; }
+    [[nodiscard]] Framework::ref<Framework::Shader> getShader() { return shader; }
 
     // Textures
     bool getEnableTexture() const { return enableTexture; }
@@ -87,10 +87,10 @@ private:
     // -----------
     // Textures and shaders
     // -----------
-    Framework::Shader* shader = nullptr;
+    Framework::ref<Framework::Shader> shader = nullptr;
 
-    Framework::Shader* skyboxShader = nullptr;
-    Framework::Skybox* skybox = nullptr;
+    Framework::ref<Framework::Shader> skyboxShader = nullptr;
+    Framework::ref<Framework::Skybox> skybox = nullptr;
 
     // -----------
     // Models

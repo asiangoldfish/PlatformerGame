@@ -7,7 +7,7 @@ class Cube : public Framework::Entity
 {
 public:
     Cube() = default;
-    explicit Cube(Framework::Shader* shader)
+    explicit Cube(Framework::ref<Framework::Shader> shader)
     {
         initDrawable(shader, GeometricTools::UnitCubeGeometry3D(), GeometricTools::UnitCubeGeometry3DIndices());
     }

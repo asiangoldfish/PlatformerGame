@@ -20,7 +20,7 @@ public:
     /**
      * Default constructor
      */
-    explicit Map(Framework::Shader* shader);
+    explicit Map(Framework::ref<Framework::Shader> shader);
 
     /**
      * Delete all entities belonging to this map.
@@ -63,7 +63,7 @@ private:
     Framework::Entity* baseNode = nullptr;
     Framework::Entity* player = nullptr;
 
-    Framework::Shader* shader = nullptr;
+    Framework::ref<Framework::Shader> shader = nullptr;
 
     int height = 0;  ///< Map size in height
     int width = 0;   ///< Map size in width

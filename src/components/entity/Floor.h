@@ -11,7 +11,7 @@ class Floor : public Framework::Entity
 {
 public:
     Floor() = default;
-    Floor(Framework::Shader* shader, glm::vec2 tiling, glm::vec2 size)
+    Floor(Framework::ref<Framework::Shader> shader, glm::vec2 tiling, glm::vec2 size)
     {
         auto vertices = GeometricTools::UnitGridGeometry2D(
           tiling.x, tiling.y, size.x, size.y);

@@ -214,7 +214,7 @@ namespace Framework {
          * @param indices All indices. Used for the index buffer
          * @param drawType (default: GL_DYNAMIC_DRAW) Either static or dynamic
          */
-        void initDrawable(Framework::Shader* shader,
+        void initDrawable(ref<Shader> shader,
                           std::vector<float> vertices,
                           std::vector<uint32_t> indices);
 
@@ -241,11 +241,11 @@ namespace Framework {
         bool isDrawable = false;
 
     protected:
-        Framework::VertexArray* vertexArray = nullptr;
-        Framework::VertexBuffer* vertexBuffer = nullptr;
-        Framework::IndexBuffer* indexBuffer = nullptr;
+        VertexArray* vertexArray = nullptr;
+        VertexBuffer* vertexBuffer = nullptr;
+        IndexBuffer* indexBuffer = nullptr;
 
-        Framework::Shader* shader = nullptr;
+        ref<Shader> shader = nullptr;
 
         // Transformation
         glm::mat4 modelMatrix;
