@@ -57,13 +57,23 @@ namespace Framework {
         /**
          * Get the camera movement's speed.
          */
-        float getCameraSpeed() const { return cameraSpeed; }
+        float getMovementSpeed() const { return movementSpeed; }
 
         /**
          * Set the camera movement's speed.
          * @param speed New camera speed.
          */
-        void setCameraSpeed(const float speed) { cameraSpeed = speed; }
+        void setMovementSpeed(const float speed) { movementSpeed = speed; }
+
+        /**
+         * Get the camera's rotation speed.
+         */
+        float getRotationSpeed() const { return rotationSpeed; }
+
+        /**
+         * Set the camera's rotation speed.
+         */
+        float setRotationSpeed() { return rotationSpeed; }
 
         [[nodiscard]] float getNearClip();
         void setNearClip(const float near);
@@ -81,7 +91,8 @@ namespace Framework {
         bool degreesDirection = true;
         float degrees = 0.0f;
         float cameraDistance = 20.0f;
-        float cameraSpeed = 0.1f;
+        float movementSpeed = 0.1f;
+        float rotationSpeed = 0.1f;
         glm::vec3 worldCenter{ 0.0f };
     };
 }

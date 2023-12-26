@@ -68,9 +68,6 @@ SokobanApplication::init()
       RESOURCES_DIR + std::string("shaders/skyboxVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"));
 
-    // We only have one shader in the application, so we only bind it here.
-    shader->bind();
-
     Framework::TextureManager::loadTexture2D(
       { { "metal_plate_diff",
           TEXTURES_DIR +
@@ -86,6 +83,8 @@ SokobanApplication::init()
             std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg") },
         { "wall", TEXTURES_DIR + std::string("wall.jpg") } });
 
+    // We only have one shader in the application, so we only bind it here.
+    shader->bind();
     getShader()->setInt("u_enableTexture", getEnableTexture());
     getShader()->setInt("u_material.diffuse", 0);
     getShader()->setInt("u_material.specular", 1);
@@ -116,6 +115,7 @@ SokobanApplication::init()
     //    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
     cameraController->setPosition({ 0.0f, 0.0f, 0.0f });
     cameraController->rotate({ -90.0f, 0.0f });
+    cameraController->setMovementSpeed(5.0f);
 
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -186,9 +186,10 @@ SokobanApplication::run()
         cameraController->update(*shader);
         shader->setFloat3("u_cameraPosition",
                           getCameraController()->getPosition());
+
         //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
-        Framework::TextureManager::bind("wall", 0);
-        testCube->draw();
+        //        Framework::TextureManager::bind("wall", 0);
+        //        testCube->draw();
 
         //        cameraController->update(*shader);
         //        shader->bind();
@@ -205,9 +206,9 @@ SokobanApplication::run()
         // --------
         // Camera uploads
         // --------
-        //        map->update();
-        //                map->draw(); // TODO: Fix bug
-        //
+        map->update();
+        map->draw(); // TODO: Fix bug
+
         //        backpackModel.setScale(1.0f);
         //        backpackModel.setPosition(
         //          { pointLight.getPosition().x,
@@ -281,7 +282,7 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
         glm::vec2 rotation =
           glm::vec2{ xpos - gApp->getWindowSize().x / 2,
                      ypos - gApp->getWindowSize().y / 2 } *
-          glm::vec2(gApp->getCameraController()->getCameraSpeed());
+          glm::vec2(gApp->getCameraController()->getRotationSpeed());
 
         gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
 
