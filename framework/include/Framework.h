@@ -10,6 +10,7 @@
 #include "Log.h"
 #include "Timer.h"
 #include "assertions.h"
+#include "EntryPoint.h"
 
 // Geometric Tools
 #include "GeometricTools.h"

@@ -1,7 +1,6 @@
 project(MyApplication)
 
 add_executable(${PROJECT_NAME}
-    main.cpp
     SokobanApplication.h
     SokobanApplication.cpp
 )

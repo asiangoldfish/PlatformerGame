@@ -188,7 +188,7 @@ SokobanApplication::run()
 
         //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
         FW::TextureManager::bind("wall", 0);
-                testCube->draw();
+        testCube->draw();
 
         //        cameraController->update(*shader);
         //        shader->bind();
@@ -205,8 +205,8 @@ SokobanApplication::run()
         // --------
         // Camera uploads
         // --------
-//        map->update();
-//        map->draw(); // TODO: Fix bug
+        //        map->update();
+        //        map->draw(); // TODO: Fix bug
 
         //        backpackModel.setScale(1.0f);
         //        backpackModel.setPosition(
@@ -216,12 +216,6 @@ SokobanApplication::run()
 
         glfwSwapBuffers(getWindow());
     }
-}
-
-void
-SokobanApplication::shutdown()
-{
-    FW::TextureManager::clearTextures();
 }
 
 /** Keyboard input function. Called every frame */
@@ -254,6 +248,11 @@ SokobanApplication::keyboardInput()
     if (glfwGetKey(getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
         cameraController->moveUp(-moveBy);
     }
+}
+
+SokobanApplication::~SokobanApplication()
+{
+    FW::TextureManager::clearTextures();
 }
 
 // Source: https://www.glfw.org/docs/3.3/input_guide.html#cursor_pos

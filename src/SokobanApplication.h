@@ -37,15 +37,12 @@ public:
     {
     }
 
-    ~SokobanApplication() override = default;
+    virtual ~SokobanApplication();
 
     /** Initialize the application. Must be called before using it */
     bool init() override;
     /** Game loop. Runs until the application quits. */
     void run() override;
-    /** Shutdown procedure. Must be called before deleting the Sokoban
-     * Application object. */
-    void shutdown() override;
 
     // ---------
     // Camera and rendering
@@ -97,3 +94,8 @@ private:
 
     FW::ref<Map> map;
 };
+
+FW::GLFWApplication* FW::createApplication()
+{
+    return new SokobanApplication("Game", "1.0.0", { 1280, 720 });
+}

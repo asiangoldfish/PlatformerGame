@@ -140,12 +140,6 @@ namespace FW {
         virtual void run() = 0;
 
         /**
-         * Clean up resources before terminating GLFW and killing the
-         * application process.
-         */
-        virtual void shutdown() = 0;
-
-        /**
          * Return the window this application runs in.
          *
          * @details Currently the application supports only window.
@@ -186,4 +180,6 @@ namespace FW {
         /** The current window size. This is the <u>GLFWwindow</u>, not the viewport size */
         glm::vec2 windowSize;
     };
+
+    GLFWApplication* createApplication();
 } // FW

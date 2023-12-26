@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME} STATIC
     GLFWApplication.cpp
     assertions.h            assertions.cpp
     Timer.h                 Timer.cpp
+    EntryPoint.h            EntryPoint.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
