@@ -1,5 +1,4 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#pragma once
 
 // C++ libraries
 #include <memory>
@@ -58,5 +57,3 @@ namespace Framework {
         bool enable = true;
     };
 }
-
-#endif // LIGHT_H

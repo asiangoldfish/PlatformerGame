@@ -2,8 +2,7 @@
  * Header only file that contains rendering commands
  */
 
-#ifndef RENDER_COMMANDS_H
-#define RENDER_COMMANDS_H
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -152,5 +151,3 @@ namespace RenderCommand {
         currentlyUsedDepthFunc = func;
     }
 }
-
-#endif // RENDER_COMMANDS_H

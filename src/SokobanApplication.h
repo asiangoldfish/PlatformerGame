@@ -1,5 +1,4 @@
-#ifndef SOKOBAN_APPLICATION_H
-#define SOKOBAN_APPLICATION_H
+#pragma once
 
 #include <string>
 #include <memory>
@@ -111,5 +110,3 @@ private:
     // ---------------
     Framework::ref<Map> map;
 };
-
-#endif // SOKOBAN_APPLICATION_H

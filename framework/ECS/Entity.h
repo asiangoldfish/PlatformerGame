@@ -1,5 +1,4 @@
-#ifndef LAB_ENTITY_H
-#define LAB_ENTITY_H
+#pragma once
 
 // C libraries
 #include <cstdint>
@@ -274,4 +273,3 @@ namespace Framework {
         Material material;
     };
 } // Framework
-#endif // LAB_ENTITY_H

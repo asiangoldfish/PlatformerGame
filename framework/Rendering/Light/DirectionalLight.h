@@ -1,5 +1,4 @@
-#ifndef PLATFORMERGAME_DIRECTIONALLIGHT_H
-#define PLATFORMERGAME_DIRECTIONALLIGHT_H
+#pragma once
 
 // External libraries
 #include <glm/glm.hpp>
@@ -34,5 +33,3 @@ namespace Framework {
     };
 
 } // Rendering
-
-#endif // PLATFORMERGAME_DIRECTIONALLIGHT_H

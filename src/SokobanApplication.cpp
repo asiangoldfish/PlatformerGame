@@ -188,8 +188,8 @@ SokobanApplication::run()
                           getCameraController()->getPosition());
 
         //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
-        //        Framework::TextureManager::bind("wall", 0);
-        //        testCube->draw();
+                Framework::TextureManager::bind("wall", 0);
+                testCube->draw();
 
         //        cameraController->update(*shader);
         //        shader->bind();
@@ -206,8 +206,8 @@ SokobanApplication::run()
         // --------
         // Camera uploads
         // --------
-        map->update();
-        map->draw(); // TODO: Fix bug
+//        map->update();
+//        map->draw(); // TODO: Fix bug
 
         //        backpackModel.setScale(1.0f);
         //        backpackModel.setPosition(

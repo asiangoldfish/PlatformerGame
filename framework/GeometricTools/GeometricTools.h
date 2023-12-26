@@ -1,5 +1,4 @@
-#ifndef GEOMETRIC_TOOLS_H
-#define GEOMETRIC_TOOLS_H
+#pragma once
 
 /**
  * The GeometricTools module provides geometries with attributes like position
@@ -294,5 +293,3 @@ namespace GeometricTools {
         return UnitCubeGeometry3DIndices();
     }
 }
-
-#endif // GEOMETRIC_TOOLS_H

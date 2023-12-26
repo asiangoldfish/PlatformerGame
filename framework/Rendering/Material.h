@@ -139,5 +139,4 @@ namespace Framework {
         MaterialPreset materialPreset = MaterialPreset::CUSTOM;
         MaterialProperties properties;
     };
-
 } // Framework

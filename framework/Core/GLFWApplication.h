@@ -1,7 +1,6 @@
-#ifndef __GLFW_APPLICATION_H__
-#define __GLFW_APPLICATION_H__
+#pragma once
 
-#include <string>
+#include "pch.h"
 
 #define GLFW_INCLUDE_NONE
 
@@ -188,5 +187,3 @@ namespace Framework {
         glm::vec2 windowSize;
     };
 }
-
-#endif // __GLFW_APPLICATION_H__

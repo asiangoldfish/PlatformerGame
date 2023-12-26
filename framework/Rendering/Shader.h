@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include "pch.h"
 #include <string>
@@ -105,5 +104,3 @@ namespace Framework {
         GLuint shaderProgram;
     };
 }
-
-#endif // SHADER_H

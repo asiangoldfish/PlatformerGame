@@ -1,5 +1,4 @@
-#ifndef BUFFERLAYOUT_H
-#define BUFFERLAYOUT_H
+#pragma once
 
 #include "BufferLayout.h"
 #include "ShaderDataTypes.h"
@@ -145,5 +144,3 @@ namespace Framework {
         GLuint stride = 0;
     };
 }
-
-#endif // BUFFERLAYOUT_H

@@ -4,8 +4,7 @@
  * framework.
  */
 
-#ifndef SHADER_DATATYPES_H
-#define SHADER_DATATYPES_H
+#pragma once
 
 #include <glad/glad.h>
 
@@ -78,5 +77,3 @@ namespace Framework {
         return 0;
     }
 }
-
-#endif // SHADER_DATATYPES_H

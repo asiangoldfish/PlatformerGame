@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 // C++ libraries
 #include <string>
@@ -46,12 +45,14 @@ namespace Framework {
      * Currently, the Texture only supports RGB and RGBA 8-bit channels.
      *
      */
-    class Texture {
+    class Texture
+    {
     public:
         /**
          * The texture's format.
          */
-        enum TextureType {
+        enum TextureType
+        {
             Texture2D = 0,
             CubeMap,
             WhiteTexture
@@ -67,7 +68,7 @@ namespace Framework {
          * @return Texture ID that also can be used to identify the texture
          * with.
          */
-        uint32_t createTexture(const std::string &name_,
+        uint32_t createTexture(const std::string& name_,
                                uint32_t hexColor = 0xFFFFFF,
                                glm::vec2 size = glm::vec2(1.0f));
 
@@ -80,7 +81,7 @@ namespace Framework {
          * @return Texture ID that also can be used to identify the texture
          * with.
          */
-        uint32_t createTexture(const std::string &name,
+        uint32_t createTexture(const std::string& name,
                                glm::vec3 color = glm::vec3(0.0f),
                                glm::vec2 size = glm::vec2(1.0f));
 
@@ -96,8 +97,8 @@ namespace Framework {
          * TextureManager.
          * @param filepath Filepath to load the texture from disk.
          */
-        uint32_t loadTexture2D(const std::string &name,
-                               const std::string &filepath);
+        uint32_t loadTexture2D(const std::string& name,
+                               const std::string& filepath);
 
         /**
          * Load a cube map from disk.
@@ -113,8 +114,8 @@ namespace Framework {
          * @param filePath File path to the texture on disk. This one texture
          * is projected for all the cube's faces.
          */
-        uint32_t loadCubeMap(const std::string &name,
-                             const std::string &filePath);
+        uint32_t loadCubeMap(const std::string& name,
+                             const std::string& filePath);
 
         /**
          * Load a cube map from disk.
@@ -130,8 +131,8 @@ namespace Framework {
          * @param filePaths File paths to the texture on disk. The order
          * of the paths matters and is FIFO.
          */
-        uint32_t loadCubeMap(const std::string &name,
-                             const std::vector<std::string> &filePaths);
+        uint32_t loadCubeMap(const std::string& name,
+                             const std::vector<std::string>& filePaths);
 
         /**
          * Bind the texture.
@@ -142,12 +143,14 @@ namespace Framework {
          * @param textureSlot The texture slot or unit to bind to. Internally,
          * <i>glActiveTexture(GL_TEXTURE0 + i)</i> is called.
          *
-         * @warning If the texture slot is less than 0, a warning is printed on console.
+         * @warning If the texture slot is less than 0, a warning is printed on
+         * console.
          */
         void bind(int textureSlot) const;
 
         /** Get the texture's file path on disk. */
-        [[nodiscard]] const std::string &getFilepath() const {
+        [[nodiscard]] const std::string& getFilepath() const
+        {
             return filepath;
         }
 
@@ -155,7 +158,7 @@ namespace Framework {
         [[nodiscard]] uint32_t getTextureId() const { return textureID; }
 
         /** Get the texture's name */
-        [[nodiscard]] const std::string &getName() const { return name; }
+        [[nodiscard]] const std::string& getName() const { return name; }
 
         /**
          * Construct Texture.
@@ -194,5 +197,3 @@ namespace Framework {
         GLenum textureTarget = 0;
     };
 }
-
-#endif // TEXTURE_H

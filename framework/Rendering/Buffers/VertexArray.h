@@ -1,5 +1,4 @@
-#ifndef VERTEX_ARRAY_H
-#define VERTEX_ARRAY_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -66,6 +65,3 @@ namespace Framework {
         IndexBuffer* indexBuffer = nullptr;
     };
 }
-
-
-#endif // VERTEX_ARRAY_H

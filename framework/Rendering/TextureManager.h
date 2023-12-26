@@ -1,5 +1,4 @@
-#ifndef TEXTURE_MANAGER_H
-#define TEXTURE_MANAGER_H
+#pragma once
 
 #include "pch.h"
 
@@ -203,5 +202,3 @@ namespace Framework {
     };
 
 } // Framework
-
-#endif // TEXTURE_MANAGER_H

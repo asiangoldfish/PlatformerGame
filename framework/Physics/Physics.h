@@ -1,5 +1,4 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#pragma once
 
 //#include "pch.h"
 //#include "Entity.h"
@@ -15,5 +14,3 @@ namespace Framework {
 //    bool isOverlapping(Entity& target, Entity* allEntities, uint32_t n);
 //    bool isOverlapping(Entity& entityA, Entity& entityB);
 } // Framework
-
-#endif // PHYSICS_H

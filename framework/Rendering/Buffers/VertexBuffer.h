@@ -1,5 +1,4 @@
-#ifndef VERTEX_BUFFER_H
-#define VERTEX_BUFFER_H
+#pragma once
 
 #include "glad/glad.h"
 #include "BufferLayout.h"
@@ -42,5 +41,3 @@ namespace Framework {
         BufferLayout layout;
     };
 }
-
-#endif // VERTEX_BUFFER_H

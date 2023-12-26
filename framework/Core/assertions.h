@@ -5,8 +5,7 @@
  * The functions in this file should be stripped out before release.
  */
 
-#ifndef __ASSERTIONS_H__
-#define __ASSERTIONS_H__
+#pragma once
 
 #include <iostream>
 
@@ -32,5 +31,3 @@ void framework_assert(std::string msg = "");
  * @param msg Debug message to print on console.
  */
 void framework_warn(std::string msg);
-
-#endif // __ASSERTIONS_H__

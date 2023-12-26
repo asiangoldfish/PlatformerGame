@@ -1,5 +1,4 @@
-#ifndef INDEX_BUFFER_H
-#define INDEX_BUFFER_H
+#pragma once
 
 #include "glad/glad.h"
 #include <memory>
@@ -52,5 +51,3 @@ namespace Framework {
         GLuint count;
     };
 }
-
-#endif // INDEX_BUFFER_H

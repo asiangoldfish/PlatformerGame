@@ -1,5 +1,4 @@
-#ifndef PLATFORMERGAME_POINTLIGHT_H
-#define PLATFORMERGAME_POINTLIGHT_H
+#pragma once
 
 #include "Light.h"
 
@@ -36,5 +35,3 @@ namespace Framework {
     };
 
 } // Rendering
-
-#endif // PLATFORMERGAME_POINTLIGHT_H
