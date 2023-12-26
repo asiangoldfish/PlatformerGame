@@ -6,10 +6,9 @@
 class Cube : public FW::Entity
 {
 public:
-    Cube() = default;
-    explicit Cube(FW::ref<FW::Shader> shader)
+    explicit Cube()
     {
-        initDrawable(shader, FW::UnitCubeGeometry3D(), FW::UnitCubeGeometry3DIndices());
+        initDrawable(FW::UnitCubeGeometry3D(), FW::UnitCubeGeometry3DIndices());
     }
 
     glm::vec4 getOriginalColor() & { return originalColor; }

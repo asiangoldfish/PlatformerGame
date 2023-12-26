@@ -23,7 +23,7 @@ namespace FW {
         ~Light() = default;
 
         /** Draw the light caster. */
-        virtual void draw() = 0;
+        virtual void draw(const ref<Shader>& shader) = 0;
 
         /**
          * Set whether this light should be active.

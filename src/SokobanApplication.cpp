@@ -4,19 +4,12 @@
 
 #include "SokobanApplication.h"
 
-// Standard libraries
-#include <algorithm>
-#include <string>
-
 // Framework API
 #include "Framework.h"
 
 // App Components
 #include "Cube.h"
-#include "Floor.h"
 #include "Map.h"
-
-#define TIMEOFDAY glm::radians((float)glfwGetTime() * dayNightCycleSpeed)
 
 SokobanApplication* gApp = nullptr;
 
@@ -88,22 +81,22 @@ SokobanApplication::init()
     getShader()->setInt("u_material.diffuse", 0);
     getShader()->setInt("u_material.specular", 1);
 
-#pragma endregion
-
     // ------------
     // Map
     // ------------
-    map = FW::createRef<Map>(shader);
+    map = FW::createRef<Map>();
     map->addNewMap("test", RESOURCES_DIR + std::string("/maps/level.map"));
     map->loadMap("test");
 
-    // -------
+    // -------------
     // Entities
-    // -------
-
-    // Backpack
-    //    backpackModel = Framework::Model(
-    //      RESOURCES_DIR + std::string("models/backpack/backpack.obj"));
+    // -------------
+    player = FW::createRef<Cube>();
+    player->setScale(0.8f);
+    player->setPosition({ 2, -5, 1 });
+    player->getMaterial().getProperties().diffuseTextureId =
+      FW::TextureManager::getTextureID("metal_plate_diff");
+    player->setMaterial(FW::MaterialPreset::CHROME);
 
     // ---------
     // Rendering
@@ -111,10 +104,10 @@ SokobanApplication::init()
     // Configure camera
     cameraController =
       FW::createRef<FW::CameraController>(FW::CameraType::PERSPECTIVE);
-    //    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
-    cameraController->setPosition({ 0.0f, 0.0f, 0.0f });
+    cameraController->getPerspectiveCamera()->setEnablePanning(true);
+    cameraController->setPosition({ 6.0f, -4.0f, 7.0f });
     cameraController->rotate({ -90.0f, 0.0f });
-    cameraController->setMovementSpeed(5.0f);
+    cameraController->setMovementSpeed(21.0f);
 
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -137,7 +130,7 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
-    testCube = FW::createRef<Cube>(shader);
+    testCube = FW::createRef<Cube>();
     testCube->setPosition({ 0.0f, 0.0f, -3.0f });
     testCube->setScale(1.0f);
 
@@ -153,13 +146,11 @@ SokobanApplication::init()
     int skyboxId = FW::TextureManager::loadCubeMap("skybox_demo", faces);
     skybox = FW::createRef<FW::Skybox>(skyboxId);
     skybox->setScale(700.0f);
-    skybox->setPosition({ 0.0f, 0.0f, 0.0f });
 
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
 
     INFO("Client application successfully initialized");
-
     return true;
 }
 
@@ -170,49 +161,32 @@ SokobanApplication::run()
         RenderCommand::clear();
         glfwPollEvents();
         keyboardInput();
-        // ------
-        // Delta time
-        // ------
         timer.updateDeltaTime();
 
         cameraController->setFarClip(701.0f);
-        cameraController->update(*skyboxShader);
-        skybox->draw(*skyboxShader);
+        cameraController->update(skyboxShader);
+        skybox->draw(skyboxShader);
 
         cameraController->setFarClip(100.0f);
 
         shader->bind();
-        cameraController->update(*shader);
+        cameraController->update(shader);
         shader->setFloat3("u_cameraPosition",
                           getCameraController()->getPosition());
 
-        //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
-        FW::TextureManager::bind("wall", 0);
-        testCube->draw();
-
-        //        cameraController->update(*shader);
-        //        shader->bind();
-
-        //        cameraController->update(*shader);
-
         // Sun
-        //        sun.draw();
-
-        // Point light
-        //        pointLight.draw();
-        //        map->getPlayer()->setPosition(pointLight.getPosition());
+        sun.draw(shader);
 
         // --------
         // Camera uploads
         // --------
-        //        map->update();
-        //        map->draw(); // TODO: Fix bug
+        map->update();
+        map->draw(shader);
 
-        //        backpackModel.setScale(1.0f);
-        //        backpackModel.setPosition(
-        //          { pointLight.getPosition().x,
-        //          pointLight.getPosition().y, 5.0f });
-        //        backpackModel.draw(*shader);
+        cameraController->setPosition({ player->getPosition().x,
+                                        player->getPosition().y + 0.25f,
+                                        cameraController->getPosition().z });
+        player->draw(shader);
 
         glfwSwapBuffers(getWindow());
     }
@@ -222,20 +196,36 @@ SokobanApplication::run()
 void
 SokobanApplication::keyboardInput()
 {
+    float moveBy = timer.getDeltaTime();
+
     // ----------
     // Player movement
     // ----------
-    Cube* player = (Cube*)map->getPlayer();
-    float movementSpeed = 3.0f;
-    float moveBy = timer.getDeltaTime() * movementSpeed;
+    float playerMovementSpeed = moveBy * 3.f;
+    if (glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
+        player->move({ 0, playerMovementSpeed, 0 });
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+        player->move({ 0, -playerMovementSpeed, 0 });
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+        player->move({ playerMovementSpeed, 0, 0 });
+    }
+    if (glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
+        player->move({ -playerMovementSpeed, 0, 0 });
+    }
 
-    // Up
+    // ----------
+    // Camera movement
+    // ----------
+    /*
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
         cameraController->moveForward(moveBy);
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
         cameraController->moveForward(-moveBy);
     }
+
     if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
         cameraController->moveSideway(moveBy);
     }
@@ -248,6 +238,7 @@ SokobanApplication::keyboardInput()
     if (glfwGetKey(getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
         cameraController->moveUp(-moveBy);
     }
+    */
 }
 
 SokobanApplication::~SokobanApplication()
@@ -259,6 +250,7 @@ SokobanApplication::~SokobanApplication()
 void
 cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    /*
     // Move camera rotation
     if (gApp && gApp->getIsRightButtonPressed()) {
         // Cursor is hidden and within window bounds
@@ -287,12 +279,13 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
         glfwSetCursorPos(
           window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
     }
+     */
 }
 
 void
 mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    gApp->getCameraController()->moveForward(yoffset);
+    gApp->getCameraController()->moveForward(yoffset * 0.1f);
 }
 
 // Source: https://www.glfw.org/docs/3.0/group__input.html
@@ -316,8 +309,8 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
     }
 }
 
-/* Keyboard input function. Used as callback function and is used in OpenGL's
- * input polling system. */
+/* Keyboard input function. Used as callback function and is used in
+ * OpenGL's input polling system. */
 void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

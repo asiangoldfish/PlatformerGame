@@ -32,7 +32,7 @@ namespace FW {
             return projectionMatrix;
         }
 
-        virtual void update(Shader& shader) = 0;
+        virtual void update(const ref<Shader>& shader) = 0;
 
         // -------------
         // Camera Movement
@@ -88,7 +88,7 @@ namespace FW {
         // When enablePanning is off, determine where the camera should look at
         glm::vec3 lookAtCenter = glm::vec3(0.0f);
 
-        bool enablePanning = true;
+        bool enablePanning = false;
     };
 
 }

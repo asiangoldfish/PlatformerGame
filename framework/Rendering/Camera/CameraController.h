@@ -37,7 +37,7 @@ namespace FW {
         }
 
         /** Upload data to the GPU */
-        void update(Shader& shader);
+        void update(const ref<Shader>& shader);
 
         /**
          * Rotate the camera.
@@ -73,7 +73,7 @@ namespace FW {
         /**
          * Set the camera's rotation speed.
          */
-        float setRotationSpeed() { return rotationSpeed; }
+        void setRotationSpeed(const float s) { rotationSpeed = s; }
 
         [[nodiscard]] float getNearClip();
         void setNearClip(const float near);

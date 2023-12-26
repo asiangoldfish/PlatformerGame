@@ -28,11 +28,9 @@
 
 namespace FW {
     // Make the entity drawable
-    void Entity::initDrawable(FW::ref<FW::Shader> shader,
-                              std::vector<float> vertices,
+    void Entity::initDrawable(std::vector<float> vertices,
                               std::vector<uint32_t> indices)
     {
-        this->shader = shader;
         drawType = GL_DYNAMIC_DRAW;
 
         auto i = std::move(indices);
@@ -48,11 +46,10 @@ namespace FW {
         vertexArray = new FW::VertexArray();
         vertexArray->bind();
 
-        indexBuffer =
-          new FW::IndexBuffer(i.data(), i.size());
+        indexBuffer = new FW::IndexBuffer(i.data(), static_cast<int>(i.size()));
 
-        vertexBuffer = new FW::VertexBuffer(
-          v.data(), v.size() * sizeof(float), drawType);
+        vertexBuffer =
+          new FW::VertexBuffer(v.data(), static_cast<int>(v.size()) * sizeof(float), drawType);
 
         vertexBuffer->setLayout(entityAttribLayout);
         vertexArray->setIndexBuffer(indexBuffer);
@@ -66,11 +63,10 @@ namespace FW {
     }
 
     // Draw itself and all child nodes.
-    void Entity::draw()
+    void Entity::draw(const ref<Shader>& shader)
     {
         if (isDrawable) {
             shader->bind();
-            // Upload all required uniforms
             shader->setMat4("u_model", modelMatrix);
             shader->setFloat4("u_color", color);
 
@@ -83,23 +79,18 @@ namespace FW {
             // We allow the user to either upload a texture or set it by value
             // -----
             // Diffuse
-            /*
-            if (material.getProperties().diffuseTextureId != -1) {
-                Framework::TextureManager::bind(material.getProperties().diffuseTextureId);
-            } else if (material.getProperties().isDiffuseTextureSet()) {
-                Framework::TextureManager::bind(
-                  material.getProperties().diffuseTextureName);
-            } else {
-                Framework::TextureManager::bind("no-texture-diff");
-            }
+            FW::TextureManager::bind(material.getProperties().diffuseTextureId,
+                                     0);
+
             // Specular
+            /*
             if (material.getProperties().specularTextureId != -1) {
-                Framework::TextureManager::bind(material.getProperties().specularTextureId);
+                FW::TextureManager::bind(material.getProperties().specularTextureId);
             } else if (material.getProperties().isSpecularTextureSet()) {
-                Framework::TextureManager::bind(
+                FW::TextureManager::bind(
                   material.getProperties().specularTextureName);
             } else {
-                Framework::TextureManager::bind("no-texture-spec");
+                FW::TextureManager::bind("no-texture-spec");
             }
              */
 
@@ -111,7 +102,7 @@ namespace FW {
         }
 
         for (const auto& child : children) {
-            child->draw();
+            child->draw(shader);
         }
     }
 

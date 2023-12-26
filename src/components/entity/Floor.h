@@ -17,7 +17,7 @@ public:
           tiling.x, tiling.y, size.x, size.y);
 
         auto indices = FW::UnitGridIndices2D(tiling.x * tiling.y);
-        initDrawable(shader, vertices, indices);
+        initDrawable(vertices, indices);
     }
 
     virtual ~Floor() = default;

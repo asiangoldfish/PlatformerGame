@@ -20,7 +20,7 @@ public:
     /**
      * Default constructor
      */
-    explicit Map(FW::ref<FW::Shader> shader);
+    Map();
 
     /**
      * Delete all entities belonging to this map.
@@ -37,7 +37,7 @@ public:
     /**
      * Draw the entity tree
      */
-    void draw();
+    void draw(const FW::ref<FW::Shader>& shader);
 
     /**
      * Adds a new map. This can be loaded with loadMap()
@@ -62,8 +62,6 @@ private:
     std::map<std::string, std::string> mapsCollection;
     FW::Entity* baseNode = nullptr;
     FW::Entity* player = nullptr;
-
-    FW::ref<FW::Shader> shader = nullptr;
 
     int height = 0;  ///< Map size in height
     int width = 0;   ///< Map size in width

@@ -5,7 +5,5 @@
 #include "SpotLight.h"
 
 namespace FW {
-    void SpotLight::draw() {
-
-    }
-} // Framework
+    void SpotLight::draw(const ref<Shader>&) {}
+} // FW

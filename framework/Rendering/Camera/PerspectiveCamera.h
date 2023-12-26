@@ -60,7 +60,7 @@ namespace FW {
         }
 
         void computeProjectionMatrix();
-        void update(Shader& shader) override;
+        void update(const ref<Shader>& shader) override;
 
         void updateViewportSize(glm::vec2 size) override;
 

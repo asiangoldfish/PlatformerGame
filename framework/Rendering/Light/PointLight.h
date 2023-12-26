@@ -10,7 +10,7 @@ namespace FW {
         PointLight() { numOfPointLights++; }
         virtual ~PointLight() { numOfPointLights--; }
 
-        void draw() override;
+        void draw(const ref<Shader>& shader) override;
 
         void setConstant(const float c) { constant = c; }
         void setLinear(const float l) { linear = l; }

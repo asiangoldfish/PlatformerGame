@@ -7,7 +7,7 @@
 namespace FW {
     int PointLight::numOfPointLights = 0;
 
-    void PointLight::draw()
+    void PointLight::draw(const ref<Shader>& shader)
     {
         std::stringstream ss;
         ss << "u_pointLight[" << numOfPointLights - 1 << "]";

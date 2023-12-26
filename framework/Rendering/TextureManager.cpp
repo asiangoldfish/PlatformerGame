@@ -1,13 +1,10 @@
-//
-// Created by khai on 25/10/23.
-//
-
 #include "TextureManager.h"
 #include "Log.h"
 #include "Shader.h"
 
 namespace FW {
     std::vector<ref<Texture>> TextureManager::textures;
+    uint32_t TextureManager::invalidTextureID = std::numeric_limits<uint32_t>::max();
 
     void TextureManager::bind(const std::string& name,
                               int textureSlot)
@@ -22,7 +19,7 @@ namespace FW {
             index++;
         }
 
-        INFO("TextureManager::bind: Texture \'{}\' does not exist", name);
+        textures[0]->bind(textureSlot);
     }
 
     void TextureManager::bind(uint32_t id, int textureSlot)
@@ -37,7 +34,7 @@ namespace FW {
             index++;
         }
 
-        INFO("TextureManager::bind: Texture by ID {} does not exist", id);
+        textures[0]->bind(textureSlot);
     }
 
     uint32_t TextureManager::loadTexture2D(const std::string& name,
@@ -99,6 +96,29 @@ namespace FW {
         textures.push_back(t);
         return t->textureID;
     }
+
+
+    uint32_t TextureManager::getTextureID(const std::string& name)
+    {
+        for (const auto& texture : textures) {
+            if (texture->name == name) {
+                return texture->getTextureId();
+            }
+        }
+
+        return invalidTextureID;
+    }
+
+    std::string TextureManager::getTextureName(const uint32_t id) {
+        for (const auto& texture : textures) {
+            if (texture->textureID == id) {
+                return texture->name;
+            }
+        }
+
+        return "";
+    }
+
 
     bool TextureManager::deleteTexture(const std::string& name)
     {

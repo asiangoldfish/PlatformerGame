@@ -58,9 +58,9 @@ namespace FW {
     }
 
     // Draw itself and all child nodes.
-    void Skybox::draw(Shader& shader)
+    void Skybox::draw(const ref<Shader>& shader)
     {
-        shader.bind();
+        shader->bind();
 
         // We want to change the depth testing before rendering the skybox. By
         // doing this, we save on performance by limiting how many fragments we
@@ -72,7 +72,7 @@ namespace FW {
         glCullFace(GL_BACK);
 
         // Upload all required uniforms
-        shader.setMat4("u_model", modelMatrix);
+        shader->setMat4("u_model", modelMatrix);
         TextureManager::bind(textureId, 0);
         RenderCommand::drawIndex(*vertexArray);
 

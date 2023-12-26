@@ -81,6 +81,7 @@ private:
 
     FW::ref<FW::Model> backpackModel;
     FW::ref<Cube> testCube;
+    FW::ref<Cube> player;
 
     FW::ref<FW::CameraController> cameraController;
 

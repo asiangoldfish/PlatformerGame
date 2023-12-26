@@ -2,6 +2,8 @@
 
 #include "pch.h"
 
+#include <limits>
+
 // External
 #include <glm/glm.hpp>
 
@@ -138,6 +140,15 @@ namespace FW {
                                       glm::vec2 size);
 
         /**
+         * Get the texture's ID by name.
+         * @param name The texture's name
+         * @return If the texture exists, then its ID is returned. Otherwise <u>invalidTextureID</u> is returned.
+         */
+        static uint32_t getTextureID(const std::string& name);
+
+        static std::string getTextureName(const uint32_t id);
+
+        /**
          * Bind the texture by its name.
          *
          * @details If the texture is not found, an INFO message is printed but
@@ -199,6 +210,8 @@ namespace FW {
     private:
         // TODO: textures should be a map. This forces their name to be unique.
         static std::vector<std::shared_ptr<Texture>> textures;
+
+        static uint32_t invalidTextureID;
     };
 
 } // Framework

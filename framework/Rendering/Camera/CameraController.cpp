@@ -4,7 +4,7 @@
 #include "Camera.h"
 
 namespace FW {
-    void CameraController::update(Shader& shader)
+    void CameraController::update(const ref<Shader>& shader)
     {
         selectedCamera->update(shader);
     }
@@ -36,17 +36,17 @@ namespace FW {
 
     void CameraController::moveSideway(float value)
     {
-        selectedCamera->moveSideway(value);
+        selectedCamera->moveSideway(value * movementSpeed);
     }
 
     void CameraController::moveForward(float value)
     {
-        selectedCamera->moveForward(value);
+        selectedCamera->moveForward(value * movementSpeed);
     }
 
     void CameraController::moveUp(float value)
     {
-        selectedCamera->moveUp(value);
+        selectedCamera->moveUp(value * movementSpeed);
     }
 
     const glm::vec3 CameraController::getPosition() const

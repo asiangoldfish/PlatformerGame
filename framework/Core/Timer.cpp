@@ -5,8 +5,8 @@
 namespace FW {
     void Timer::updateDeltaTime()
     {
-        auto currentTime = static_cast<float>(glfwGetTime()) / 1000.0f;
-        deltaTime =  lastFrame;
+        auto currentTime = static_cast<float>(glfwGetTime());
+        deltaTime =  currentTime - lastFrame;
         lastFrame = currentTime;
     }
 } // Framework

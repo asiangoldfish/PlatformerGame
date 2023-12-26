@@ -21,7 +21,7 @@ namespace FW {
         DirectionalLight() { numOfDirectionalLights++; }
         virtual ~DirectionalLight() { numOfDirectionalLights--; }
 
-        void draw() override;
+        void draw(const ref<Shader>& shader) override;
 
         void setDirection(const glm::vec3& d) { direction = d; }
 

@@ -46,7 +46,7 @@ namespace FW {
         /**
          * Draw itself and all child entities.
          */
-        virtual void draw(Shader& shader);
+        virtual void draw(const ref<Shader>& shader);
 
         inline void setScale(const float s)
         {

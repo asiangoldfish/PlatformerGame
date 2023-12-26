@@ -103,7 +103,7 @@ namespace FW {
         /**
          * Draw itself and all child entities.
          */
-        virtual void draw();
+        virtual void draw(const ref<Shader>& shader);
 
         /**
          * Update itself and all child entities.
@@ -213,8 +213,7 @@ namespace FW {
          * @param indices All indices. Used for the index buffer
          * @param drawType (default: GL_DYNAMIC_DRAW) Either static or dynamic
          */
-        void initDrawable(ref<Shader> shader,
-                          std::vector<float> vertices,
+        void initDrawable(std::vector<float> vertices,
                           std::vector<uint32_t> indices);
 
     private:
@@ -243,8 +242,6 @@ namespace FW {
         VertexArray* vertexArray = nullptr;
         VertexBuffer* vertexBuffer = nullptr;
         IndexBuffer* indexBuffer = nullptr;
-
-        ref<Shader> shader = nullptr;
 
         // Transformation
         glm::mat4 modelMatrix;

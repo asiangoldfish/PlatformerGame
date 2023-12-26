@@ -8,10 +8,8 @@
 #include "Shader.h"
 
 // Constructor
-Map::Map(FW::ref<FW::Shader> shader)
+Map::Map()
 {
-    this->shader = shader;
-
     // This node is empty. All it does is containing other child nodes.
     baseNode = new FW::Entity();
 }
@@ -31,10 +29,10 @@ Map::update()
 }
 
 void
-Map::draw()
+Map::draw(const FW::ref<FW::Shader>& shader)
 {
     if (baseNode) {
-        baseNode->draw();
+        baseNode->draw(shader);
     }
 }
 
@@ -72,6 +70,9 @@ Map::loadMap(const std::string& name)
         height = 0;
         int index = 0;
 
+        uint32_t wallTextureID = FW::TextureManager::getTextureID("wall");
+        uint32_t coralStoneTextureID = FW::TextureManager::getTextureID("coral_stone_diff");
+
         while (getline(infile, readLine)) {
             Cube* entity = nullptr;
             bool wallFound = false;
@@ -79,19 +80,17 @@ Map::loadMap(const std::string& name)
             for (auto& c : readLine) {
                 switch (toupper(c)) {
                     case 'W':
-                        entity = new Cube(shader);
+                        entity = new Cube();
                         entity->setPosition({ index, height, 0 });
-                        entity->getMaterial()
-                          .getProperties()
-                          .diffuseTextureName = "wall";
+                        entity->getMaterial().getProperties().diffuseTextureId =
+                          wallTextureID;
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
-                        entity = new Cube(shader);
+                        entity = new Cube();
                         entity->setPosition({ index, height, 1 });
                         entity->getMaterial()
-                          .getProperties()
-                          .diffuseTextureName = "wall";
+                          .getProperties().diffuseTextureId = wallTextureID;
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
@@ -102,46 +101,13 @@ Map::loadMap(const std::string& name)
                         // Only spawn background if we have first spawned a
                         // wall.
                         if (wallFound) {
-                            entity = new Cube(shader);
+                            entity = new Cube();
                             entity->setPosition({ index, height, -1 });
-                            entity->setTextureName("player");
                             entity->getMaterial()
-                              .getProperties()
-                              .diffuseTextureName = "coral_stone_diff";
-                            entity->getMaterial()
-                              .getProperties()
-                              .specularTextureName = "coral_stone_spec";
+                              .getProperties().diffuseTextureId = coralStoneTextureID;
                             entity->setParent(baseNode);
                             baseNode->addChild(entity);
                         }
-                        break;
-
-                    case 'P':
-                        // Spawn player
-                        entity = new Cube(shader);
-                        entity->setScale(0.8f);
-                        entity->setPosition({ index, height, 0 });
-                        entity->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-                        entity->setTextureName("player");
-                        entity->setParent(baseNode);
-                        entity->setMaterial(FW::MaterialPreset::CHROME);
-
-                        baseNode->addChild(entity);
-
-                        player = entity;
-
-                        // Spawn background
-                        entity = new Cube(shader);
-                        entity->setPosition({ index, height, -1 });
-                        entity->setTextureName("player");
-                        entity->getMaterial()
-                          .getProperties()
-                          .diffuseTextureName = "coral_stone_diff";
-                        entity->getMaterial()
-                          .getProperties()
-                          .specularTextureName = "coral_stone_spec";
-                        entity->setParent(baseNode);
-                        baseNode->addChild(entity);
                         break;
                 }
                 index++; // Increase X-position

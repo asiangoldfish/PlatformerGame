@@ -58,11 +58,11 @@ namespace FW {
                            frustum.farClip);
     }
 
-    void PerspectiveCamera::update(Shader& shader)
+    void PerspectiveCamera::update(const ref<Shader>& shader)
     {
-        shader.bind();
-        shader.setMat4("u_projection", getProjectionMatrix());
-        shader.setMat4("u_view", getViewMatrix());
+        shader->bind();
+        shader->setMat4("u_projection", getProjectionMatrix());
+        shader->setMat4("u_view", getViewMatrix());
         //        shader.setFloat3("u_cameraPosition", getPosition());
     }
     void PerspectiveCamera::updateViewportSize(glm::vec2 size)

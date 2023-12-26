@@ -26,7 +26,7 @@ namespace FW {
             const glm::vec3& position = glm::vec3(0.0f)
         );
 
-        void update(Shader& shader) override {};
+        void update(const ref<Shader>& shader) override {};
 
         void setFrustum(const Frustum& frust) {
             this->frustum = frust;

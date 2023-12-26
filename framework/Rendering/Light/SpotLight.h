@@ -6,7 +6,7 @@ namespace FW {
 
     class SpotLight : public Light
     {
-        void draw() override;
+        void draw(const ref<Shader>& shader) override;
 
     private:
         glm::vec3 position{ 0.0f };
