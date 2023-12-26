@@ -54,27 +54,6 @@ namespace FW {
         const glm::vec3 getPosition() const;
         void setPosition(glm::vec3 newPosition);
 
-        /**
-         * Get the camera movement's speed.
-         */
-        float getMovementSpeed() const { return movementSpeed; }
-
-        /**
-         * Set the camera movement's speed.
-         * @param speed New camera speed.
-         */
-        void setMovementSpeed(const float speed) { movementSpeed = speed; }
-
-        /**
-         * Get the camera's rotation speed.
-         */
-        float getRotationSpeed() const { return rotationSpeed; }
-
-        /**
-         * Set the camera's rotation speed.
-         */
-        void setRotationSpeed(const float s) { rotationSpeed = s; }
-
         [[nodiscard]] float getNearClip();
         void setNearClip(const float near);
         [[nodiscard]] float getFarClip();

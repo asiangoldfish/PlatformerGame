@@ -107,7 +107,6 @@ SokobanApplication::init()
     cameraController->getPerspectiveCamera()->setEnablePanning(true);
     cameraController->setPosition({ 6.0f, -4.0f, 7.0f });
     cameraController->rotate({ -90.0f, 0.0f });
-    cameraController->setMovementSpeed(21.0f);
 
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
