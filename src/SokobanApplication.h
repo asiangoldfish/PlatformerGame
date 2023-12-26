@@ -78,22 +78,13 @@ public:
     }
 
 private:
-    // -----------
-    // Textures and shaders
-    // -----------
-    FW::ref<FW::Shader> shader = nullptr;
-    FW::ref<FW::Shader> skyboxShader = nullptr;
-    FW::ref<FW::Skybox> skybox = nullptr;
+    FW::ref<FW::Shader> shader;
+    FW::ref<FW::Shader> skyboxShader;
+    FW::ref<FW::Skybox> skybox;
 
-    // -----------
-    // Models
-    // -----------
     FW::ref<FW::Model> backpackModel;
     FW::ref<Cube> testCube;
 
-    // -----------
-    // Camera
-    // -----------
     FW::ref<FW::CameraController> cameraController;
 
     FW::DirectionalLight sun;
@@ -102,11 +93,7 @@ private:
     FW::Timer timer;
 
     bool enableTexture = true;
-
     bool isRightButtonPressed = false;
 
-    // ---------------
-    // Map
-    // ---------------
     FW::ref<Map> map;
 };
