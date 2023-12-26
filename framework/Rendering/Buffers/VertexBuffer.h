@@ -4,7 +4,7 @@
 #include "BufferLayout.h"
 #include <memory>
 
-namespace Framework {
+namespace FW {
     /**
      * Vertex Buffer Object in OpenGL.
      *

@@ -7,7 +7,7 @@
 #include "pch.h"
 #include "Camera.h"
 
-namespace Framework {
+namespace FW {
     class PerspectiveCamera : public Camera {
     public:
         struct Frustum

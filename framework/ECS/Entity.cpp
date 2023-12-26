@@ -26,9 +26,9 @@
 // Entity
 #include "Entity.h"
 
-namespace Framework {
+namespace FW {
     // Make the entity drawable
-    void Entity::initDrawable(Framework::ref<Framework::Shader> shader,
+    void Entity::initDrawable(FW::ref<FW::Shader> shader,
                               std::vector<float> vertices,
                               std::vector<uint32_t> indices)
     {
@@ -38,20 +38,20 @@ namespace Framework {
         auto i = std::move(indices);
         auto v = std::move(vertices);
 
-        auto entityAttribLayout = Framework::BufferLayout({
-          { Framework::ShaderDataType::Float3, "a_position" },
-          { Framework::ShaderDataType::Float4, "a_color" },
-          { Framework::ShaderDataType::Float2, "a_texCoord" },
-          { Framework::ShaderDataType::Float3, "a_normal" },
+        auto entityAttribLayout = FW::BufferLayout({
+          { FW::ShaderDataType::Float3, "a_position" },
+          { FW::ShaderDataType::Float4, "a_color" },
+          { FW::ShaderDataType::Float2, "a_texCoord" },
+          { FW::ShaderDataType::Float3, "a_normal" },
         });
 
-        vertexArray = new Framework::VertexArray();
+        vertexArray = new FW::VertexArray();
         vertexArray->bind();
 
         indexBuffer =
-          new Framework::IndexBuffer(i.data(), i.size());
+          new FW::IndexBuffer(i.data(), i.size());
 
-        vertexBuffer = new Framework::VertexBuffer(
+        vertexBuffer = new FW::VertexBuffer(
           v.data(), v.size() * sizeof(float), drawType);
 
         vertexBuffer->setLayout(entityAttribLayout);

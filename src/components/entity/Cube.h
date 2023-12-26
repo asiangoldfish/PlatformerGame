@@ -3,13 +3,13 @@
 
 #include "Framework.h"
 
-class Cube : public Framework::Entity
+class Cube : public FW::Entity
 {
 public:
     Cube() = default;
-    explicit Cube(Framework::ref<Framework::Shader> shader)
+    explicit Cube(FW::ref<FW::Shader> shader)
     {
-        initDrawable(shader, GeometricTools::UnitCubeGeometry3D(), GeometricTools::UnitCubeGeometry3DIndices());
+        initDrawable(shader, FW::UnitCubeGeometry3D(), FW::UnitCubeGeometry3DIndices());
     }
 
     glm::vec4 getOriginalColor() & { return originalColor; }

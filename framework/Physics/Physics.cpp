@@ -1,6 +1,6 @@
 #include "Physics.h"
 
-namespace Framework {
+namespace FW {
     /*
     void update(Entity* entity, uint32_t n)
     {

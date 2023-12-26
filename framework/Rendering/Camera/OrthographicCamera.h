@@ -9,8 +9,7 @@
 // Framework
 #include "Camera.h"
 
-namespace Framework
-{
+namespace FW {
     class OrthographicCamera : public Camera {
     public:
         struct Frustum

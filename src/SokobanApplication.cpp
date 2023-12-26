@@ -15,7 +15,6 @@
 #include "Cube.h"
 #include "Floor.h"
 #include "Map.h"
-#include "gameMath.h"
 
 #define TIMEOFDAY glm::radians((float)glfwGetTime() * dayNightCycleSpeed)
 
@@ -60,15 +59,15 @@ SokobanApplication::init()
     // -----------
     // Textures and shaders
     // -----------
-    shader = Framework::createRef<Framework::Shader>(
+    shader = FW::createRef<FW::Shader>(
       RESOURCES_DIR + std::string("shaders/vertex.glsl"),
       RESOURCES_DIR + std::string("shaders/fragment.glsl"));
 
-    skyboxShader = Framework::createRef<Framework::Shader>(
+    skyboxShader = FW::createRef<FW::Shader>(
       RESOURCES_DIR + std::string("shaders/skyboxVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/skyboxFrag.glsl"));
 
-    Framework::TextureManager::loadTexture2D(
+    FW::TextureManager::loadTexture2D(
       { { "metal_plate_diff",
           TEXTURES_DIR +
             std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg") },
@@ -94,7 +93,7 @@ SokobanApplication::init()
     // ------------
     // Map
     // ------------
-    map = Framework::createRef<Map>(shader);
+    map = FW::createRef<Map>(shader);
     map->addNewMap("test", RESOURCES_DIR + std::string("/maps/level.map"));
     map->loadMap("test");
 
@@ -110,8 +109,8 @@ SokobanApplication::init()
     // Rendering
     // ---------
     // Configure camera
-    cameraController = Framework::createRef<Framework::CameraController>(
-      Framework::CameraType::PERSPECTIVE);
+    cameraController =
+      FW::createRef<FW::CameraController>(FW::CameraType::PERSPECTIVE);
     //    cameraController->setPosition({ 5.0f, -4.0f, 6.0f });
     cameraController->setPosition({ 0.0f, 0.0f, 0.0f });
     cameraController->rotate({ -90.0f, 0.0f });
@@ -138,7 +137,7 @@ SokobanApplication::init()
     pointLight.setQuadratic(0.07f);
     pointLight.setBrightness(3.0f);
 
-    testCube = Framework::createRef<Cube>(shader);
+    testCube = FW::createRef<Cube>(shader);
     testCube->setPosition({ 0.0f, 0.0f, -3.0f });
     testCube->setScale(1.0f);
 
@@ -151,8 +150,8 @@ SokobanApplication::init()
         TEXTURES_DIR + std::string("skybox/demo/front.jpg"),
         TEXTURES_DIR + std::string("skybox/demo/back.jpg"),
     };
-    int skyboxId = Framework::TextureManager::loadCubeMap("skybox_demo", faces);
-    skybox = Framework::createRef<Framework::Skybox>(skyboxId);
+    int skyboxId = FW::TextureManager::loadCubeMap("skybox_demo", faces);
+    skybox = FW::createRef<FW::Skybox>(skyboxId);
     skybox->setScale(700.0f);
     skybox->setPosition({ 0.0f, 0.0f, 0.0f });
 
@@ -188,7 +187,7 @@ SokobanApplication::run()
                           getCameraController()->getPosition());
 
         //        Framework::TextureManager::bind(*shader, "skybox_demo", 0);
-                Framework::TextureManager::bind("wall", 0);
+        FW::TextureManager::bind("wall", 0);
                 testCube->draw();
 
         //        cameraController->update(*shader);
@@ -222,7 +221,7 @@ SokobanApplication::run()
 void
 SokobanApplication::shutdown()
 {
-    Framework::TextureManager::clearTextures();
+    FW::TextureManager::clearTextures();
 }
 
 /** Keyboard input function. Called every frame */

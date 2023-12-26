@@ -2,7 +2,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Framework {
+namespace FW {
     VertexBuffer::VertexBuffer(const void *vertices, GLsizei size, GLenum drawMethod) {
         glGenBuffers(1, &vertexBufferId);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);

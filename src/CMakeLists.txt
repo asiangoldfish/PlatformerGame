@@ -14,7 +14,6 @@ target_link_libraries(${PROJECT_NAME}
 
     # Components
     COMPONENT_entity
-    COMPONENT_util
     COMPONENT_map
 )
 
@@ -30,4 +29,3 @@ add_custom_target (${PROJECT_NAME}_COPY_ASSETS
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
 )
 add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_ASSETS)
-

@@ -3,7 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "pch.h"
 
-namespace Framework {
+namespace FW {
 	void Camera::moveForward(const float speed)
 	{
 		// From ChatGPT

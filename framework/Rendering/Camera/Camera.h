@@ -10,7 +10,7 @@
 #include "glm/glm.hpp"
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
 
     class Camera
     {

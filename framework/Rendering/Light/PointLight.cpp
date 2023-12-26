@@ -4,7 +4,7 @@
 
 #include "Log.h"
 
-namespace Framework {
+namespace FW {
     int PointLight::numOfPointLights = 0;
 
     void PointLight::draw()

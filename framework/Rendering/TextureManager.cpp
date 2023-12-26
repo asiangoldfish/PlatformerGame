@@ -6,7 +6,7 @@
 #include "Log.h"
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
     std::vector<ref<Texture>> TextureManager::textures;
 
     void TextureManager::bind(const std::string& name,

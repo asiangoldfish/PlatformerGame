@@ -1,7 +1,7 @@
 #include "Material.h"
 #include "TextureManager.h"
 
-namespace Framework {
+namespace FW {
     Material::Material(const MaterialPreset& preset)
       : materialPreset(preset)
     {

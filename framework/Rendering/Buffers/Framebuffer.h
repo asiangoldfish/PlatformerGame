@@ -4,7 +4,7 @@
 
 #include "pch.h"
 
-namespace Framework {
+namespace FW {
     class Framebuffer
     {
     public:

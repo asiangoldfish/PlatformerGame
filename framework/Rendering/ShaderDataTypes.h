@@ -8,7 +8,7 @@
 
 #include <glad/glad.h>
 
-namespace Framework {
+namespace FW {
     enum class ShaderDataType {
         None = 0,
         Float, Float2, Float3, Float4,

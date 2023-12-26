@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace Framework {
+namespace FW {
     class Shader;
     class Entity;
 }
@@ -20,7 +20,7 @@ public:
     /**
      * Default constructor
      */
-    explicit Map(Framework::ref<Framework::Shader> shader);
+    explicit Map(FW::ref<FW::Shader> shader);
 
     /**
      * Delete all entities belonging to this map.
@@ -53,17 +53,17 @@ public:
     /** Get the map's width */
     int getWidth() const { return width; }
 
-    [[nodiscard]] Framework::Entity* getPlayer() { return player; }
+    [[nodiscard]] FW::Entity* getPlayer() { return player; }
 
-    [[nodiscard]] Framework::Entity* getBaseNode() { return baseNode; }
+    [[nodiscard]] FW::Entity* getBaseNode() { return baseNode; }
 
 private:
     /** <mapName, filepath> */
     std::map<std::string, std::string> mapsCollection;
-    Framework::Entity* baseNode = nullptr;
-    Framework::Entity* player = nullptr;
+    FW::Entity* baseNode = nullptr;
+    FW::Entity* player = nullptr;
 
-    Framework::ref<Framework::Shader> shader = nullptr;
+    FW::ref<FW::Shader> shader = nullptr;
 
     int height = 0;  ///< Map size in height
     int width = 0;   ///< Map size in width

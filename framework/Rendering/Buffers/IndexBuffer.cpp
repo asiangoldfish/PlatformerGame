@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-namespace Framework {
+namespace FW {
     IndexBuffer::IndexBuffer(uint32_t *indices, int count) {
         glGenBuffers(1, &indexBufferID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);

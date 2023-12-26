@@ -10,7 +10,7 @@
 #include <memory>
 #include <utility>
 
-namespace Framework {
+namespace FW {
     /**
      * Delete a raw pointer
      * @tparam T The pointer's typename
@@ -54,4 +54,4 @@ namespace Framework {
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
-}
+} // FW

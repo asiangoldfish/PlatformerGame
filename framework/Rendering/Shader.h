@@ -7,7 +7,7 @@
 
 #include "RenderCommands.h"
 
-namespace Framework {
+namespace FW {
     /**
      * Shader class for OpenGL.
      *

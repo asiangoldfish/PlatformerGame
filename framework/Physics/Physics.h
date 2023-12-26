@@ -3,7 +3,7 @@
 //#include "pch.h"
 //#include "Entity.h"
 
-namespace Framework {
+namespace FW {
     struct BoundingBox
     {
         float north, south, top, bot, east, west;
@@ -13,4 +13,4 @@ namespace Framework {
 //    void update(Entity& entity);             // Update BoundingBox with AABB
 //    bool isOverlapping(Entity& target, Entity* allEntities, uint32_t n);
 //    bool isOverlapping(Entity& entityA, Entity& entityB);
-} // Framework
+} // FW

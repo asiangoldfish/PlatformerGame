@@ -6,7 +6,7 @@
 // Framework
 #include "Light.h"
 
-namespace Framework {
+namespace FW {
 
     /**
      * Cast light on objects regardless of angle and distance.

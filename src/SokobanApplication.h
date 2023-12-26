@@ -16,13 +16,13 @@ class Floor;
 class Cube;
 class Map;
 
-namespace Framework {
+namespace FW {
     class Shader;
     class PerspectiveCamera;
     class TextureManager;
 }
 
-class SokobanApplication : public Framework::GLFWApplication
+class SokobanApplication : public FW::GLFWApplication
 {
 public:
     /**
@@ -51,12 +51,12 @@ public:
     // Camera and rendering
     // ---------
     // Camera
-    [[nodiscard]] Framework::ref<Framework::CameraController>& getCameraController()
+    [[nodiscard]] FW::ref<FW::CameraController>& getCameraController()
     {
         return cameraController;
     }
 
-    [[nodiscard]] Framework::ref<Framework::Shader> getShader() { return shader; }
+    [[nodiscard]] FW::ref<FW::Shader> getShader() { return shader; }
 
     // Textures
     bool getEnableTexture() const { return enableTexture; }
@@ -81,25 +81,25 @@ private:
     // -----------
     // Textures and shaders
     // -----------
-    Framework::ref<Framework::Shader> shader = nullptr;
-    Framework::ref<Framework::Shader> skyboxShader = nullptr;
-    Framework::ref<Framework::Skybox> skybox = nullptr;
+    FW::ref<FW::Shader> shader = nullptr;
+    FW::ref<FW::Shader> skyboxShader = nullptr;
+    FW::ref<FW::Skybox> skybox = nullptr;
 
     // -----------
     // Models
     // -----------
-    Framework::ref<Framework::Model> backpackModel;
-    Framework::ref<Cube> testCube;
+    FW::ref<FW::Model> backpackModel;
+    FW::ref<Cube> testCube;
 
     // -----------
     // Camera
     // -----------
-    Framework::ref<Framework::CameraController> cameraController;
+    FW::ref<FW::CameraController> cameraController;
 
-    Framework::DirectionalLight sun;
-    Framework::PointLight pointLight;
+    FW::DirectionalLight sun;
+    FW::PointLight pointLight;
 
-    Framework::Timer timer;
+    FW::Timer timer;
 
     bool enableTexture = true;
 
@@ -108,5 +108,5 @@ private:
     // ---------------
     // Map
     // ---------------
-    Framework::ref<Map> map;
+    FW::ref<Map> map;
 };

@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-namespace Framework {
+namespace FW {
     /**
      * Measure time.
      *
@@ -94,6 +94,5 @@ namespace Framework {
 
         /** Time between current and last frame */
         float deltaTime = 0.0f;
-
     };
-}
+} // FW

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Framework {
+namespace FW {
     VertexArray::VertexArray() {
         // Create new VAO
         glGenVertexArrays(1, &vertexArrayID);

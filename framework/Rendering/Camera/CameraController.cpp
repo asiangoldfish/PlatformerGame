@@ -3,7 +3,7 @@
 #include "OrthographicCamera.h"
 #include "Camera.h"
 
-namespace Framework {
+namespace FW {
     void CameraController::update(Shader& shader)
     {
         selectedCamera->update(shader);

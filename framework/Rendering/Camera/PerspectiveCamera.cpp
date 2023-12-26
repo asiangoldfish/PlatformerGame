@@ -8,7 +8,7 @@
 // Framework
 #include "PerspectiveCamera.h"
 
-namespace Framework {
+namespace FW {
     PerspectiveCamera::PerspectiveCamera(
       const PerspectiveCamera::Frustum& frustum,
       const glm::vec3& position)
@@ -68,7 +68,7 @@ namespace Framework {
     void PerspectiveCamera::updateViewportSize(glm::vec2 size)
     {
         // Match the camera frustum's width and height to the new window size
-        Framework::PerspectiveCamera::Frustum oldFrustum = frustum;
+        FW::PerspectiveCamera::Frustum oldFrustum = frustum;
 
         oldFrustum.width = static_cast<float>(size.x);
         oldFrustum.height = static_cast<float>(size.y);

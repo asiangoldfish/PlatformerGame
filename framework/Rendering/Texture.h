@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-namespace Framework {
+namespace FW {
     class Shader;
 
     /**

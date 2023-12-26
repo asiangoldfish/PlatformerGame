@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-namespace Framework {
+namespace FW {
     /**
      * Application class
      *
@@ -186,4 +186,4 @@ namespace Framework {
         /** The current window size. This is the <u>GLFWwindow</u>, not the viewport size */
         glm::vec2 windowSize;
     };
-}
+} // FW

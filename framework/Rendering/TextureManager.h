@@ -10,7 +10,7 @@
 
 class Shader;
 
-namespace Framework {
+namespace FW {
     /**
      * Container for Texture objects.
      *

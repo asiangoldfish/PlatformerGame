@@ -79,7 +79,7 @@ namespace RenderCommand {
      * @param vertexArrayObject Vertex Array Object to bind
      * @param primitive OpenGL primitive to draw with. Default: GL_TRIANGLES
      */
-    inline void drawIndex(const Framework::VertexArray& vertexArrayObject,
+    inline void drawIndex(const FW::VertexArray& vertexArrayObject,
                           GLenum primitive = GL_TRIANGLES)
     {
 
@@ -89,7 +89,7 @@ namespace RenderCommand {
         glDrawElements(GL_TRIANGLES, (int)count, GL_UNSIGNED_INT, nullptr);
     }
 
-    inline void drawIndex(const std::shared_ptr<Framework::VertexArray>& vao,
+    inline void drawIndex(const std::shared_ptr<FW::VertexArray>& vao,
                           GLenum primitive = GL_TRIANGLES)
     {
         drawIndex(*vao, primitive);

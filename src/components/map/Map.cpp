@@ -8,12 +8,12 @@
 #include "Shader.h"
 
 // Constructor
-Map::Map(Framework::ref<Framework::Shader> shader)
+Map::Map(FW::ref<FW::Shader> shader)
 {
     this->shader = shader;
 
     // This node is empty. All it does is containing other child nodes.
-    baseNode = new Framework::Entity();
+    baseNode = new FW::Entity();
 }
 
 // Delete associated entity nodes
@@ -124,7 +124,7 @@ Map::loadMap(const std::string& name)
                         entity->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
                         entity->setTextureName("player");
                         entity->setParent(baseNode);
-                        entity->setMaterial(Framework::MaterialPreset::CHROME);
+                        entity->setMaterial(FW::MaterialPreset::CHROME);
 
                         baseNode->addChild(entity);
 

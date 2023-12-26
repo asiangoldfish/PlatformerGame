@@ -27,7 +27,7 @@ rgbToHex(const glm::vec3& color)
            (static_cast<uint32_t>(green) << 8) | static_cast<uint32_t>(blue);
 }
 
-namespace Framework {
+namespace FW {
     Texture::~Texture()
     {
         glDeleteTextures(1, &textureID);

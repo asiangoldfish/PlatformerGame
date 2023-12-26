@@ -13,7 +13,7 @@
 #include "assertions.h"
 #include "Log.h"
 
-namespace Framework {
+namespace FW {
     Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
     {
         vertexShader = compileShader(GL_VERTEX_SHADER, readFile(vertexSrc));

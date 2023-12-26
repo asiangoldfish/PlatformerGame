@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Framework {
+namespace FW {
     void Timer::updateDeltaTime()
     {
         auto currentTime = static_cast<float>(glfwGetTime()) / 1000.0f;

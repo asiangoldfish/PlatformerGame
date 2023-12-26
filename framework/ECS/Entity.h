@@ -16,7 +16,7 @@
 #include "Material.h"
 #include "Physics.h"
 
-namespace Framework {
+namespace FW {
 
     class Shader;
     class VertexArray;
@@ -272,4 +272,4 @@ namespace Framework {
         // ----------
         Material material;
     };
-} // Framework
+} // FW

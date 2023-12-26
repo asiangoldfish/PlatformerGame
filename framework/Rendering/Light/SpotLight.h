@@ -2,7 +2,7 @@
 
 #include "Light.h"
 
-namespace Framework {
+namespace FW {
 
     class SpotLight : public Light
     {

@@ -9,7 +9,7 @@
 #include "Log.h"
 #include "RenderCommands.h"
 
-namespace Framework {
+namespace FW {
     // Output messages from OpenGL
     static void GLAPIENTRY messageCallback(GLenum source, GLenum type,
         GLuint id, GLenum severity,

@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 
-namespace Framework {
+namespace FW {
     class PerspectiveCamera;
     class OrthographicCamera;
 

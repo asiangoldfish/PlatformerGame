@@ -7,16 +7,16 @@
 // Framework
 #include "Framework.h"
 
-class Floor : public Framework::Entity
+class Floor : public FW::Entity
 {
 public:
     Floor() = default;
-    Floor(Framework::ref<Framework::Shader> shader, glm::vec2 tiling, glm::vec2 size)
+    Floor(FW::ref<FW::Shader> shader, glm::vec2 tiling, glm::vec2 size)
     {
-        auto vertices = GeometricTools::UnitGridGeometry2D(
+        auto vertices = FW::UnitGridGeometry2D(
           tiling.x, tiling.y, size.x, size.y);
 
-        auto indices = GeometricTools::UnitGridIndices2D(tiling.x * tiling.y);
+        auto indices = FW::UnitGridIndices2D(tiling.x * tiling.y);
         initDrawable(shader, vertices, indices);
     }
 

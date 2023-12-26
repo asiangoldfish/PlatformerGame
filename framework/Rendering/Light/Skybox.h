@@ -15,7 +15,7 @@
 // Framework
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
 
     class VertexArray;
     class VertexBuffer;
@@ -71,9 +71,9 @@ namespace Framework {
         void recalculateModelMatrix();
 
     private:
-        Framework::VertexArray* vertexArray = nullptr;
-        Framework::IndexBuffer* indexBuffer = nullptr;
-        Framework::VertexBuffer* vertexBuffer = nullptr;
+        FW::VertexArray* vertexArray = nullptr;
+        FW::IndexBuffer* indexBuffer = nullptr;
+        FW::VertexBuffer* vertexBuffer = nullptr;
 
         /** The texture by ID to draw. */
         int textureId = -1;

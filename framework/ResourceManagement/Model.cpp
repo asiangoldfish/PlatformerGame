@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "TextureManager.h"
 
-namespace Framework {
+namespace FW {
 #pragma region Mesh
     Mesh::Mesh(const std::vector<Vertex>& v,
                const std::vector<unsigned int>& i,

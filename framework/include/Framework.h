@@ -1,5 +1,8 @@
 #pragma once
 
+// Utils
+#include "FW_Math.h"
+
 // Core
 #include "memory.h"
 #include "GLFWApplication.h"

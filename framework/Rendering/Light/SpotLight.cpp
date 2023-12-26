@@ -4,7 +4,7 @@
 
 #include "SpotLight.h"
 
-namespace Framework {
+namespace FW {
     void SpotLight::draw() {
 
     }

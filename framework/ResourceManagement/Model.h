@@ -10,7 +10,7 @@
 #include "Shader.h"
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
     struct Vertex
     {
         glm::vec3 position;

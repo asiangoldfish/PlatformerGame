@@ -3,7 +3,7 @@
 #include "DirectionalLight.h"
 #include "Log.h"
 
-namespace Framework {
+namespace FW {
     int DirectionalLight::numOfDirectionalLights = 0;
 
     void DirectionalLight::draw()

@@ -29,19 +29,19 @@
 // Entity
 #include "Skybox.h"
 
-namespace Framework {
+namespace FW {
     Skybox::Skybox(int textureId)
     {
         this->textureId = textureId;
 
-        auto entityAttribLayout = Framework::BufferLayout(
-          { { Framework::ShaderDataType::Float3, "a_position" } });
+        auto entityAttribLayout =
+          FW::BufferLayout({ { FW::ShaderDataType::Float3, "a_position" } });
 
-        vertexArray = new Framework::VertexArray();
+        vertexArray = new FW::VertexArray();
         vertexArray->bind();
 
-        std::vector<float> vertices = GeometricTools::SkyboxGeometryVertices();
-        std::vector<uint32_t> indices = GeometricTools::SkyboxGeometryIndices();
+        std::vector<float> vertices = FW::SkyboxGeometryVertices();
+        std::vector<uint32_t> indices = FW::SkyboxGeometryIndices();
 
         indexBuffer = new IndexBuffer(indices.data(), indices.size());
 
@@ -70,7 +70,6 @@ namespace Framework {
         glDepthMask(GL_FALSE);
         glFrontFace(GL_CCW);
         glCullFace(GL_BACK);
-
 
         // Upload all required uniforms
         shader.setMat4("u_model", modelMatrix);

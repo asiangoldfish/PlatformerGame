@@ -13,7 +13,7 @@
 // Framework
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
     /**
      * Predefined material presets.
      *

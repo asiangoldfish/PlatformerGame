@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace Framework {
+namespace FW {
     /** An attribute for a Vertex Buffer Object. */
     struct BufferAttribute {
         BufferAttribute(

@@ -5,7 +5,7 @@
 #include "Framebuffer.h"
 #include "TextureManager.h"
 
-namespace Framework {
+namespace FW {
     Framebuffer::Framebuffer()
     {
         createFramebuffer();

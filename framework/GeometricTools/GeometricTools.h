@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace GeometricTools {
+namespace FW {
     /**
      * Generate a 2-dimensional triangle with positions
      */
@@ -292,4 +292,4 @@ namespace GeometricTools {
     {
         return UnitCubeGeometry3DIndices();
     }
-}
+} // FW

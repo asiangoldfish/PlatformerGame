@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 #include <memory>
 
-namespace Framework {
+namespace FW {
     /**
      * The IndexBuffer class represents the Element Buffer Object in OpenGL.
      */

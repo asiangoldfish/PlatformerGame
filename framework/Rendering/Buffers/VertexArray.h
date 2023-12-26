@@ -5,7 +5,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-namespace Framework {
+namespace FW {
     /**
      * Vertex Array Object in OpenGL.
      *

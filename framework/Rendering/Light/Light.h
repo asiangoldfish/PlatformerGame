@@ -9,7 +9,7 @@
 // Framework
 #include "Shader.h"
 
-namespace Framework {
+namespace FW {
     // Pre-declared classes
     class Shader;
 
