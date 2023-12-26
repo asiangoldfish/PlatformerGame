@@ -1,4 +1,4 @@
-project(Physics)
+project(FRAMEWORK_PHYSICS)
 
 add_library(${PROJECT_NAME}
     Physics.h   Physics.cpp
@@ -13,5 +13,5 @@ PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    ECS
+    FRAMEWORK_ECS
 )

@@ -1,4 +1,4 @@
-project(ECS)
+project(FRAMEWORK_ECS)
 
 add_library(${PROJECT_NAME} STATIC
     Entity.h Entity.cpp
@@ -22,8 +22,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     spdlog
 
     # Internal
-    GeometricTools
-    Rendering
-    Core
-    Physics
+    FRAMEWORK_GEOMETRICTOOLS
+    FRAMEWORK_RENDERING
+    FRAMEWORK_CORE
+    FRAMEWORK_PHYSICS
 )

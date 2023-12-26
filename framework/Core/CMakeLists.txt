@@ -1,6 +1,6 @@
-set(MODULE_NAME Core)
+project(FRAMEWORK_CORE)
 
-add_library(${MODULE_NAME} STATIC
+add_library(${PROJECT_NAME} STATIC
     Memory.h
     GLFWApplication.h
     GLFWApplication.cpp
@@ -8,7 +8,7 @@ add_library(${MODULE_NAME} STATIC
     Timer.h                 Timer.cpp
 )
 
-target_include_directories(${MODULE_NAME}
+target_include_directories(${PROJECT_NAME}
 PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 
@@ -16,13 +16,13 @@ PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${MODULE_NAME}
+target_link_libraries(${PROJECT_NAME}
 PRIVATE
     glfw
     glad
     glm
 
-    Rendering
+    FRAMEWORK_RENDERING
 
 PUBLIC
     spdlog

@@ -27,9 +27,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     stb
     spdlog
 
-    Core
-    GeometricTools
-    Rendering
-    ECS
-    ResourceManagement
+    FRAMEWORK_CORE
+    FRAMEWORK_GEOMETRICTOOLS
+    FRAMEWORK_RENDERING
+    FRAMEWORK_ECS
+    FRAMEWORK_RESOURCE_MANAGEMENT
 )

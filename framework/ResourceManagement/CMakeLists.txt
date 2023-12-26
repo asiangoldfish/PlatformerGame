@@ -1,4 +1,4 @@
-project(ResourceManagement)
+project(FRAMEWORK_RESOURCE_MANAGEMENT)
 
 add_library(${PROJECT_NAME}
     Model.h     Model.cpp
@@ -16,5 +16,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     glfw
     stb
 
-    Rendering
+    FRAMEWORK_RENDERING
 )

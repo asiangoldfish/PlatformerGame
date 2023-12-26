@@ -1,6 +1,6 @@
-set(MODULE_NAME Rendering)
+project(FRAMEWORK_RENDERING)
 
-add_library(${MODULE_NAME} STATIC
+add_library(${PROJECT_NAME} STATIC
     # Buffers
     Buffers/VertexBuffer.h  Buffers/VertexBuffer.cpp
     Buffers/IndexBuffer.h   Buffers/IndexBuffer.cpp
@@ -32,7 +32,7 @@ add_library(${MODULE_NAME} STATIC
     RenderCommands.h
 )
 
-target_include_directories(${MODULE_NAME}
+target_include_directories(${PROJECT_NAME}
 PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 
@@ -40,13 +40,13 @@ PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${MODULE_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
     glfw
     glad
     glm
     stb
     spdlog
 
-    Core
-    GeometricTools
+    FRAMEWORK_CORE
+    FRAMEWORK_GEOMETRICTOOLS
 )
