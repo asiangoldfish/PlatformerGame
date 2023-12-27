@@ -7,6 +7,16 @@
 #include "Cube.h"
 #include "Shader.h"
 
+static Cube*
+spawnWall(glm::vec3 pos, uint32_t diffTexId, FW::Entity* parent)
+{
+    Cube* cube = new Cube();
+    cube->setPosition(pos);
+    cube->getMaterial().getProperties().diffuseTextureId = diffTexId;
+    cube->setParent(parent);
+    return cube;
+}
+
 // Constructor
 Map::Map()
 {
@@ -67,8 +77,6 @@ Map::loadMap(const std::string& name)
         std::string readLine;
 
         uint32_t wallTextureID = FW::TextureManager::getTextureID("wall");
-        uint32_t coralStoneTextureID =
-          FW::TextureManager::getTextureID("coral_stone_diff");
 
         std::vector<std::string> linesFromFile;
         while (getline(infile, readLine)) {
@@ -78,49 +86,20 @@ Map::loadMap(const std::string& name)
         // Loop over each line in the file, from end to beginning.
         for (int y = linesFromFile.size() - 1; y > 0; y--) {
             // The map file might end with an empty line. Take this into account
-            if (y == linesFromFile.size() - 1 && linesFromFile[y].empty() ) {
+            if (y == linesFromFile.size() - 1 && linesFromFile[y].empty()) {
                 continue;
             }
-
-            Cube* entity = nullptr;
-            bool wallFound = false;
 
             // Loop over each character in the given line
             for (int x = 0; x < linesFromFile[y].size(); x++) {
                 std::string currentLine = linesFromFile[y];
                 switch (toupper(currentLine[x])) {
                     case 'W':
-                        entity = new Cube();
-                        entity->setPosition({ x, -y, 0 });
-                        entity->getMaterial().getProperties().diffuseTextureId =
-                          wallTextureID;
-                        entity->setParent(baseNode);
-                        baseNode->addChild(entity);
-
-                        entity = new Cube();
-                        entity->setPosition({ x, -y, 1 });
-                        entity->getMaterial().getProperties().diffuseTextureId =
-                          wallTextureID;
-                        entity->setParent(baseNode);
-                        baseNode->addChild(entity);
-
-                        wallFound = true;
+                        baseNode->addChild(
+                          spawnWall({ x, -y, 0 }, wallTextureID, baseNode));
+                        baseNode->addChild(
+                          spawnWall({ x, -y, 1 }, wallTextureID, baseNode));
                         break;
-
-                        /*
-                    case ' ':
-                        // Only spawn background if we have first spawned a
-                        // wall.
-                        if (wallFound) {
-                            entity = new Cube();
-                            entity->setPosition({ index, height, -1 });
-                            entity->getMaterial()
-                              .getProperties().diffuseTextureId =
-                        coralStoneTextureID; entity->setParent(baseNode);
-                            baseNode->addChild(entity);
-                        }
-                        break;
-*/
                 }
             }
         }

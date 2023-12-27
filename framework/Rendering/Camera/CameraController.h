@@ -86,6 +86,6 @@ namespace FW {
          */
         glm::vec3 cameraOffset{ 0.0f };
 
-        bool spectatorMode = true;
+        bool spectatorMode = false;
     };
 }
