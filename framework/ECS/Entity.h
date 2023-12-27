@@ -123,20 +123,25 @@ namespace FW {
         void setRotation(glm::vec3 rotation);
         void setRotation(float yaw, float pitch, float roll);
 
-        inline void setScale(const float scale)
+        inline void setScale(const float s)
         {
-            this->scale.x = scale;
-            this->scale.y = scale;
-            this->scale.z = scale;
+            this->scale.x = s;
+            this->scale.y = s;
+            this->scale.z = s;
             recalculateModelMatrix();
         }
-        inline void setScale(const glm::vec3& scale) { this->scale = scale; }
+        inline void setScale(const glm::vec3& s)
+        {
+            scale = s;
+            boundingBox.setScale(s);
+        }
 
         inline const glm::vec3& getScale() const { return scale; }
 
         inline void setPosition(glm::vec3 position)
         {
             this->position = position;
+            boundingBox.setPosition(position);
             recalculateModelMatrix();
         }
         const glm::vec3& getPosition() const { return position; }
@@ -184,12 +189,8 @@ namespace FW {
 
         const std::vector<glm::vec3> getVertices();
 
-        // Physics
-        BoundingBox& getBoundingBox() { return boundingBox; }
-
         void setTextureName(const std::string& name) { textureName = name; }
 
-    public:
         /**
          *  Recalculate the entity's model matrix.
          *
@@ -197,6 +198,10 @@ namespace FW {
          * its transformation.
          */
         void recalculateModelMatrix();
+
+        BoundingBox_Quad& getBoundingBox() { return boundingBox; }
+
+        bool getIsDrawable() { return isDrawable; }
 
     protected:
         /**
@@ -228,6 +233,9 @@ namespace FW {
         VertexBuffer* vertexBuffer = nullptr;
         IndexBuffer* indexBuffer = nullptr;
 
+        // Physics
+        BoundingBox_Quad boundingBox;
+
         // Transformation
         glm::mat4 modelMatrix;
         glm::vec3 position;
@@ -245,9 +253,6 @@ namespace FW {
 
         // Disable per-entity-basis
         bool enableDepthTesting = true;
-
-        // Physics
-        BoundingBox boundingBox;
 
         // ----------
         // Materials and textures

@@ -48,8 +48,8 @@ namespace FW {
 
         indexBuffer = new FW::IndexBuffer(i.data(), static_cast<int>(i.size()));
 
-        vertexBuffer =
-          new FW::VertexBuffer(v.data(), static_cast<int>(v.size()) * sizeof(float), drawType);
+        vertexBuffer = new FW::VertexBuffer(
+          v.data(), static_cast<int>(v.size()) * sizeof(float), drawType);
 
         vertexBuffer->setLayout(entityAttribLayout);
         vertexArray->setIndexBuffer(indexBuffer);
@@ -109,6 +109,11 @@ namespace FW {
     // Recursively update itself and child nodes
     void Entity::update()
     {
+        if (isDrawable) {
+            boundingBox.setPosition(position);
+            boundingBox.setScale(scale);
+        }
+
         for (const auto& child : children) {
             child->update();
         }
