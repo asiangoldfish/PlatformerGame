@@ -92,8 +92,8 @@ SokobanApplication::init()
     // Entities
     // -------------
     FW::scope<FW::Entity> playerCube = FW::createScope<Cube>();
-    playerCube->setScale(0.8f);
-    playerCube->setPosition({ 2, -5, 1 });
+    //    playerCube->setScale(0.8f);
+    playerCube->setPosition({ 2, 3, 0 });
     playerCube->getMaterial().getProperties().diffuseTextureId =
       FW::TextureManager::getTextureID("metal_plate_diff");
     playerCube->setMaterial(FW::MaterialPreset::CHROME);
@@ -106,8 +106,12 @@ SokobanApplication::init()
     cameraController =
       FW::createRef<FW::CameraController>(FW::CameraType::PERSPECTIVE);
     cameraController->getPerspectiveCamera()->setEnablePanning(true);
-    cameraController->setPosition({ 6.0f, -4.0f, 7.0f });
     cameraController->rotate({ -90.0f, 0.0f });
+    cameraController->setPosition(
+      { playerController->getPossessedEntity()->getPosition().x + 3.0f,
+        playerController->getPossessedEntity()->getPosition().y + 2.0f,
+        15.0f });
+    cameraController->setCameraOffset({ 3.0f, 2.0f, 0.0f });
 
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -185,10 +189,20 @@ SokobanApplication::run()
 
         auto playerCube = playerController->getPossessedEntity();
 
-        cameraController->setPosition({ playerCube->getPosition().x,
-                                        playerCube->getPosition().y + 0.25f,
-                                        cameraController->getPosition().z });
+        //        cameraController->setPosition({ playerCube->getPosition().x,
+        //                                        playerCube->getPosition().y +
+        //                                        0.25f,
+        //                                        cameraController->getPosition().z
+        //                                        });
+
+        playerCube->update();
         playerCube->draw(shader);
+        if (!cameraController->getSpectatorMode()) {
+            cameraController->setPosition(
+              glm::vec3(playerCube->getPosition().x,
+                        playerCube->getPosition().y,
+                        cameraController->getPosition().z));
+        }
 
         glfwSwapBuffers(getWindow());
     }
@@ -198,41 +212,137 @@ SokobanApplication::run()
 void
 SokobanApplication::keyboardInput()
 {
-    float moveBy = timer.getDeltaTime();
+    float delta = timer.getDeltaTime();
+    static bool canJump = true;
+    auto playerEntity = playerController->getPossessedEntity();
+    auto playerBox = playerController->getPossessedEntity()->getBoundingBox();
+    static float velocity = 0;
+    float playerMovementSpeed = delta * 6.f;
+    float gravity = 0.5f * delta;
+    float jumpingPower = 5.0f;
+    bool canPlayerMoveRight = true;
+    bool canPlayerMoveLeft = true;
+    float movementSpeed = 0.0f;
+    float positionY = playerEntity->getPosition().y;
 
-    // ----------
-    // Player movement
-    // ----------
-    float playerMovementSpeed = moveBy * 3.f;
-    if (glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
-        player->move({ 0, playerMovementSpeed, 0 });
+    std::vector<FW::BoundingBox_Quad*> collidingBoxes;
+    for (auto& child : map->getBaseNode()->getChildren()) {
+        collidingBoxes.push_back(&child->getBoundingBox());
     }
-    if (glfwGetKey(getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-        player->move({ 0, -playerMovementSpeed, 0 });
-    }
+
+    // Walk sideways
     if (glfwGetKey(getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        player->move({ playerMovementSpeed, 0, 0 });
+        for (const auto& node : map->getBaseNode()->getChildren()) {
+            if (!FW::isOverlapping(playerBox, node->getBoundingBox())) {
+                auto targetBox = node->getBoundingBox();
+                if (
+                  // Check right side is inside target box
+                  playerBox.maxX + playerMovementSpeed >= targetBox.minX &&
+                  playerBox.maxX <= targetBox.maxX &&
+                  playerBox.minY < targetBox.maxY &&
+                  playerBox.minY >= targetBox.minY) {
+                    canPlayerMoveRight = false;
+                    break;
+                }
+            }
+        }
+
+        if (canPlayerMoveRight) {
+            movementSpeed = 1.0f;
+        }
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-        player->move({ -playerMovementSpeed, 0, 0 });
+        for (const auto& node : map->getBaseNode()->getChildren()) {
+            if (!FW::isOverlapping(playerBox, node->getBoundingBox())) {
+                auto targetBox = node->getBoundingBox();
+                if (
+                  // Check left side is inside target box
+                  playerBox.minX - playerMovementSpeed <= targetBox.maxX &&
+                  playerBox.minX >= targetBox.minX &&
+                  playerBox.minY < targetBox.maxY &&
+                  playerBox.minY >= targetBox.minY) {
+                    canPlayerMoveLeft = false;
+                    float distance = playerBox.minX - targetBox.maxX;
+                    if (distance == 0.0f) {
+                        movementSpeed = distance;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (canPlayerMoveLeft) {
+            movementSpeed = -1.0f;
+        }
     }
 
-    // ----------
-    // Camera movement
-    // ----------
-    /*
+    // Collision detection top
+    bool isTopColliding = false;
+    FW::BoundingBox_Quad* collidedBox = nullptr;
+    for (const auto& node : map->getBaseNode()->getChildren()) {
+        if (FW::isOverlapping(playerBox, node->getBoundingBox())) {
+            if (playerBox.minY <= node->getBoundingBox().maxY) {
+                isTopColliding = true;
+                velocity = 0.0f;
+            }
+            break;
+        }
+    }
+
+    if (glfwGetKey(getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
+        if (canJump) {
+            velocity += jumpingPower * delta;
+            canJump = false;
+        }
+    }
+
+    if (isTopColliding) {
+        canJump = true;
+    } else {
+        velocity -= gravity;
+        canJump = false;
+    }
+
+    positionY += velocity;
+
+    playerEntity->setPosition(
+      { playerEntity->getPosition().x + playerMovementSpeed * movementSpeed,
+        positionY,
+        0.0f });
+
+    // Camera controller spectator mode
+    float cameraSpeed = 5.0f * delta;
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        cameraController->moveForward(moveBy);
+        if (cameraController->getSpectatorMode()) {
+            cameraController->setPosition(
+              { cameraController->getPosition().x,
+                cameraController->getPosition().y + cameraSpeed,
+                cameraController->getPosition().z });
+        }
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-        cameraController->moveForward(-moveBy);
+        if (cameraController->getSpectatorMode()) {
+            cameraController->setPosition(
+              { cameraController->getPosition().x,
+                cameraController->getPosition().y - cameraSpeed,
+                cameraController->getPosition().z });
+        }
     }
-
     if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        playerController->addMovement({ playerMovementSpeed, 0, 0 });
+        if (cameraController->getSpectatorMode()) {
+            cameraController->setPosition(
+              { cameraController->getPosition().x + cameraSpeed,
+                cameraController->getPosition().y,
+                cameraController->getPosition().z });
+        }
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        playerController->addMovement({ -playerMovementSpeed, 0, 0 });
+        if (cameraController->getSpectatorMode()) {
+            cameraController->setPosition(
+              { cameraController->getPosition().x - cameraSpeed,
+                cameraController->getPosition().y,
+                cameraController->getPosition().z });
+        }
     }
 }
 
@@ -314,6 +424,16 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     // Quit application
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
+    }
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        auto controller = gApp->getCameraController();
+        controller->setSpectatorMode(!controller->getSpectatorMode());
+
+        if (controller->getSpectatorMode()) {
+            INFO("Spectator enabled");
+        } else {
+            INFO("Spectator disabled");
+        }
     }
 }
 

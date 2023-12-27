@@ -14,4 +14,5 @@ PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     FRAMEWORK_ECS
+    glm
 )

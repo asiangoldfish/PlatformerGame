@@ -59,6 +59,13 @@ namespace FW {
         [[nodiscard]] float getFarClip();
         void setFarClip(const float far);
 
+        const glm::vec3& getCameraOffset() const { return cameraOffset; }
+        void setCameraOffset(glm::vec3 offset) { cameraOffset = offset; }
+
+        bool getSpectatorMode() { return spectatorMode; }
+        void setSpectatorMode(const bool enable) { spectatorMode = enable; }
+
+
     private:
         Camera* selectedCamera = nullptr;
         ref<PerspectiveCamera> perspectiveCamera;
@@ -73,5 +80,12 @@ namespace FW {
         float movementSpeed = 0.1f;
         float rotationSpeed = 0.1f;
         glm::vec3 worldCenter{ 0.0f };
+
+        /**
+         * How far away from the possessed entity should the camera be
+         */
+        glm::vec3 cameraOffset{ 0.0f };
+
+        bool spectatorMode = true;
     };
 }
