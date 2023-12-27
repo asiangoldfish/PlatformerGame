@@ -135,20 +135,6 @@ namespace FW {
                       glm::scale(modelMatrix, scale);
     }
 
-    void Entity::move(glm::vec3 moveBy)
-    {
-        position += moveBy;
-        recalculateModelMatrix();
-    }
-
-    void Entity::rotate(float yawBy, float pitchBy, float rollBy)
-    {
-        yaw += yawBy;
-        pitch += pitchBy;
-        roll += rollBy;
-        recalculateModelMatrix();
-    }
-
     void Entity::setRotation(glm::vec3 rotation)
     {
         setRotation(rotation.x, rotation.y, rotation.z);

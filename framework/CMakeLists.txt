@@ -20,6 +20,7 @@ add_subdirectory(ECS)
 add_subdirectory(Physics)
 add_subdirectory(ResourceManagement)
 add_subdirectory(Util)
+add_subdirectory(Gameplay)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     glfw
@@ -34,4 +35,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     FRAMEWORK_ECS
     FRAMEWORK_RESOURCE_MANAGEMENT
     FRAMEWORK_UTIL
+    FRAMEWORK_GAMEPLAY
 )

@@ -91,12 +91,13 @@ SokobanApplication::init()
     // -------------
     // Entities
     // -------------
-    player = FW::createRef<Cube>();
-    player->setScale(0.8f);
-    player->setPosition({ 2, -5, 1 });
-    player->getMaterial().getProperties().diffuseTextureId =
+    FW::scope<FW::Entity> playerCube = FW::createScope<Cube>();
+    playerCube->setScale(0.8f);
+    playerCube->setPosition({ 2, -5, 1 });
+    playerCube->getMaterial().getProperties().diffuseTextureId =
       FW::TextureManager::getTextureID("metal_plate_diff");
-    player->setMaterial(FW::MaterialPreset::CHROME);
+    playerCube->setMaterial(FW::MaterialPreset::CHROME);
+    playerController = FW::createScope<FW::PlayerController>(playerCube);
 
     // ---------
     // Rendering
@@ -182,10 +183,12 @@ SokobanApplication::run()
         map->update();
         map->draw(shader);
 
-        cameraController->setPosition({ player->getPosition().x,
-                                        player->getPosition().y + 0.25f,
+        auto playerCube = playerController->getPossessedEntity();
+
+        cameraController->setPosition({ playerCube->getPosition().x,
+                                        playerCube->getPosition().y + 0.25f,
                                         cameraController->getPosition().z });
-        player->draw(shader);
+        playerCube->draw(shader);
 
         glfwSwapBuffers(getWindow());
     }
@@ -226,18 +229,11 @@ SokobanApplication::keyboardInput()
     }
 
     if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        cameraController->moveSideway(moveBy);
+        playerController->addMovement({ playerMovementSpeed, 0, 0 });
     }
     if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        cameraController->moveSideway(-moveBy);
+        playerController->addMovement({ -playerMovementSpeed, 0, 0 });
     }
-    if (glfwGetKey(getWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
-        cameraController->moveUp(moveBy);
-    }
-    if (glfwGetKey(getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
-        cameraController->moveUp(-moveBy);
-    }
-    */
 }
 
 SokobanApplication::~SokobanApplication()
@@ -284,13 +280,14 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 void
 mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    gApp->getCameraController()->moveForward(yoffset * 0.1f);
+    gApp->getCameraController()->moveForward(yoffset * 0.5f);
 }
 
 // Source: https://www.glfw.org/docs/3.0/group__input.html
 void
 cursorMouseButton_callback(GLFWwindow* window, int, int, int)
 {
+    /*
     if (!gApp) {
         return;
     }
@@ -306,6 +303,7 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+     */
 }
 
 /* Keyboard input function. Used as callback function and is used in
@@ -316,12 +314,6 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     // Quit application
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
-    }
-
-    // Toggle textures
-    if (key == GLFW_KEY_T && action == GLFW_PRESS) {
-        gApp->setEnableTexture(!gApp->getEnableTexture());
-        gApp->getShader()->setInt("u_enableTexture", gApp->getEnableTexture());
     }
 }
 

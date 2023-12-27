@@ -120,21 +120,6 @@ namespace FW {
          */
         virtual void update();
 
-        /**
-         * Move the entity.
-         *
-         * This function is a shorthand for currentPosition + unitsToMoveBy. It
-         * takes the current position and adds x, y and z units to move by.
-         *
-         * @param moveBy How much to move by
-         */
-        void move(glm::vec3 moveBy);
-
-        /**
-         * Rotate by some degrees
-         */
-        void rotate(float yawBy, float pitchBy, float rollBy);
-
         void setRotation(glm::vec3 rotation);
         void setRotation(float yaw, float pitch, float roll);
 
@@ -204,6 +189,15 @@ namespace FW {
 
         void setTextureName(const std::string& name) { textureName = name; }
 
+    public:
+        /**
+         *  Recalculate the entity's model matrix.
+         *
+         * This needs to be called before every draw if the entity has changed
+         * its transformation.
+         */
+        void recalculateModelMatrix();
+
     protected:
         /**
          * Initialize required parameters and data to draw the entity on screen.
@@ -215,15 +209,6 @@ namespace FW {
          */
         void initDrawable(std::vector<float> vertices,
                           std::vector<uint32_t> indices);
-
-    private:
-        /**
-         *  Recalculate the entity's model matrix.
-         *
-         * This needs to be called before every draw if the entity has changed
-         * its transformation.
-         */
-        void recalculateModelMatrix();
 
     private:
         Entity* parent = nullptr;
