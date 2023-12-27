@@ -66,37 +66,48 @@ Map::loadMap(const std::string& name)
         // Line that is currently read from the file
         std::string readLine;
 
-        width = 0;
-        height = 0;
-        int index = 0;
-
         uint32_t wallTextureID = FW::TextureManager::getTextureID("wall");
-        uint32_t coralStoneTextureID = FW::TextureManager::getTextureID("coral_stone_diff");
+        uint32_t coralStoneTextureID =
+          FW::TextureManager::getTextureID("coral_stone_diff");
 
+        std::vector<std::string> linesFromFile;
         while (getline(infile, readLine)) {
+            linesFromFile.push_back(readLine);
+        }
+
+        // Loop over each line in the file, from end to beginning.
+        for (int y = linesFromFile.size() - 1; y > 0; y--) {
+            // The map file might end with an empty line. Take this into account
+            if (y == linesFromFile.size() - 1 && linesFromFile[y].empty() ) {
+                continue;
+            }
+
             Cube* entity = nullptr;
             bool wallFound = false;
 
-            for (auto& c : readLine) {
-                switch (toupper(c)) {
+            // Loop over each character in the given line
+            for (int x = 0; x < linesFromFile[y].size(); x++) {
+                std::string currentLine = linesFromFile[y];
+                switch (toupper(currentLine[x])) {
                     case 'W':
                         entity = new Cube();
-                        entity->setPosition({ index, height, 0 });
+                        entity->setPosition({ x, -y, 0 });
                         entity->getMaterial().getProperties().diffuseTextureId =
                           wallTextureID;
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
                         entity = new Cube();
-                        entity->setPosition({ index, height, 1 });
-                        entity->getMaterial()
-                          .getProperties().diffuseTextureId = wallTextureID;
+                        entity->setPosition({ x, -y, 1 });
+                        entity->getMaterial().getProperties().diffuseTextureId =
+                          wallTextureID;
                         entity->setParent(baseNode);
                         baseNode->addChild(entity);
 
                         wallFound = true;
                         break;
 
+                        /*
                     case ' ':
                         // Only spawn background if we have first spawned a
                         // wall.
@@ -104,20 +115,14 @@ Map::loadMap(const std::string& name)
                             entity = new Cube();
                             entity->setPosition({ index, height, -1 });
                             entity->getMaterial()
-                              .getProperties().diffuseTextureId = coralStoneTextureID;
-                            entity->setParent(baseNode);
+                              .getProperties().diffuseTextureId =
+                        coralStoneTextureID; entity->setParent(baseNode);
                             baseNode->addChild(entity);
                         }
                         break;
+*/
                 }
-                index++; // Increase X-position
             }
-            if (index > width) {
-                width = index;
-            }
-
-            index = 0; // Reset X-position as we are on a new line now
-            height--;  // Increase Y-position
         }
 
         // Close the file as we have finished reading it
