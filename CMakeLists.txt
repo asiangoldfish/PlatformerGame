@@ -39,6 +39,7 @@ target_compile_definitions(stb INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 
 add_subdirectory(src)
+add_subdirectory(PhysicsDemo)
 
 # External framework that I contributed to
 add_subdirectory(framework)
