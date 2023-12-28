@@ -70,6 +70,8 @@ namespace FW {
 
         virtual void updateViewportSize(glm::vec2 size) = 0;
 
+        const glm::vec3& getCameraFront() { return cameraFront; }
+
     private:
         /**
          * @brief Computes the camera's front vector and view matrix

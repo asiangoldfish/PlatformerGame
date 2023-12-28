@@ -55,11 +55,11 @@ public:
 
     [[nodiscard]] bool getIsRightButtonPressed() const
     {
-        return isRightButtonPressed;
+        return isRightButtonMousePressed;
     }
     void setIsRightButtonPressed(const bool isPressed)
     {
-        isRightButtonPressed = isPressed;
+        isRightButtonMousePressed = isPressed;
     }
 
     FW::Timer& getTimer() { return timer; }
@@ -73,6 +73,21 @@ public:
         };
     }
 
+public:
+    bool isRightButtonMousePressed = false;
+    bool isLeftButtonMousePressed = false;
+    bool isLeftAltPressed = false;
+    bool isLeftCtrlPressed = false;
+    bool isLeftShiftPressed = false;
+    glm::vec2 savedCursorPosition{ 0.0f };
+    glm::vec2 savedCameraPosition{ 0.0f };
+
+    glm::vec2 cameraCenter{ 0.0f };
+    float cameraDegreesX = 0.0f;
+    float cameraDegreesY = 0.0f;
+    float cameraDistance = 0.0f;
+    float cameraRotationSpeed = 1.0f;
+
 private:
     FW::ref<FW::Shader> shader;
     FW::ref<Cube> testCube;
@@ -82,7 +97,6 @@ private:
     FW::Timer timer;
 
     FW::ref<Floor> grid;
-    bool isRightButtonPressed = false;
 };
 
 FW::GLFWApplication*

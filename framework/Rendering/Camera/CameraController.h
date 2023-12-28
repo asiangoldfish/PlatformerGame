@@ -52,7 +52,11 @@ namespace FW {
         void moveSideway(float value);
         void moveUp(float value);
         const glm::vec3 getPosition() const;
+
         void setPosition(glm::vec3 newPosition);
+        void setPositionX(const float value);
+        void setPositionY(const float value);
+        void setPositionZ(const float value);
 
         [[nodiscard]] float getNearClip();
         void setNearClip(const float near);
@@ -65,6 +69,16 @@ namespace FW {
         bool getSpectatorMode() { return spectatorMode; }
         void setSpectatorMode(const bool enable) { spectatorMode = enable; }
 
+        Camera* getSelectedCamera() { return selectedCamera; }
+        /**
+         * Move the entity.
+         *
+         * This function is a shorthand for currentPosition + unitsToMoveBy. It
+         * takes the current position and adds x, y and z units to move by.
+         *
+         * @param moveBy How much to move by
+         */
+        void addMovement(glm::vec3 moveBy);
 
     private:
         Camera* selectedCamera = nullptr;

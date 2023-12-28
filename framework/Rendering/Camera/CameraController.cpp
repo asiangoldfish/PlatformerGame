@@ -65,6 +65,22 @@ namespace FW {
         }
     }
 
+    void CameraController::setPositionX(const float value)
+    {
+        auto pos = selectedCamera->getPosition();
+        setPosition(glm::vec3{ value, pos.y, pos.z });
+    }
+    void CameraController::setPositionY(const float value)
+    {
+        auto pos = selectedCamera->getPosition();
+        setPosition(glm::vec3{ pos.x, value, pos.z });
+    }
+    void CameraController::setPositionZ(const float value)
+    {
+        auto pos = selectedCamera->getPosition();
+        setPosition(glm::vec3{ pos.x, pos.y, value });
+    }
+
     float CameraController::getNearClip()
     {
         if (selectedCamera == (Camera*)perspectiveCamera.get()) {
@@ -99,5 +115,10 @@ namespace FW {
         } else {
             orthographicCamera->getFrustum().far = far;
         }
+    }
+    void CameraController::addMovement(glm::vec3 moveBy)
+    {
+        selectedCamera->setPosition(selectedCamera->getPosition() +
+                                    glm::vec3(moveBy));
     }
 }

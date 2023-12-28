@@ -182,41 +182,104 @@ PhysicsApp::~PhysicsApp()
 void
 cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    float cameraSpeed = 5.0f * gApp->getTimer().getDeltaTime();
+    glm::vec2 diff =
+      glm::vec2((float)xpos, (float)ypos) - gApp->savedCursorPosition;
+    auto controller = gApp->getCameraController();
+
+    float dt = gApp->getTimer().getDeltaTime();
+    float cameraSpeed = 5.0f * dt;
 
     // Move camera rotation
-    if (gApp && gApp->getIsRightButtonPressed()) {
+    if (gApp && gApp->isRightButtonMousePressed) {
         // Cursor is hidden and within window bounds
 
         // Make sure mouse is within bounds
-        if (xpos < 0) {
-            xpos = 0;
-        } else if (xpos > gApp->getWindowSize().x) {
-            xpos = gApp->getWindowSize().x;
-        }
-
-        if (ypos < 0) {
-            ypos = 0;
-        } else if (ypos > gApp->getWindowSize().y) {
-            ypos = gApp->getWindowSize().y;
-        }
+        //        if (xpos < 0) {
+        //            xpos = 0;
+        //        } else if (xpos > gApp->getWindowSize().x) {
+        //            xpos = gApp->getWindowSize().x;
+        //        }
+        //
+        //        if (ypos < 0) {
+        //            ypos = 0;
+        //        } else if (ypos > gApp->getWindowSize().y) {
+        //            ypos = gApp->getWindowSize().y;
+        //        }
 
         glfwGetCursorPos(window, &xpos, &ypos);
         glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
                                         ypos - gApp->getWindowSize().y / 2 } *
                              cameraSpeed;
 
-        gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
+        if (gApp->isLeftAltPressed && gApp->isLeftCtrlPressed &&
+            !gApp->isLeftShiftPressed) {
+            // Both alt and ctrl are pressed
+        } else if (gApp->isLeftShiftPressed && !gApp->isLeftCtrlPressed &&
+                   !gApp->isLeftAltPressed) {
+            // Only shift is pressed
+            gApp->getCameraController()->moveForward(-rotation.y * dt * 8.0f);
+            glfwSetCursorPos(
+              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+        } else if (gApp->isLeftCtrlPressed) {
+            // Only ctrl is pressed
+            // TODO: Fix panning so the direction is dependent on camera front
+            controller->setPosition(
+              { gApp->savedCameraPosition.x + diff.x * 0.1f * dt,
+                gApp->savedCameraPosition.y - diff.y * 0.1f * dt,
+                controller->getPosition().z });
+        } else if (gApp->isLeftAltPressed && !gApp->isLeftCtrlPressed &&
+                   !gApp->isLeftShiftPressed) {
+            // Only alt is pressed
+            gApp->cameraRotationSpeed = 15.0f;
+            float rotX = rotation.x * dt * gApp->cameraRotationSpeed;
+            float rotY = rotation.y * dt * gApp->cameraRotationSpeed;
 
-        glfwSetCursorPos(
-          window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+            gApp->cameraDegreesX += rotX;
+            gApp->cameraDegreesY += rotY;
+            gApp->cameraDistance = 5.0f;
+
+            INFO("Yaw: {} | DegreesX: {}", controller->getPerspectiveCamera()->getYaw(), gApp->cameraDegreesX);
+
+            controller->getPerspectiveCamera()->setEnablePanning(false);
+            //            controller->setPositionY(controller->getPosition().y +
+            //            rotY);
+
+            controller->setPositionX(std::cos(glm::radians(gApp->cameraDegreesX)) * gApp->cameraDistance);
+            controller->setPositionZ(std::sin(glm::radians(gApp->cameraDegreesX)) * gApp->cameraDistance);
+            controller->setPositionY(std::sin(glm::radians(gApp->cameraDegreesY)) * gApp->cameraDistance);
+
+            // Centralize mouse cursor on screen
+            glfwSetCursorPos(
+              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+            controller->getPerspectiveCamera()->setEnablePanning(true);
+        } else {
+            // No mod key is pressed
+            gApp->getCameraController()->rotate(
+              { rotation.x * 0.5f, -rotation.y * 0.5f });
+            glfwSetCursorPos(
+              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+        }
     }
+
+    //    if (gApp && gApp->isLeftAltPressed && gApp->isLeftButtonMousePressed)
+    //    {
+    //        //        auto currentCameraRotation =
+    //        //        gApp->getCameraController()->getSelectedCamera()->get;
+    //        glfwGetCursorPos(window, &xpos, &ypos);
+    //        glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x /
+    //        2,
+    //                                        ypos - gApp->getWindowSize().y / 2
+    //                                        } *
+    //                             cameraSpeed;
+    //
+    //        gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
+    //    }
 }
 
 void
 mouseScrollBack_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-//    gApp->getCameraController()->moveForward(yoffset * 0.5f);
+    //    gApp->getCameraController()->moveForward(yoffset * 0.5f);
     gApp->setCameraSpeed(gApp->getCameraSpeed() + 4.f * yoffset);
     INFO("New camera speed: {}", gApp->getCameraSpeed());
 }
@@ -229,13 +292,15 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
         return;
     }
 
-    gApp->setIsRightButtonPressed(
-      glfwGetMouseButton(window, MOUSE_RIGHT_CLICK));
+    gApp->isRightButtonMousePressed =
+      glfwGetMouseButton(window, MOUSE_RIGHT_CLICK);
+    gApp->isLeftButtonMousePressed =
+      glfwGetMouseButton(window, MOUSE_LEFT_CLICK);
 
-    if (gApp->getIsRightButtonPressed()) {
-        glfwSetCursorPos(window,
-                         gApp->getWindowSize().x / 2.0f,
-                         gApp->getWindowSize().y / 2.0f);
+    if (gApp->isRightButtonMousePressed) {
+        //        glfwSetCursorPos(window,
+        //                         gApp->getWindowSize().x / 2.0f,
+        //                         gApp->getWindowSize().y / 2.0f);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -247,9 +312,57 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
 void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    static bool altBtnJustPressed = false;
+    static bool ctrlBtnJustPressed = false;
+    static bool shiftBtnJustPressed = false;
+
+    double savedX, savedY;
+    glfwGetCursorPos(window, &savedX, &savedY);
+
     // Quit application
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
+    }
+
+    // Camera rotation
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS &&
+        !altBtnJustPressed) {
+        altBtnJustPressed = true;
+        gApp->isLeftAltPressed = true;
+        gApp->getCameraController()->getPerspectiveCamera()->setEnablePanning(
+          false);
+    }
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
+        altBtnJustPressed = false;
+        gApp->isLeftAltPressed = false;
+        gApp->getCameraController()->getPerspectiveCamera()->setEnablePanning(
+          true);
+    }
+
+    // Camera zoom
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS &&
+        !shiftBtnJustPressed) {
+        shiftBtnJustPressed = true;
+        gApp->isLeftShiftPressed = true;
+    }
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+        shiftBtnJustPressed = false;
+        gApp->isLeftShiftPressed = false;
+    }
+
+    // Camera panning
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS &&
+        !ctrlBtnJustPressed) {
+        ctrlBtnJustPressed = true;
+        gApp->isLeftCtrlPressed = true;
+        gApp->savedCursorPosition = glm::vec2(savedX, savedY);
+        gApp->savedCameraPosition = gApp->getCameraController()->getPosition();
+    }
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE) {
+        ctrlBtnJustPressed = false;
+        gApp->isLeftCtrlPressed = false;
+        gApp->savedCursorPosition = glm::vec2(savedX, savedY);
+        gApp->savedCameraPosition = gApp->getCameraController()->getPosition();
     }
 }
 
