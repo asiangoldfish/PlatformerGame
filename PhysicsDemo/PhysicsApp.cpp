@@ -193,19 +193,6 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
     if (gApp && gApp->isRightButtonMousePressed) {
         // Cursor is hidden and within window bounds
 
-        // Make sure mouse is within bounds
-        //        if (xpos < 0) {
-        //            xpos = 0;
-        //        } else if (xpos > gApp->getWindowSize().x) {
-        //            xpos = gApp->getWindowSize().x;
-        //        }
-        //
-        //        if (ypos < 0) {
-        //            ypos = 0;
-        //        } else if (ypos > gApp->getWindowSize().y) {
-        //            ypos = gApp->getWindowSize().y;
-        //        }
-
         glfwGetCursorPos(window, &xpos, &ypos);
         glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
                                         ypos - gApp->getWindowSize().y / 2 } *
