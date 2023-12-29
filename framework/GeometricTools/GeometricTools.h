@@ -20,11 +20,20 @@ namespace FW {
     /**
      * Generate a 2-dimensional square with positions
      */
-    constexpr std::array<float, 2 * 6> UnitSquare2D = { -0.25f, -0.25f, 0.25f,
-                                                        -0.25f, -0.25f, 0.25f,
+    inline std::vector<float> UnitSquareVertices2D = {
+        // Triangle 1       // Corners:
+        -1.0f, -1.0f, -1.0f,   // A
+        1.0f, -1.0f, -1.0f,   // B
+        1.0f, 1.0f, -1.0f,   // C
+        -1.0f, 1.0f, -1.0f,   // D
+    };
 
-                                                        0.25f,  -0.25f, -0.25f,
-                                                        0.25f,  0.25f,  0.25f };
+    inline std::vector<uint32_t> UnitSquareIndices2D = {
+        0, 1, 2,
+        2, 3, 0,
+    };
+
+
 
     /**
      * Generate a unit grid

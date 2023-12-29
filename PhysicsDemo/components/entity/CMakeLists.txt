@@ -3,6 +3,7 @@ project(COMPONENT_entity2)
 add_library(${PROJECT_NAME} STATIC
     Cube.h
     Floor.h     Floor.cpp
+    WorldGrid.h WorldGrid.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -13,7 +14,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ## Libraries ##
 ###############
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PRIVATE
     # External
     glfw
     glad
