@@ -13,6 +13,12 @@
 #include "assertions.h"
 #include "Log.h"
 
+static void outputShaderLocationLog(const int location, const std::string& name) {
+    if (location < 0) {
+        WARN("Unable to upload uniform {}", name);
+    }
+}
+
 namespace FW {
     Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
     {
@@ -113,18 +119,14 @@ namespace FW {
     void Shader::setInt(const std::string& name, const int value) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
-        }
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform1i(location, value);
     }
 
     void Shader::setFloat(const std::string& name, const float value) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
-        }
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform1f(location, value);
     }
 
@@ -132,9 +134,7 @@ namespace FW {
                            const glm::vec2& vector) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
-        }
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform2f(location, vector.x, vector.y);
     }
 
@@ -142,10 +142,7 @@ namespace FW {
                            const glm::vec3& vector) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_assert("Unable to upload uniform " + name);
-        }
-
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform3f(location, vector.x, vector.y, vector.z);
     }
 
@@ -153,20 +150,14 @@ namespace FW {
                            const glm::vec4& vector) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
-        }
-
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
     void Shader::setMat4(const std::string& name, const glm::mat4& matrix) const
     {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
-        if (location < 0) {
-            framework_warn("Unable to upload uniform " + name);
-        }
-
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 

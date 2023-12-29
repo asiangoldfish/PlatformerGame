@@ -7,6 +7,13 @@
 
 #include "RenderCommands.h"
 
+//#define SHADER_LOCATION_OUTPUT
+#ifdef SHADER_LOCATION_OUTPUT
+#define OUTPUT_SHADER_LOCATION_LOG(location, name) outputShaderLocationLog(location, name)
+#else
+#define OUTPUT_SHADER_LOCATION_LOG(location, name)
+#endif
+
 namespace FW {
     /**
      * Shader class for OpenGL.
