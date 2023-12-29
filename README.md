@@ -1,6 +1,7 @@
 # Platformer Game
 
 ![render-engine.jpeg](docs%2Fimages%2Frender-engine.jpeg)
+![3d_viewport_with_grid.jpeg](docs%2Fimages%2F3d_viewport_with_grid.jpeg)
 
 A render engine based on the [Learn OpenGL](https://learnopengl.com/) book.
 
