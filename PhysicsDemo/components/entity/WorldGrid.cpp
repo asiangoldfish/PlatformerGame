@@ -1,0 +1,28 @@
+#include "WorldGrid.h"
+
+WorldGrid::WorldGrid() {
+    auto entityAttribLayout = FW::BufferLayout({
+      { FW::ShaderDataType::Float3, "a_position" }
+    });
+
+    auto vertices = FW::UnitSquareVertices2D;
+    auto indices = FW::UnitSquareIndices2D;
+
+    vertexArray = FW::createRef<FW::VertexArray>();
+    vertexArray->bind();
+
+    indexBuffer = FW::createRef<FW::IndexBuffer>(&indices.front(), indices.size());
+
+    vertexBuffer = FW::createRef<FW::VertexBuffer>(
+      &vertices.front(), vertices.size() * sizeof(float));
+
+    vertexBuffer->setLayout(entityAttribLayout);
+    vertexArray->setIndexBuffer(indexBuffer.get());
+    vertexArray->addVertexBuffer(vertexBuffer.get());
+}
+void
+WorldGrid::draw(const FW::ref<FW::Shader> shader)
+{
+    shader->bind();
+    RenderCommand::drawIndex(*vertexArray);
+}

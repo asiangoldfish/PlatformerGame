@@ -10,6 +10,7 @@
 // App Components
 #include "Cube.h"
 #include "Floor.h"
+#include "WorldGrid.h"
 
 PhysicsApp* gApp = nullptr;
 
@@ -55,6 +56,10 @@ PhysicsApp::init()
     shader = FW::createRef<FW::Shader>(
       RESOURCES_DIR + std::string("shaders/vertex.glsl"),
       RESOURCES_DIR + std::string("shaders/fragment.glsl"));
+
+    worldGridShader = FW::createRef<FW::Shader>(
+      RESOURCES_DIR + std::string("shaders/worldGridVertex.glsl"),
+      RESOURCES_DIR + std::string("shaders/worldGridFrag.glsl"));
 
     FW::TextureManager::loadTexture2D(
       { { "metal_plate_diff",
@@ -106,10 +111,9 @@ PhysicsApp::init()
     testCube->setScale(1.0f);
 
     // Grid
-    int gridSize = 10;
+    int gridSize = 100;
     grid = FW::createScope<Floor>(gridSize);
     grid->setRotation({ 90.0f, 0.0f, 0.0f });
-    grid->setTiles(10, 10);
     grid->setPosition({ -gridSize / 2, 0, -gridSize / 2 });
 
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
@@ -117,6 +121,8 @@ PhysicsApp::init()
 
     INFO("Client application successfully initialized");
     shader->bind();
+
+    worldGrid = FW::createRef<WorldGrid>();
 
     return true;
 }
@@ -130,16 +136,16 @@ PhysicsApp::run()
         keyboardInput();
         timer.updateDeltaTime();
 
-        RenderCommand::setPolygonMode(RenderCommand::PolygonMode::WIREFRAME);
-        grid->draw(shader);
-        RenderCommand::setPolygonMode(RenderCommand::PolygonMode::SOLID);
+        cameraController->update(worldGridShader);
+        worldGrid->draw(worldGridShader);
+
+        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         cameraController->update(shader);
         shader->setFloat3("u_cameraPosition",
                           getCameraController()->getPosition());
 
         auto playerCube = playerController->getPossessedEntity();
-
         playerCube->update();
         playerCube->draw(shader);
 
@@ -223,17 +229,25 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 
             gApp->cameraDegreesX += rotX;
             gApp->cameraDegreesY += rotY;
-            gApp->cameraDistance = 5.0f;
+            //            gApp->cameraDistance = 5.0f;
 
-            INFO("Yaw: {} | DegreesX: {}", controller->getPerspectiveCamera()->getYaw(), gApp->cameraDegreesX);
+            gApp->cameraDistance =
+              glm::distance(glm::vec3(0.0f),
+                            glm::vec3(controller->getPosition().x,
+                                      0.0f,
+                                      controller->getPosition().z));
 
             controller->getPerspectiveCamera()->setEnablePanning(false);
-            //            controller->setPositionY(controller->getPosition().y +
-            //            rotY);
 
-            controller->setPositionX(std::cos(glm::radians(gApp->cameraDegreesX)) * gApp->cameraDistance);
-            controller->setPositionZ(std::sin(glm::radians(gApp->cameraDegreesX)) * gApp->cameraDistance);
-            controller->setPositionY(std::sin(glm::radians(gApp->cameraDegreesY)) * gApp->cameraDistance);
+            controller->setPositionX(
+              std::cos(glm::radians(gApp->cameraDegreesX)) *
+              gApp->cameraDistance);
+            controller->setPositionZ(
+              std::sin(glm::radians(gApp->cameraDegreesX)) *
+              gApp->cameraDistance);
+            controller->setPositionY(
+              std::sin(glm::radians(gApp->cameraDegreesY)) *
+              gApp->cameraDistance);
 
             // Centralize mouse cursor on screen
             glfwSetCursorPos(

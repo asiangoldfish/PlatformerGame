@@ -7,6 +7,7 @@
 
 class Cube;
 class Floor;
+class WorldGrid;
 
 namespace FW {
     class Shader;
@@ -97,6 +98,9 @@ private:
     FW::Timer timer;
 
     FW::ref<Floor> grid;
+
+    FW::ref<FW::Shader> worldGridShader;
+    FW::ref<WorldGrid> worldGrid;
 };
 
 FW::GLFWApplication*
