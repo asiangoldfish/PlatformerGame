@@ -198,26 +198,32 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
     float dt = gApp->getTimer().getDeltaTime();
     float cameraSpeed = 5.0f * dt;
 
-    // Move camera rotation
+    /*
+     * Handle camera movement. The following modes are supported by activating
+     * mod keys (shift, alt, control) and holding right mouse button:
+     *
+     * - Shift: Move forward/backward.
+     * - Control: Two-dimensional movement based on the currently front vector.
+     * - Alt: Orbit around a point.
+     * - None: Panning and tilting.
+     */
     if (gApp && gApp->isRightButtonMousePressed) {
-        if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) &&
-            !FW::Input::isKeyPressed(FW_KEY_LEFT_ALT) &&
-            !FW::Input::isKeyPressed(FW_KEY_LEFT_CONTROL)) {
-            // Only left shift is pressed
+        if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_SHIFT_BIT)) {
+            // Shift: Move forward/backward
             float mouseDistance = ypos - gApp->getWindowSize().y / 2.0f;
             gApp->getCameraController()->moveForward(-mouseDistance * dt *
                                                      8.0f);
             gApp->centralizeCursorInWindow();
-        } else if (gApp->isLeftCtrlPressed) {
-            // Only left ctrl is pressed
+        } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_CONTROL_BIT)) {
+            // Control: Two-dimensional movement based on the currently front vector.
             // TODO: Fix panning so the direction is dependent on camera front
             controller->setPosition(
               { gApp->savedCameraPosition.x + diff.x * 0.1f * dt,
                 gApp->savedCameraPosition.y - diff.y * 0.1f * dt,
                 controller->getPosition().z });
-        } else if (gApp->isLeftAltPressed && !gApp->isLeftCtrlPressed &&
-                   !gApp->isLeftShiftPressed) {
-            // Only alt is pressed
+
+        } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
+            // Alt: Orbit around a point.
             gApp->cameraRotationSpeed = 15.0f;
 
             // Orbit around the camera's focus point based on the distance from
@@ -250,7 +256,7 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
             //            gApp->centralizeCursorInWindow();
             //            controller->getPerspectiveCamera()->setEnablePanning(true);
         } else {
-            // No mod key is pressed
+            // None: Panning and tilting.
             /*
              * Take the distance from the currently saved location when the
              * mouse cursor is clicked (in screen space). Use this metric to
@@ -332,6 +338,10 @@ void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     FW::Input::updateJustPressed(key, action);
+
+    // Update the key press state for left and right SHIFT, ALT, SUPER and
+    // CONTROL
+    FW::Input::updateModKeyState(key, action);
 
     if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
         // Saved current mouse cursor

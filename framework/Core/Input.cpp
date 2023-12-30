@@ -6,6 +6,7 @@ namespace FW {
     Input::KeyRegister Input::registerKeyJustPressed;
     Input::MouseRegister Input::registerMouseJustPressed;
     GLFWwindow* Input::window = nullptr;
+    uint32_t Input::currentKeyState = 0;
 
     bool Input::isKeyPressed(int keycode)
     {
@@ -31,6 +32,11 @@ namespace FW {
     {
         auto state = glfwGetMouseButton(window, mouseButton);
         return state == GLFW_PRESS;
+    }
+
+    bool Input::isModKeyCombinationPressed(FW_KEY_BIT keys)
+    {
+        return currentKeyState == keys;
     }
 
     float Input::getMouseX()
@@ -111,5 +117,59 @@ namespace FW {
 
         window = win;
         return 0;
+    }
+
+    void Input::updateModKeyState(int key, int action)
+    {
+        /*
+         * Only register the following left or right keys:
+         * - Control
+         * - Alt
+         * - Shift
+         * - Super
+         */
+
+        uint32_t bitkey = 0;
+
+        switch (key) {
+            case FW_KEY_LEFT_SHIFT:
+                bitkey = FW_KEY_LEFT_SHIFT_BIT;
+                break;
+            case FW_KEY_RIGHT_SHIFT:
+                bitkey = FW_KEY_RIGHT_SHIFT_BIT;
+                break;
+            case FW_KEY_LEFT_CONTROL:
+                bitkey = FW_KEY_LEFT_CONTROL_BIT;
+                break;
+            case FW_KEY_RIGHT_CONTROL:
+                bitkey = FW_KEY_RIGHT_CONTROL_BIT;
+                break;
+            case FW_KEY_LEFT_ALT:
+                bitkey = FW_KEY_LEFT_ALT_BIT;
+                break;
+            case FW_KEY_RIGHT_ALT:
+                bitkey = FW_KEY_RIGHT_ALT_BIT;
+                break;
+            case FW_KEY_LEFT_SUPER:
+                bitkey = FW_KEY_LEFT_SUPER_BIT;
+                break;
+            case FW_KEY_RIGHT_SUPER:
+                bitkey = FW_KEY_RIGHT_SUPER_BIT;
+                break;
+            default:
+                bitkey = 0;
+                break;
+        }
+
+        // If bitkey is 0, then no valid key was passed.
+        if (!bitkey) {
+            return;
+        }
+
+        if (action == GLFW_PRESS) {
+            currentKeyState |= FW_KEY_BIT(bitkey);
+        } else {
+            currentKeyState &= ~FW_KEY_BIT(bitkey);
+        }
     }
 }

@@ -14,39 +14,6 @@ namespace FW {
     {
     public:
         /**
-         * Update the registration of keys that are just pressed.
-         *
-         * @details For performance, this function should only be called once per frame.
-         * Consider placing it at the top of the game loop.
-         *
-         * @example
-         * @code
-         * #include "Framework.h"
-         *
-         * void keyCallback(GLFWwindow* window, int key, int scancode, int
-         * action, int mods)
-         * {
-         *     FW::Input::updateJustPressed(key, action);
-         * }
-         *
-         * int main() {
-         *     // ...
-         *     glfwSetKeyCallback(window, keyCallback);
-         *
-         *     // To find if 'Q' was just pressed
-         *     if (FW::Input::isKeyJustPressed(FW::KEY_Q) {
-         *         INFO("Key 'Q' just pressed!");
-         * }
-         * @endcode
-         */
-        static void updateJustPressed(int key, int action);
-
-        /**
-         * Clear all just-pressed variables. This should be called at the end of the game loop.
-         */
-        static void clearJustPressed();
-
-        /**
          * Determine what mouse buttons are held or released.
          *
          * @details The struct is for general use. Implementations determine how
@@ -76,6 +43,40 @@ namespace FW {
         };
 
     public:
+        /**
+         * Update the registration of keys that are just pressed.
+         *
+         * @details For performance, this function should only be called once per frame.
+         * Consider placing it at the top of the game loop.
+         *
+         * @example
+         * @code
+         * #include "Framework.h"
+         *
+         * void keyCallback(GLFWwindow* window, int key, int scancode, int
+         * action, int mods)
+         * {
+         *     FW::Input::updateJustPressed(key, action);
+         * }
+         *
+         * int main() {
+         *     // ...
+         *     glfwSetKeyCallback(window, keyCallback);
+         *
+         *     // To find if 'Q' was just pressed
+         *     if (FW::Input::isKeyJustPressed(FW::KEY_Q) {
+         *         INFO("Key 'Q' just pressed!");
+         * }
+         * @endcode
+         */
+        static void updateJustPressed(int key, int action);
+        static void updateModKeyState(int key, int action);
+
+        /**
+         * Clear all just-pressed variables. This should be called at the end of the game loop.
+         */
+        static void clearJustPressed();
+
         /**
          * Check whether the key is pressed. This also checks if it's also
          * continuously held down.
@@ -111,6 +112,20 @@ namespace FW {
          * or released, return false.
          */
         static bool isKeyJustPressed(int keycode);
+
+        /**
+         * Check whether a certain key combination is pressed.
+         *
+         * @example
+         * @code
+         * if (FW::Input::isKeyCombinationPressed(FW_KEY_Q | FW_KEY_A)) {
+         *     std::cout << "Q and A are pressed" << std::endl;
+         * }
+         * @endcode
+         * @param keys Bits for the keys to check against.
+         * @return True if the key combination is pressed. False if not.
+         */
+        static bool isModKeyCombinationPressed(FW_KEY_BIT keys);
 
         /**
          * Checks whether the mouse button was just pressed
@@ -162,9 +177,12 @@ namespace FW {
          */
         static int setWindow(GLFWwindow* win);
 
+        static int getCurrentKeyState() { return currentKeyState; }
+
     public:
         static KeyRegister registerKeyJustPressed;
         static MouseRegister registerMouseJustPressed;
         static GLFWwindow* window;
+        static uint32_t currentKeyState;
     };
 }
