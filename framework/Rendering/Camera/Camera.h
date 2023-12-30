@@ -41,6 +41,8 @@ namespace FW {
         void moveSideway(const float speed);
         void moveUp(const float speed);
         void rotate(const glm::vec2& rotation);
+        glm::vec2 getRotation() { return glm::vec2(yaw, pitch); };
+        void setRotation(const glm::vec2& rotation);
 
         // -------------
         // Camera Rotation
@@ -49,7 +51,7 @@ namespace FW {
         inline void setYaw(const float yaw) { this->yaw = yaw; }
 
         inline float getPitch() const { return pitch; }
-        inline void setPitch(const float pitch) { this->pitch = pitch; }
+        inline void setPitch(const float p) { pitch = p; }
 
         // -------------
         // Camera Position

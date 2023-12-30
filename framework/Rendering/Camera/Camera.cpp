@@ -35,4 +35,16 @@ namespace FW {
 
 		computeViewMatrix();
 	}
+
+        void Camera::setRotation(const glm::vec2& rotation)
+        {
+            // From ChatGPT
+            yaw = rotation.x;
+
+            // Clamp so the camera doesn't go upside down
+            pitch = rotation.y;
+            pitch = std::clamp(pitch, -89.9f, 89.9f);
+
+            computeViewMatrix();
+        }
 }

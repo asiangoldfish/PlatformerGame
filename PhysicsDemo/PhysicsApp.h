@@ -74,6 +74,12 @@ public:
         };
     }
 
+    void centralizeCursorInWindow()
+    {
+        glfwSetCursorPos(
+          getWindow(), getWindowSize().x / 2, getWindowSize().y / 2);
+    }
+
 public:
     bool isRightButtonMousePressed = false;
     bool isLeftButtonMousePressed = false;
@@ -88,6 +94,11 @@ public:
     float cameraDegreesY = 0.0f;
     float cameraDistance = 0.0f;
     float cameraRotationSpeed = 1.0f;
+    float cameraCurrentYaw = 0.0f;
+    float cameraCurrentPitch = 0.0f;
+
+    float savedCameraYaw = 0.0f;
+    float savedCameraPitch = 0.0f;
 
 private:
     FW::ref<FW::Shader> shader;

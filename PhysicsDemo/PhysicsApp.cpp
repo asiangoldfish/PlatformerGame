@@ -198,8 +198,6 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
     // Move camera rotation
     if (gApp && gApp->isRightButtonMousePressed) {
         // Cursor is hidden and within window bounds
-
-        glfwGetCursorPos(window, &xpos, &ypos);
         glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
                                         ypos - gApp->getWindowSize().y / 2 } *
                              cameraSpeed;
@@ -224,11 +222,16 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
                    !gApp->isLeftShiftPressed) {
             // Only alt is pressed
             gApp->cameraRotationSpeed = 15.0f;
-            float rotX = rotation.x * dt * gApp->cameraRotationSpeed;
-            float rotY = rotation.y * dt * gApp->cameraRotationSpeed;
 
-            gApp->cameraDegreesX += rotX;
-            gApp->cameraDegreesY += rotY;
+            // Orbit around the camera's focus point based on the distance from
+            // where the user mouse clicked to where the cursor is at the moment
+            // in screen space.
+
+            // Assume that the distance is in degrees
+            glm::vec2 distance =
+              glm::vec2{ diff.x * dt * gApp->cameraRotationSpeed,
+                         diff.y * dt * gApp->cameraRotationSpeed };
+
             //            gApp->cameraDistance = 5.0f;
 
             gApp->cameraDistance =
@@ -239,42 +242,35 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 
             controller->getPerspectiveCamera()->setEnablePanning(false);
 
-            controller->setPositionX(
-              std::cos(glm::radians(gApp->cameraDegreesX)) *
-              gApp->cameraDistance);
-            controller->setPositionZ(
-              std::sin(glm::radians(gApp->cameraDegreesX)) *
-              gApp->cameraDistance);
-            controller->setPositionY(
-              std::sin(glm::radians(gApp->cameraDegreesY)) *
-              gApp->cameraDistance);
+            controller->setPositionX(std::cos(glm::radians(distance.x)) *
+                                     gApp->cameraDistance);
+            controller->setPositionY(std::sin(glm::radians(distance.y)) *
+                                     gApp->cameraDistance);
+            controller->setPositionZ(std::sin(glm::radians(distance.x)) *
+                                     gApp->cameraDistance);
 
             // Centralize mouse cursor on screen
-            glfwSetCursorPos(
-              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
-            controller->getPerspectiveCamera()->setEnablePanning(true);
+            //            gApp->centralizeCursorInWindow();
+            //            controller->getPerspectiveCamera()->setEnablePanning(true);
         } else {
             // No mod key is pressed
-            gApp->getCameraController()->rotate(
-              { rotation.x * 0.5f, -rotation.y * 0.5f });
-            glfwSetCursorPos(
-              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+            /*
+             * Take the distance from the currently saved location when the
+             * mouse cursor is clicked (in screen space). Use this metric to
+             * determine how much to rotate the camera by.
+             */
+            float cameraRotationSpeed = 0.1f;
+            glm::vec2 difference =
+              glm::vec2(xpos, ypos) - gApp->savedCursorPosition;
+            auto cam = gApp->getCameraController()->getPerspectiveCamera();
+            difference.y *= -1;
+            glm::vec2 newRotation =
+              glm::vec2(gApp->cameraCurrentYaw, gApp->cameraCurrentPitch) +
+              difference * cameraRotationSpeed;
+
+            cam->setRotation(newRotation);
         }
     }
-
-    //    if (gApp && gApp->isLeftAltPressed && gApp->isLeftButtonMousePressed)
-    //    {
-    //        //        auto currentCameraRotation =
-    //        //        gApp->getCameraController()->getSelectedCamera()->get;
-    //        glfwGetCursorPos(window, &xpos, &ypos);
-    //        glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x /
-    //        2,
-    //                                        ypos - gApp->getWindowSize().y / 2
-    //                                        } *
-    //                             cameraSpeed;
-    //
-    //        gApp->getCameraController()->rotate({ rotation.x, -rotation.y });
-    //    }
 }
 
 void
@@ -293,10 +289,35 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
         return;
     }
 
-    gApp->isRightButtonMousePressed =
-      glfwGetMouseButton(window, MOUSE_RIGHT_CLICK);
+    // Detect the first time the mouse button is pressed;
+    struct MouseButtons
+    {
+        bool left = false;
+        bool middle = false;
+        bool right = false;
+    };
+    static MouseButtons mbtn;
+
     gApp->isLeftButtonMousePressed =
       glfwGetMouseButton(window, MOUSE_LEFT_CLICK);
+
+    if (glfwGetMouseButton(window, MOUSE_RIGHT_CLICK)) {
+        gApp->isRightButtonMousePressed = true;
+
+        double x, y;
+
+        if (!mbtn.right) {
+            glfwGetCursorPos(window, &x, &y);
+            gApp->savedCursorPosition = glm::vec2(x, y);
+            gApp->cameraCurrentYaw =
+              gApp->getCameraController()->getPerspectiveCamera()->getYaw();
+            gApp->cameraCurrentPitch =
+              gApp->getCameraController()->getPerspectiveCamera()->getPitch();
+        }
+    } else {
+        gApp->isRightButtonMousePressed = false;
+        mbtn.right = false;
+    }
 
     if (gApp->isRightButtonMousePressed) {
         //        glfwSetCursorPos(window,

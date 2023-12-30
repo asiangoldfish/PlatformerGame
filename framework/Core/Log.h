@@ -76,3 +76,7 @@
  * must be fixed quickly as possible.
  */
 #define FATAL(...) spdlog::critical(__VA_ARGS__); __breakpoint()
+
+#define INFO_GLM_VEC2(value) INFO("X: {} | Y: {}", value.x, value.y)
+#define INFO_GLM_VEC3(value) INFO("X: {} | Y: {} | Z: {}", value.x, value.y, value.z);
+#define INFO_GLM_VEC4(value) INFO("X: {} | Y: {} | Z: {} | W: {}", value.x, value.y, value.z, value.w);
