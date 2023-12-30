@@ -7,6 +7,9 @@ add_library(${PROJECT_NAME} STATIC
     assertions.h            assertions.cpp
     Timer.h                 Timer.cpp
     EntryPoint.h            EntryPoint.cpp
+    MouseButtonCodes.h
+    KeyCodes.h
+    Input.h                 Input.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

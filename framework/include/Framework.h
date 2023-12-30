@@ -6,6 +6,8 @@
 // Core
 #include "Memory.h"
 #include "GLFWApplication.h"
+#include "KeyCodes.h"
+#include "MouseButtonCodes.h"
 #include "Input.h"
 #include "Log.h"
 #include "Timer.h"

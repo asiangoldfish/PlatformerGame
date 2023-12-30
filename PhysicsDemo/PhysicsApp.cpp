@@ -86,7 +86,9 @@ PhysicsApp::init()
     // -------------
     FW::scope<FW::Entity> playerCube = FW::createScope<Cube>();
     //    playerCube->setScale(0.8f);
-    playerCube->setPosition({ 0, 0.5f, 0 });
+    playerCube->setPosition({ 0, 1.f, 0 });
+    playerCube->setScale({ 1.0f, 2.0f, 1.0f });
+    playerCube->recalculateModelMatrix();
     playerCube->getMaterial().getProperties().diffuseTextureId =
       FW::TextureManager::getTextureID("metal_plate_diff");
     playerCube->setMaterial(FW::MaterialPreset::CHROME);
@@ -99,7 +101,7 @@ PhysicsApp::init()
     cameraController =
       FW::createRef<FW::CameraController>(FW::CameraType::PERSPECTIVE);
     cameraController->getPerspectiveCamera()->setEnablePanning(true);
-    cameraController->rotate({ -90.0f, -45.0f });
+    cameraController->addRotation({ -90.0f, -45.0f });
     cameraController->setPosition({ 0.0f, 5.0f, 5.0f });
     cameraController->setSpectatorMode(true);
 
@@ -150,6 +152,7 @@ PhysicsApp::run()
         playerCube->draw(shader);
 
         glfwSwapBuffers(getWindow());
+        FW::Input::clearJustPressed();
     }
 }
 
@@ -197,22 +200,16 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
 
     // Move camera rotation
     if (gApp && gApp->isRightButtonMousePressed) {
-        // Cursor is hidden and within window bounds
-        glm::vec2 rotation = glm::vec2{ xpos - gApp->getWindowSize().x / 2,
-                                        ypos - gApp->getWindowSize().y / 2 } *
-                             cameraSpeed;
-
-        if (gApp->isLeftAltPressed && gApp->isLeftCtrlPressed &&
-            !gApp->isLeftShiftPressed) {
-            // Both alt and ctrl are pressed
-        } else if (gApp->isLeftShiftPressed && !gApp->isLeftCtrlPressed &&
-                   !gApp->isLeftAltPressed) {
-            // Only shift is pressed
-            gApp->getCameraController()->moveForward(-rotation.y * dt * 8.0f);
-            glfwSetCursorPos(
-              window, gApp->getWindowSize().x / 2, gApp->getWindowSize().y / 2);
+        if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) &&
+            !FW::Input::isKeyPressed(FW_KEY_LEFT_ALT) &&
+            !FW::Input::isKeyPressed(FW_KEY_LEFT_CONTROL)) {
+            // Only left shift is pressed
+            float mouseDistance = ypos - gApp->getWindowSize().y / 2.0f;
+            gApp->getCameraController()->moveForward(-mouseDistance * dt *
+                                                     8.0f);
+            gApp->centralizeCursorInWindow();
         } else if (gApp->isLeftCtrlPressed) {
-            // Only ctrl is pressed
+            // Only left ctrl is pressed
             // TODO: Fix panning so the direction is dependent on camera front
             controller->setPosition(
               { gApp->savedCameraPosition.x + diff.x * 0.1f * dt,
@@ -259,7 +256,7 @@ cursorPos_callback(GLFWwindow* window, double xpos, double ypos)
              * mouse cursor is clicked (in screen space). Use this metric to
              * determine how much to rotate the camera by.
              */
-            float cameraRotationSpeed = 0.1f;
+            float cameraRotationSpeed = 0.05f;
             glm::vec2 difference =
               glm::vec2(xpos, ypos) - gApp->savedCursorPosition;
             auto cam = gApp->getCameraController()->getPerspectiveCamera();
@@ -299,9 +296,9 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
     static MouseButtons mbtn;
 
     gApp->isLeftButtonMousePressed =
-      glfwGetMouseButton(window, MOUSE_LEFT_CLICK);
+      glfwGetMouseButton(window, FW_MOUSE_BUTTON_LEFT);
 
-    if (glfwGetMouseButton(window, MOUSE_RIGHT_CLICK)) {
+    if (glfwGetMouseButton(window, FW_MOUSE_BUTTON_RIGHT)) {
         gApp->isRightButtonMousePressed = true;
 
         double x, y;
@@ -334,9 +331,17 @@ cursorMouseButton_callback(GLFWwindow* window, int, int, int)
 void
 keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    FW::Input::updateJustPressed(key, action);
+
+    if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
+        // Saved current mouse cursor
+        double xpos, ypos;
+        glfwGetCursorPos(gApp->getWindow(), &xpos, &ypos);
+        gApp->savedCursorPosition = glm::vec2(xpos, ypos);
+    }
+
     static bool altBtnJustPressed = false;
     static bool ctrlBtnJustPressed = false;
-    static bool shiftBtnJustPressed = false;
 
     double savedX, savedY;
     glfwGetCursorPos(window, &savedX, &savedY);
@@ -359,17 +364,6 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
         gApp->isLeftAltPressed = false;
         gApp->getCameraController()->getPerspectiveCamera()->setEnablePanning(
           true);
-    }
-
-    // Camera zoom
-    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS &&
-        !shiftBtnJustPressed) {
-        shiftBtnJustPressed = true;
-        gApp->isLeftShiftPressed = true;
-    }
-    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-        shiftBtnJustPressed = false;
-        gApp->isLeftShiftPressed = false;
     }
 
     // Camera panning

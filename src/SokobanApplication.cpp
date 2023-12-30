@@ -106,7 +106,7 @@ SokobanApplication::init()
     cameraController =
       FW::createRef<FW::CameraController>(FW::CameraType::PERSPECTIVE);
     cameraController->getPerspectiveCamera()->setEnablePanning(true);
-    cameraController->rotate({ -90.0f, 0.0f });
+    cameraController->addRotation({ -90.0f, 0.0f });
     cameraController->setPosition(
       { playerController->getPossessedEntity()->getPosition().x + 3.0f,
         playerController->getPossessedEntity()->getPosition().y + 2.0f,

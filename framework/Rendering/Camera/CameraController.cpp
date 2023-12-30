@@ -29,9 +29,14 @@ namespace FW {
         }
     }
 
-    void CameraController::rotate(glm::vec2 value)
+    void CameraController::addRotation(glm::vec2 value)
     {
         selectedCamera->rotate(value);
+    }
+
+    void CameraController::setRotation(glm::vec2 value)
+    {
+        selectedCamera->setRotation(value);
     }
 
     void CameraController::moveSideway(float value)

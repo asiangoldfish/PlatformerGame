@@ -4,35 +4,36 @@
 // External libraries
 #include <glad/glad.h>
 
-// Framwork
+// Framework
 #include "GLFWApplication.h"
 #include "Log.h"
 #include "RenderCommands.h"
+#include "Input.h"
 
 namespace FW {
     // Output messages from OpenGL
-    static void GLAPIENTRY messageCallback(GLenum source, GLenum type,
-        GLuint id, GLenum severity,
-        GLsizei length,
-        const GLchar* message,
-        const void* userParam) {
+    static void GLAPIENTRY messageCallback(GLenum source,
+                                           GLenum type,
+                                           GLuint id,
+                                           GLenum severity,
+                                           GLsizei length,
+                                           const GLchar* message,
+                                           const void* userParam)
+    {
         std::cerr << "GL CALLBACK:"
-            << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "")
-            <<
-            "type = 0x" << type <<
-            ", severity = 0x" << severity <<
-            ", message =" << message << std::endl;
+                  << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "")
+                  << "type = 0x" << type << ", severity = 0x" << severity
+                  << ", message =" << message << std::endl;
     }
 
     // Set initial values to member variables
-    GLFWApplication::GLFWApplication(
-        const std::string& name,
-        const std::string& version,
-        glm::vec2 windowSize)
-        : appName(name)
-        , appVersion(version)
-        , window(nullptr)
-        , windowSize(windowSize)
+    GLFWApplication::GLFWApplication(const std::string& name,
+                                     const std::string& version,
+                                     glm::vec2 windowSize)
+      : appName(name)
+      , appVersion(version)
+      , window(nullptr)
+      , windowSize(windowSize)
     {
     }
 
@@ -57,11 +58,7 @@ namespace FW {
 
         // Create window
         window = glfwCreateWindow(
-                windowSize.x,
-                windowSize.y,
-                appName.c_str(),
-                nullptr,
-                nullptr);
+          windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
 
         if (!window) {
             std::cerr << "GLFW::WINDOW::Unable to create window\n";
@@ -78,7 +75,8 @@ namespace FW {
 
         // Make window's context the current one. This also lets us load OpenGL
         // functions with GLAD using gladLoadGLLoader(...).
-        //More about GLFW context: https://computergraphics.stackexchange.com/a/4563
+        // More about GLFW context:
+        // https://computergraphics.stackexchange.com/a/4563
         glfwMakeContextCurrent(window);
 
         // Load OpenGL functions in runtime
@@ -96,12 +94,21 @@ namespace FW {
         glFrontFace(GL_CCW);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
+
         // Uncomment this only for debugging
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(messageCallback, nullptr);
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        glDebugMessageControl(
+          GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
+        // User input - Register the window.
+        // These errors should never happen, but there is no harm in checking them.
+        // Input::setWindow() returns 0 if everything is OK, and non-zero integer if something went wrong.
+        if (Input::setWindow(window)) {
+                FATAL("GLFWApplication::Init: Failed to set window. This should never happen");
+                return false;
+        }
 
         INFO("GLFWApplication \'{}\' successfully initiated", appName);
 

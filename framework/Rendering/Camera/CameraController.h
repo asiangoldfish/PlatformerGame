@@ -15,10 +15,11 @@ namespace FW {
     };
 
     /**
-     * Manage the input for the Camera.
+     * Controller for the Camera.
      *
      * While the Camera handles the technical details, the CameraController
-     * handles user input and moving the camera.
+     * handles user input and moving the camera. It provides functions to
+     * manipulate the camera's properties.
      */
     class CameraController
     {
@@ -40,13 +41,25 @@ namespace FW {
         void update(const ref<Shader>& shader);
 
         /**
-         * Rotate the camera.
+         * Add rotation to the camera.
          *
-         * The values are set in world space.
-         * @param value The values to set the new camera rotation by. The
-         * x-value is horizontal rotation, while the y-value is vertical.
+         * @details Add rotation to the current camera's yaw and pitch. To set
+         * the rotation's absolute value, use <u>setRotation()</u> instead.
+         *
+         * @param value Value to increment or decrement the current rotation by.
          */
-        void rotate(glm::vec2 value);
+        void addRotation(glm::vec2 value);
+
+        /**
+         * Set the camera absolute rotation.
+         *
+         * @details Set the camera's rotation by yaw and pitch. To increment or
+         * decrement, instead use <u>addRotation()</u>
+         *
+         * @param value The values to set the new camera rotation by. The
+         * x-value is yaw and y-value is pitch
+         */
+        void setRotation(glm::vec2 value);
 
         void moveForward(float value);
         void moveSideway(float value);
