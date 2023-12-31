@@ -28,7 +28,7 @@ namespace FW {
         return myRandomNumber;
     }
 
-    float rgn(float low, float high)
+    float rng(float low, float high)
     {
         return rng() * (high - low) + low;
     }

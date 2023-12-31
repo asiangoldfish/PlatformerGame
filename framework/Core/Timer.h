@@ -76,14 +76,14 @@ namespace FW {
         inline void resetTimer() { elapsedTime = 0.0f ;}
 
         /**
-         * Get time elapsed since it was last reset.
+         * Get time elapsed since it was last reset in seconds.
          */
-        inline float getElapsedTimeInSeconds() const { return elapsedTime / 1000.0f; }
+        inline float getElapsedTime() const { return elapsedTime; }
 
         /**
-         * Get time elapsed since it was last reset.
+         * Get time elapsed since it was last reset in milliseconds.
          */
-        inline float getElapsedTimeInMilliseconds() const { return elapsedTime; }
+        inline float getElapsedTimeInMilliseconds() const { return elapsedTime * 1000.0f; }
 
     private:
         /** Time since constructed or reset */

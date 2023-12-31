@@ -1,7 +1,8 @@
 project(FRAMEWORK_PHYSICS)
 
 add_library(${PROJECT_NAME}
-    Physics.h   Physics.cpp
+    Physics.h           Physics.cpp
+    ParticleSystem.h    ParticleSystem.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -9,10 +10,28 @@ PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 
 PRIVATE
-    ${CMAKE_SOURCE_DIR}/framework
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    FRAMEWORK_ECS
     glm
+
+    FRAMEWORK_ECS
+    FRAMEWORK_RENDERING
+    FRAMEWORK_GEOMETRICTOOLS
+    FRAMEWORK_UTIL
 )
+
+
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    FW_PHYSICS_RESOURCES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/"
+)
+
+# Copy assets directory to binary destination
+set (source "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources")
+add_custom_target (${PROJECT_NAME}_COPY_ASSETS
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
+)
+add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_ASSETS)

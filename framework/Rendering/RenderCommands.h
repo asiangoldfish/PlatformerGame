@@ -82,7 +82,6 @@ namespace RenderCommand {
     inline void drawIndex(const FW::VertexArray& vertexArrayObject,
                           GLenum primitive = GL_TRIANGLES)
     {
-
         uint32_t count = vertexArrayObject.getIndexBuffer()->getCount();
 
         vertexArrayObject.bind();

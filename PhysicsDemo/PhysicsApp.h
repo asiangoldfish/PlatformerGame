@@ -120,6 +120,9 @@ private:
 
     FW::ref<FW::Shader> worldGridShader;
     FW::ref<WorldGrid> worldGrid;
+
+    // Particle system
+    FW::scope<FW::Emitter> emitter;
 };
 
 FW::GLFWApplication*

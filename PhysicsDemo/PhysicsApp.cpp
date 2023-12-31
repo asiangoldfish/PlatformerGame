@@ -93,6 +93,9 @@ PhysicsApp::init()
 
     worldGrid = FW::createRef<WorldGrid>();
 
+    // Physics
+    emitter = FW::createScope<FW::Emitter>();
+
     INFO("Client application successfully initialized");
 
     return true;
@@ -101,11 +104,16 @@ PhysicsApp::init()
 void
 PhysicsApp::run()
 {
+    FW::Timer emitterTimer;
+    emitterTimer.resetTimer();
+
     while (!glfwWindowShouldClose(getWindow())) {
         RenderCommand::clear();
         glfwPollEvents();
         keyboardInput();
         timer.updateDeltaTime();
+
+        emitterTimer.update(timer.getDeltaTime());
 
         cameraController->update(worldGridShader);
         worldGrid->draw(worldGridShader);
@@ -114,8 +122,18 @@ PhysicsApp::run()
 
         cameraController->update(shader);
 
-        playerCube->update();
-        playerCube->draw(shader);
+//        playerCube->update();
+//        playerCube->draw(shader);
+
+        cameraController->update(emitter->getShader());
+
+        if (emitterTimer.getElapsedTime() > FW::rng(0.1f, 3.f)) {
+            emitter->addParticle(1);
+            emitterTimer.resetTimer();
+        }
+
+        emitter->update(timer.getDeltaTime());
+        emitter->draw();
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();
@@ -250,10 +268,7 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
             // in screen space.
 
             // Assume that the distance is in degrees
-            glm::vec2 distance = glm::vec2{ diff.x * dt * cameraRotationSpeed,
-                                            diff.y * dt * cameraRotationSpeed };
-
-            //            cameraDistance = 5.0f;
+            glm::vec2 distance = diff * cameraRotationSpeed * 0.01f;
 
             cameraDistance =
               glm::distance(glm::vec3(0.0f),

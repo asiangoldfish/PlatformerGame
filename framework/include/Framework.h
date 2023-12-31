@@ -38,6 +38,10 @@
 // ECS
 #include "Entity.h"
 
+// Physics
+#include "Physics.h"
+#include "ParticleSystem.h"
+
 // Resource Management
 #include "Model.h"
 
