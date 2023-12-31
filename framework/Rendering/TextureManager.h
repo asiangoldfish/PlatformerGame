@@ -207,6 +207,8 @@ namespace FW {
          */
         static const std::vector<std::shared_ptr<Texture>>& getTextures();
 
+        static const int getInvalidTextureID() { return invalidTextureID; }
+
     private:
         // TODO: textures should be a map. This forces their name to be unique.
         static std::vector<std::shared_ptr<Texture>> textures;

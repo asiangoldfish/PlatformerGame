@@ -79,7 +79,7 @@ namespace FW {
             // We allow the user to either upload a texture or set it by value
             // -----
             // Diffuse
-            FW::TextureManager::bind(material.getProperties().diffuseTextureId,
+            FW::TextureManager::bind(material.getProperties().diffuseTextureID,
                                      0);
 
             // Specular

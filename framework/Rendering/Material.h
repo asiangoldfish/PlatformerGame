@@ -67,9 +67,37 @@ namespace FW {
         glm::vec3 specular = glm::vec3(1.0f);
         std::string diffuseTextureName;
         std::string specularTextureName;
-        uint32_t diffuseTextureId = -1;
-        uint32_t specularTextureId = -1;
+        uint32_t diffuseTextureID = -1;
+        uint32_t specularTextureID = -1;
         float shininess = 1.0f;
+
+        /**
+         * Set the diffuse texture's ID by its name.
+         * @details TextureManage is used to find the texture's ID. Simply pass the name, and the ID is extracted.
+         * @param name The texture's name
+         */
+        void setDiffuseTextureID(std::string name) {
+            uint32_t foundID = TextureManager::getTextureID(name);
+            if (foundID == TextureManager::getInvalidTextureID()) {
+                WARN("Material::setDiffuseTextureID: Cannot find texture ID by name");
+            } else {
+                diffuseTextureID = foundID;
+            }
+        }
+
+        /**
+         * Set the specular texture's ID by its name.
+         * @details TextureManage is used to find the texture's ID. Simply pass the name, and the ID is extracted.
+         * @param name The texture's name
+         */
+        void setSpecularTextureID(std::string name) {
+            uint32_t foundID = TextureManager::getTextureID(name);
+            if (foundID == TextureManager::getInvalidTextureID()) {
+                WARN("Material::setSpecularTextureID: Cannot find texture ID by name");
+            } else {
+                specularTextureID = foundID;
+            }
+        }
     };
 
     /**

@@ -200,7 +200,7 @@ namespace FW {
         shader.setFloat3("u_material.specular", properties.specular);
         shader.setFloat("u_material.shininess", properties.shininess);
 
-        TextureManager::bind(properties.diffuseTextureId, 0);
-        TextureManager::bind(properties.specularTextureId, 1);
+        TextureManager::bind(properties.diffuseTextureID, 0);
+        TextureManager::bind(properties.specularTextureID, 1);
     }
 } // Framework
