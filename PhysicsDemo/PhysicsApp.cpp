@@ -95,7 +95,13 @@ PhysicsApp::init()
 
     // Physics
     emitter = FW::createScope<FW::Emitter>();
-    emitter->setmaxLifetime(0.5f, 1.3f);
+    emitter->setMaxLifetime(1.0f, 3.0f);
+    float spread = 0.075f;
+    emitter->setInitialVelocityX(-spread, spread);
+    emitter->setInitialVelocityY(0.3f, 0.5f);
+    emitter->setInitialVelocityZ(-spread, spread);
+    emitter->setGravity(0.0098f);
+    emitter->setMaxParticles(100);
 
     INFO("Client application successfully initialized");
 
@@ -123,14 +129,14 @@ PhysicsApp::run()
 
         cameraController->update(shader);
 
-//        playerCube->update();
-//        playerCube->draw(shader);
+        //        playerCube->update();
+        //        playerCube->draw(shader);
 
         cameraController->update(emitter->getShader());
         emitter->update(timer.getDeltaTime());
 
-        if (emitterTimer.getElapsedTime() > FW::rng(0.1f, 3.f)) {
-            emitter->addParticle(1);
+        if (emitterTimer.getElapsedTime() > FW::rng(0.15f, 0.5f)) {
+            emitter->addParticle(FW::rng(5, 15));
             emitterTimer.resetTimer();
         }
 
@@ -350,7 +356,8 @@ PhysicsApp::mouseButtonCallback(int button, int action, int mods)
 void
 PhysicsApp::mouseScrollCallback(double xoffset, double yoffset)
 {
-    if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) || FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
+    if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) ||
+        FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
         setCameraSpeed(getCameraSpeed() + 4.f * yoffset);
         INFO("New camera speed: {}", getCameraSpeed());
     } else {

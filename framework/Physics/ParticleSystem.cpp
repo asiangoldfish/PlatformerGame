@@ -20,75 +20,71 @@ namespace FW {
             return;
         }
 
-        float radius = lifetime * 0.25f * randomRadius;
-        float speed = lifetime * 4.0f;
+        // Apply gravity (aka. downward acceleration)
+        velocity.y -= gravity;
+        position.x += velocity.x;
+        position.y += velocity.y + gravity;
+        position.z += velocity.z;
 
-        velocity += gravity;
-
-        position.x = std::cos(speed) * radius;
-        position.y += velocity.y * 0.001f;
-        position.z = std::sin(speed) * radius;
+        // Color fades as it dies out. Alpha color is based on percentage of
+        // life remaining.
+        if (maxLifetime >= 0) {
+            // Prevent zero-division error
+            color.a = 1.0f - lifetime / maxLifetime;
+        }
     }
 
     void Particle::draw(ref<Shader>& shader)
     {
-        displayEntity->draw(shader);
+        shader->setFloat4("u_color", color);
+        //        displayEntity->draw(shader);
     }
 #pragma endregion
 
 #pragma region Emitter
     void Emitter::update(float deltaTime)
     {
-        for (auto i = 0; i < particlesPool.size(); i++) {
-            auto particle = particlesPool[i];
+        for (const auto& particle : particlesPool) {
             particle->update(deltaTime, gravity);
         }
 
         // Remove dead particles
-        std::erase_if(particlesPool,
-                      [](const ref<Particle>& p) { return !p->isAlive; });
+        std::erase_if(particlesPool, [&](const ref<Particle>& p) {
+            if (!p->isAlive) {
+                numOfParticles--;
+                return true;
+            }
+            return false;
+        });
     }
 
     void Emitter::draw()
     {
-        for (auto i = 0; i < particlesPool.size(); i++) {
+        for (auto& particle : particlesPool) {
+            particle->draw(shader);
+
             shader->bind();
-            recalculateModelMatrix(particlesPool[i]->position,
-                                   glm::vec3(0.0f),
-                                   glm::vec3(particlesPool[i]->size));
+            recalculateModelMatrix(
+              particle->position, glm::vec3(0.0f), glm::vec3(particle->size));
             shader->setMat4("u_model", modelMatrix);
             RenderCommand::drawIndex(*vertexArray);
-            // TODO: Upload u_projection and u_view
         }
     }
 
-    void Emitter::addParticle(int amount, bool clampMax)
+    void Emitter::addParticle(int amount)
     {
-        /* TODO: Add mechanism to reserve space and reuse particles
-        // If clampMax is enabled, then add x amount of particles, but do not
-        // overfill the pool
-        if (clampMax && numOfParticles < maxParticles) {
-            uint32_t maxSpawnableParticles = maxParticles - numOfParticles;
-            while (numOfParticles < maxSpawnableParticles &&
-                   numOfParticles < amount) {
-                // Increase the pool's reserved space if we're about to go
-                // beyond the current limit
-                if (++numOfParticles > particlesPool.size()) {
-                    particlesPool.reserve(currentlyReserved + reserveIncrement);
-                }
-            }
-        }
+        // TODO: Add mechanism to reserve space and reuse particles
+        for (int i = 0; i < amount && numOfParticles < maxParticles; i++) {
+            // Determine the particle's initial velocity by randomness
+            glm::vec3 newInitialVelocity = glm::vec3(
+              // X-value
+              rng(initialVelocityX.x, initialVelocityX.y),
+              // Y-value
+              rng(initialVelocityY.x, initialVelocityY.y),
+              // Z-value;
+              rng(initialVelocityZ.x, initialVelocityZ.y));
 
-        // Only add particles if it doesn't overflow the pool
-        if (numOfParticles + amount <= maxParticles) {
-            while (++numOfParticles > amount)
-                ;
-        }
-         */
-
-        // TODO: Add clampMax mechanism
-        for (int i = 0; i < amount; i++) {
-            ref<Particle> particle = createRef<Particle>(initialVelocity);
+            ref<Particle> particle = createRef<Particle>(newInitialVelocity);
             particle->size = 0.25f;
             particle->id = findAvailableParticleID();
             particle->position = position;
@@ -98,20 +94,12 @@ namespace FW {
                                       ? maxLifetime.x
                                       : rng(maxLifetime.x, maxLifetime.y);
 
+            // Temporary: Add random color
+            particle->color = glm::vec4(
+              rng(0.0f, 1.0f), rng(0.0f, 1.0f), rng(0.0f, 1.0f), 1.0f);
+
             particlesPool.push_back(particle);
             numOfParticles++;
-        }
-    }
-
-    void Emitter::removeParticle(uint32_t particleId)
-    {
-        // Find the particle's iterator
-        for (auto it = particlesPool.begin(); it != particlesPool.end(); ++it) {
-            if ((*it)->id == particleId) {
-                // Found the particle's id
-                particlesPool.erase(it);
-                return;
-            }
         }
     }
 
@@ -191,7 +179,6 @@ namespace FW {
 
         // No particles in this emitter, so return ID equals 0
         if (particlesPool.empty()) {
-            INFO("Empty!");
             return 0;
         }
 
@@ -206,7 +193,7 @@ namespace FW {
 
         // When the code reaches this part, it means that all particle IDs are
         // chronological. We can therefore return the last ID added by one.
-        return particlesPool.size();
+        return static_cast<int32_t>(particlesPool.size());
     }
 #pragma endregion
 }
