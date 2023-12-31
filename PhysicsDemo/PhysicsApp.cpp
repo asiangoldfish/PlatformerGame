@@ -95,6 +95,7 @@ PhysicsApp::init()
 
     // Physics
     emitter = FW::createScope<FW::Emitter>();
+    emitter->setmaxLifetime(0.5f, 1.3f);
 
     INFO("Client application successfully initialized");
 
@@ -126,13 +127,13 @@ PhysicsApp::run()
 //        playerCube->draw(shader);
 
         cameraController->update(emitter->getShader());
+        emitter->update(timer.getDeltaTime());
 
         if (emitterTimer.getElapsedTime() > FW::rng(0.1f, 3.f)) {
             emitter->addParticle(1);
             emitterTimer.resetTimer();
         }
 
-        emitter->update(timer.getDeltaTime());
         emitter->draw();
 
         glfwSwapBuffers(getWindow());

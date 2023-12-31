@@ -13,10 +13,15 @@ namespace FW {
 
     void Particle::update(float deltaTime, float gravity)
     {
-        lifeTime += deltaTime;
+        // Lifetime
+        lifetime += deltaTime;
+        if (maxLifetime > 0 && lifetime > maxLifetime) {
+            isAlive = false;
+            return;
+        }
 
-        float radius = 1.5f + lifeTime * 0.25f * randomRadius;
-        float speed = lifeTime * 4.0f;
+        float radius = lifetime * 0.25f * randomRadius;
+        float speed = lifetime * 4.0f;
 
         velocity += gravity;
 
@@ -34,15 +39,19 @@ namespace FW {
 #pragma region Emitter
     void Emitter::update(float deltaTime)
     {
-        for (auto i = 0; i < numOfParticles; i++) {
+        for (auto i = 0; i < particlesPool.size(); i++) {
             auto particle = particlesPool[i];
             particle->update(deltaTime, gravity);
         }
+
+        // Remove dead particles
+        std::erase_if(particlesPool,
+                      [](const ref<Particle>& p) { return !p->isAlive; });
     }
 
     void Emitter::draw()
     {
-        for (auto i = 0; i < numOfParticles; i++) {
+        for (auto i = 0; i < particlesPool.size(); i++) {
             shader->bind();
             recalculateModelMatrix(particlesPool[i]->position,
                                    glm::vec3(0.0f),
@@ -81,6 +90,14 @@ namespace FW {
         for (int i = 0; i < amount; i++) {
             ref<Particle> particle = createRef<Particle>(initialVelocity);
             particle->size = 0.25f;
+            particle->id = findAvailableParticleID();
+            particle->position = position;
+
+            // Set particle lifetime
+            particle->maxLifetime = maxLifetime.x == maxLifetime.y
+                                      ? maxLifetime.x
+                                      : rng(maxLifetime.x, maxLifetime.y);
+
             particlesPool.push_back(particle);
             numOfParticles++;
         }
@@ -88,7 +105,14 @@ namespace FW {
 
     void Emitter::removeParticle(uint32_t particleId)
     {
-        particlesPool.erase(particlesPool.begin() + particleId);
+        // Find the particle's iterator
+        for (auto it = particlesPool.begin(); it != particlesPool.end(); ++it) {
+            if ((*it)->id == particleId) {
+                // Found the particle's id
+                particlesPool.erase(it);
+                return;
+            }
+        }
     }
 
     void Emitter::initiateEmitter()
@@ -154,6 +178,35 @@ namespace FW {
 
         modelMatrix = glm::translate(glm::mat4(1.0f), translate) * newRotation *
                       glm::scale(glm::mat4(1.04), scale);
+    }
+
+    int32_t Emitter::findAvailableParticleID()
+    {
+        // Sort particles pool
+        std::sort(particlesPool.begin(),
+                  particlesPool.end(),
+                  [](const ref<Particle>& p1, ref<Particle> p2) {
+                      return p1->id < p2->id;
+                  });
+
+        // No particles in this emitter, so return ID equals 0
+        if (particlesPool.empty()) {
+            INFO("Empty!");
+            return 0;
+        }
+
+        // Particles exist. Find the first available id
+        for (int32_t i = 0; i < particlesPool.size(); i++) {
+            // Particle ID is sorted. If there is a gap in the ID sequence,
+            // return the first one
+            if (particlesPool[i]->id != i) {
+                return i;
+            }
+        }
+
+        // When the code reaches this part, it means that all particle IDs are
+        // chronological. We can therefore return the last ID added by one.
+        return particlesPool.size();
     }
 #pragma endregion
 }
