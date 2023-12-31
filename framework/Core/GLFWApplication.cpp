@@ -19,33 +19,26 @@ FW_GLFWKey_Callback(GLFWwindow* window,
 static void
 FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos);
 static void
-FW_GLFWCursorMouseButton_Callback(GLFWwindow* window,
-                                  int button,
-                                  int action,
-                                  int mods);
+FW_GLFWMouseButton_Callback(GLFWwindow* window,
+                            int button,
+                            int action,
+                            int mods);
 static void
 FW_GLFWMouseScroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
 static void
 FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height);
+static void GLAPIENTRY
+OpenGL_DebugMessages(GLenum source,
+                     GLenum type,
+                     GLuint id,
+                     GLenum severity,
+                     GLsizei length,
+                     const GLchar* message,
+                     const void* userParam);
 
 static FW::GLFWApplication* gApp = nullptr;
 
 namespace FW {
-    // Output messages from OpenGL
-    static void GLAPIENTRY messageCallback(GLenum source,
-                                           GLenum type,
-                                           GLuint id,
-                                           GLenum severity,
-                                           GLsizei length,
-                                           const GLchar* message,
-                                           const void* userParam)
-    {
-        std::cerr << "GL CALLBACK:"
-                  << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "")
-                  << "type = 0x" << type << ", severity = 0x" << severity
-                  << ", message =" << message << std::endl;
-    }
-
     // Set initial values to member variables
     GLFWApplication::GLFWApplication(const std::string& name,
                                      const std::string& version,
@@ -72,7 +65,7 @@ namespace FW {
         // ------------------
 
         if (!glfwInit()) {
-            std::cerr << "GLFW::INIT::Failed to initialize\n";
+            WARN("GLFW::INIT::Failed to initialize");
             return false;
         }
 
@@ -81,7 +74,7 @@ namespace FW {
           windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
 
         if (!window) {
-            std::cerr << "GLFW::WINDOW::Unable to create window\n";
+            WARN("GLFW::WINDOW::Unable to create window");
             return false;
         }
 
@@ -118,7 +111,7 @@ namespace FW {
         // Uncomment this only for debugging
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(messageCallback, nullptr);
+        glDebugMessageCallback(OpenGL_DebugMessages, nullptr);
         glDebugMessageControl(
           GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
@@ -127,16 +120,15 @@ namespace FW {
         // them. Input::setWindow() returns 0 if everything is OK, and non-zero
         // integer if something went wrong.
         if (Input::setWindow(window)) {
-            FATAL("GLFWApplication::Init: Failed to set window. This should "
-                  "never happen");
+            WARN("GLFWApplication::Init: Failed to set window. This should "
+                 "never happen");
             return false;
         }
 
         // Input callbacks
         glfwSetKeyCallback(getWindow(), FW_GLFWKey_Callback);
         glfwSetCursorPosCallback(getWindow(), FW_GLFWCursorPos_Callback);
-        glfwSetMouseButtonCallback(getWindow(),
-                                   FW_GLFWCursorMouseButton_Callback);
+        glfwSetMouseButtonCallback(getWindow(), FW_GLFWMouseButton_Callback);
         glfwSetScrollCallback(getWindow(), FW_GLFWMouseScroll_Callback);
         glfwSetFramebufferSizeCallback(getWindow(),
                                        FW_GLFWFramebufferSize_Callback);
@@ -153,31 +145,40 @@ namespace FW {
 
 } // namespace Framework
 
-// Source: https://www.glfw.org/docs/3.3/input_guide.html#cursor_pos
+/**
+ * Called whenever the mouse position is changed.
+ */
 void
 FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos)
 {
     gApp->cursorPosCallback(xpos, ypos);
 }
 
+/**
+ * Called whenever the mouse's scroll wheel is used. For middle click,  see
+ * <u>FW_GLFWMouseButton_Callback()</u>
+ */
 void
 FW_GLFWMouseScroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     gApp->mouseScrollCallback(xoffset, yoffset);
 }
 
-// Source: https://www.glfw.org/docs/3.0/group__input.html
+/**
+ * Called whenever a mouse button is pressed.
+ */
 void
-FW_GLFWCursorMouseButton_Callback(GLFWwindow* window,
-                                  int button,
-                                  int action,
-                                  int mods)
+FW_GLFWMouseButton_Callback(GLFWwindow* window,
+                            int button,
+                            int action,
+                            int mods)
 {
     gApp->mouseButtonCallback(button, action, mods);
 }
 
-/* Keyboard input function. Used as callback function and is used in
- * OpenGL's input polling system. */
+/**
+ * Called whenever a key is pressed
+ */
 void
 FW_GLFWKey_Callback(GLFWwindow* window,
                     int key,
@@ -188,8 +189,27 @@ FW_GLFWKey_Callback(GLFWwindow* window,
     gApp->keyCallback(key, scancode, action, mods);
 }
 
+/**
+ * Called whenever the framebuffer size is changed.
+ */
 void
 FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height)
 {
     gApp->framebufferSizeCallback(width, height);
+}
+
+// Output messages from OpenGL
+static void GLAPIENTRY
+OpenGL_DebugMessages(GLenum source,
+                     GLenum type,
+                     GLuint id,
+                     GLenum severity,
+                     GLsizei length,
+                     const GLchar* message,
+                     const void* userParam)
+{
+    std::cerr << "GL CALLBACK:"
+              << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "")
+              << "type = 0x" << type << ", severity = 0x" << severity
+              << ", message =" << message << std::endl;
 }
