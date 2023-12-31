@@ -63,7 +63,7 @@ namespace FW {
         shader->bind();
         shader->setMat4("u_projection", getProjectionMatrix());
         shader->setMat4("u_view", getViewMatrix());
-        //        shader.setFloat3("u_cameraPosition", getPosition());
+        shader->setFloat3("u_cameraPosition", getPosition());
     }
     void PerspectiveCamera::updateViewportSize(glm::vec2 size)
     {

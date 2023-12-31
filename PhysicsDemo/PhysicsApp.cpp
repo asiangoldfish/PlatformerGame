@@ -59,7 +59,8 @@ PhysicsApp::init()
     playerCube = FW::createRef<Cube>();
     playerCube->setScale({ 1.0f, 1.0f, 1.0f });
     playerCube->setPosition({ 0, playerCube->getScale().y / 2.0f, 0 });
-    playerCube->getMaterial().getProperties().setDiffuseTextureID("metal_plate_diff");
+    playerCube->getMaterial().getProperties().setDiffuseTextureID(
+      "metal_plate_diff");
     playerCube->setMaterial(FW::MaterialPreset::CHROME);
     playerController = FW::createScope<FW::PlayerController>(playerCube);
 
@@ -90,10 +91,9 @@ PhysicsApp::init()
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
 
-    INFO("Client application successfully initialized");
-    shader->bind();
-
     worldGrid = FW::createRef<WorldGrid>();
+
+    INFO("Client application successfully initialized");
 
     return true;
 }
@@ -113,10 +113,7 @@ PhysicsApp::run()
         RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         cameraController->update(shader);
-        shader->setFloat3("u_cameraPosition",
-                          getCameraController()->getPosition());
 
-        auto playerCube = playerController->getPossessedEntity();
         playerCube->update();
         playerCube->draw(shader);
 
@@ -188,14 +185,12 @@ PhysicsApp::keyCallback(int key, int scancode, int action, int mods)
         !altBtnJustPressed) {
         altBtnJustPressed = true;
         isLeftAltPressed = true;
-        getCameraController()->getPerspectiveCamera()->setEnablePanning(
-          false);
+        getCameraController()->getPerspectiveCamera()->setEnablePanning(false);
     }
     if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
         altBtnJustPressed = false;
         isLeftAltPressed = false;
-        getCameraController()->getPerspectiveCamera()->setEnablePanning(
-          true);
+        getCameraController()->getPerspectiveCamera()->setEnablePanning(true);
     }
 
     // Camera panning
@@ -216,8 +211,7 @@ PhysicsApp::keyCallback(int key, int scancode, int action, int mods)
 void
 PhysicsApp::cursorPosCallback(double xpos, double ypos)
 {
-    glm::vec2 diff =
-      glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
+    glm::vec2 diff = glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
     auto controller = getCameraController();
 
     float dt = getTimer().getDeltaTime();
@@ -235,8 +229,7 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
         if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_SHIFT_BIT)) {
             // Shift: Move forward/backward
             float mouseDistance = ypos - getWindowSize().y / 2.0f;
-            getCameraController()->moveForward(-mouseDistance * dt *
-                                                     8.0f);
+            getCameraController()->moveForward(-mouseDistance * dt * 8.0f);
             centralizeCursorInWindow();
         } else if (FW::Input::isModKeyCombinationPressed(
                      FW_KEY_LEFT_CONTROL_BIT)) {
@@ -257,9 +250,8 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
             // in screen space.
 
             // Assume that the distance is in degrees
-            glm::vec2 distance =
-              glm::vec2{ diff.x * dt * cameraRotationSpeed,
-                         diff.y * dt * cameraRotationSpeed };
+            glm::vec2 distance = glm::vec2{ diff.x * dt * cameraRotationSpeed,
+                                            diff.y * dt * cameraRotationSpeed };
 
             //            cameraDistance = 5.0f;
 
@@ -289,8 +281,7 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
              * determine how much to rotate the camera by.
              */
             float cameraRotationSpeed = 0.05f;
-            glm::vec2 difference =
-              glm::vec2(xpos, ypos) - savedCursorPosition;
+            glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
             auto cam = getCameraController()->getPerspectiveCamera();
             difference.y *= -1;
             glm::vec2 newRotation =
@@ -335,9 +326,6 @@ PhysicsApp::mouseButtonCallback(int button, int action, int mods)
     }
 
     if (isRightButtonMousePressed) {
-        //        glfwSetCursorPos(window,
-        //                         getWindowSize().x / 2.0f,
-        //                         getWindowSize().y / 2.0f);
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     } else {
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -346,11 +334,12 @@ PhysicsApp::mouseButtonCallback(int button, int action, int mods)
 void
 PhysicsApp::mouseScrollCallback(double xoffset, double yoffset)
 {
-    // TODO: Use mod key to change between adjusting camera speed vs moving
-    // forward/backward
-    //    getCameraController()->moveForward(yoffset * 0.5f);
-    setCameraSpeed(getCameraSpeed() + 4.f * yoffset);
-    INFO("New camera speed: {}", getCameraSpeed());
+    if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) || FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
+        setCameraSpeed(getCameraSpeed() + 4.f * yoffset);
+        INFO("New camera speed: {}", getCameraSpeed());
+    } else {
+        getCameraController()->moveForward(yoffset * cameraSpeed * 0.25f);
+    }
 }
 void
 PhysicsApp::framebufferSizeCallback(int width, int height)
