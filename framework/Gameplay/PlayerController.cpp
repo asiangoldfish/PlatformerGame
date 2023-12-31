@@ -17,13 +17,13 @@ namespace FW {
         possessedEntity->recalculateModelMatrix();
     }
 
-    PlayerController::PlayerController(scope<Entity>& entity)
+    PlayerController::PlayerController(ref<Entity>& entity)
     {
-        possessedEntity = std::move(entity);
+        possessedEntity = entity;
     }
 
-    void PlayerController::possessEntity(scope<Entity>& entity)
+    void PlayerController::possessEntity(ref<Entity>& entity)
     {
-        possessedEntity = std::move(entity);
+        possessedEntity = entity;
     }
 } // FW

@@ -112,6 +112,7 @@ private:
     FW::ref<Cube> testCube;
     FW::scope<FW::PlayerController> playerController;
     FW::ref<FW::CameraController> cameraController;
+    FW::ref<FW::Entity> playerCube;
     float cameraSpeed = 15.0f;
     FW::Timer timer;
 

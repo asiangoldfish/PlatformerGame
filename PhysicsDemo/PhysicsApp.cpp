@@ -56,7 +56,7 @@ PhysicsApp::init()
     // -------------
     // Entities
     // -------------
-    FW::scope<FW::Entity> playerCube = FW::createScope<Cube>();
+    playerCube = FW::createRef<Cube>();
     playerCube->setScale({ 1.0f, 1.0f, 1.0f });
     playerCube->setPosition({ 0, playerCube->getScale().y / 2.0f, 0 });
     playerCube->getMaterial().getProperties().setDiffuseTextureID("metal_plate_diff");
