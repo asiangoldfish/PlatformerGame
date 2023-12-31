@@ -168,6 +168,78 @@ namespace FW {
             windowSize = size;
         }
 
+        /**
+         * Callback function for when a keyboard key is interacted with.
+         *
+         * @details This function activates whenever an action like pressing or
+         * releasing a key is performed by the user For more information, visit
+         * the <i>'Key input'</i> section at <a
+         * href="https://www.glfw.org/docs/3.3/input_guide.html#input_key">glfw.org</a>
+         *
+         * @param key The key that is pressed. Refer to the key codes at <a
+         * href="https://github.com/asiangoldfish/PlatformerGame/blob/main/framework/Core/KeyCodes.h">
+         * KeyCodes</a>.
+         * @param scancode Platform specific code determining what key was
+         * interacted with.
+         * @param action Either <i>GLFW_PRESS</i>, <i>GLFW_REPEAT</i> or
+         * <i>GLFW_RELEASE</i>. Determines how the key is interacted with.
+         * @param mods Bitfield representing mod keys that were pressed.
+         * Includes SHIFT, ALT, CONTROL and SUPER.
+         */
+        virtual void keyCallback(int key, int scancode, int action, int mods) {}
+
+        /**
+         * Callback function for when the mouse cursor moves across the
+         * viewport.
+         *
+         * @details The function is called whenever the cursor changes position
+         * within the viewport. Currently, only one viewport is supported. This
+         * covers the whole client window.
+         * @param xpos The cursor's X position
+         * @param ypos The cursor's Y position
+         */
+        virtual void cursorPosCallback(double xpos, double ypos) {}
+
+        /**
+         * Callback function for when mouse buttons are pressed.
+         *
+         * @details The function is called whenever a mouse button is pressed,
+         * released or held down.
+         *
+         * @param button The mouse button that is interacted with.
+         * Refer to <a
+         * href="https://github.com/asiangoldfish/PlatformerGame/blob/main/framework/Core/MouseButtonCodes.h">MouseButtonCodes.h</a>
+         * for button macros.
+         * @param action Either <i>GLFW_PRESS</i>, <i>GLFW_REPEAT</i> or
+         * <i>GLFW_RELEASE</i>. Determines how the key is interacted with.
+         * @param mods Bitfield representing mod keys that were pressed.
+         * Includes SHIFT, ALT, CONTROL and SUPER.
+         */
+        virtual void mouseButtonCallback(int button, int action, int mods) {}
+
+        /**
+         * Callback function for when the mouse's scroll wheel is interacted
+         with.
+
+         * @param xoffset The mouse scrolling in the X-axis.
+         * @param yoffset The mouse's scrolling in the Y-axis. This is the most
+         commonly used value.
+         */
+        virtual void mouseScrollCallback(double xoffset, double yoffset) {}
+
+        /**
+         * Callback function for when the framebuffer's size changes.
+         *
+         * @details The function is called whenever the size changes. By
+         * default, GLFW's default framebuffer covers the window, using its
+         * initial size when initiating GLFW. If another framebuffer is used,
+         * like a texture, this function is called whenever the texture size
+         * changes.
+         * @param width The framebuffer's new width.
+         * @param height The framebuffer's new height
+         */
+        virtual void framebufferSizeCallback(int width, int height) {}
+
     private:
         /** Application name. This is also the window class. */
         std::string appName;
@@ -178,7 +250,8 @@ namespace FW {
         /** The application window where all rendering happens */
         GLFWwindow* window;
 
-        /** The current window size. This is the <u>GLFWwindow</u>, not the viewport size */
+        /** The current window size. This is the <u>GLFWwindow</u>, not the
+         * viewport size */
         glm::vec2 windowSize;
     };
 

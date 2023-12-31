@@ -80,6 +80,13 @@ public:
           getWindow(), getWindowSize().x / 2, getWindowSize().y / 2);
     }
 
+
+    virtual void keyCallback(int key, int scancode, int action, int mods) override;
+    virtual void cursorPosCallback(double xpos, double ypos) override;
+    virtual void mouseButtonCallback(int button, int action, int mods) override;
+    virtual void mouseScrollCallback(double xoffset, double yoffset) override;
+    virtual void framebufferSizeCallback(int width, int height) override;
+
 public:
     bool isRightButtonMousePressed = false;
     bool isLeftButtonMousePressed = false;
