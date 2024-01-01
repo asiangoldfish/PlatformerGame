@@ -9,34 +9,67 @@
 #include "Entity.h"
 
 namespace FW {
+    class ParticleShape;
+
     class Particle
     {
     public:
+        /**
+         * Construct particle with default parameters.
+         */
         Particle() = default;
+
+        /**
+         * Construct the particle with an initial velocity.
+         * @param initialVelocity The initial velocity when spawning.
+         */
         Particle(glm::vec3 initialVelocity);
 
+        // TODO: Move the force to the emitter. The emitter's responsibility is
+        // to impact the particle's velocity.
+        /**
+         * Update the particle over time.
+         * @param deltaTime Time between frames.
+         * @param gravity Gravity is applied per frame to the velocity.
+         */
         virtual void update(float deltaTime, float gravity);
+
+        /**
+         * Draw the particle. This is only for visuals, as properties are
+         * updated in <u>update()</u>.
+         * @param shader The shader to draw with.
+         */
         virtual void draw(ref<Shader>& shader);
 
     private:
         friend class Emitter;
 
+        /** Unique particle identifier. -1 if it has no ID. */
         int32_t id = -1;
+
+        /** Position in world space. */
         glm::vec3 position{ 0.0f };
+
+        // TODO: Change to non-uniform size
+        /** Particle uniform size */
         float size = 1.0f;
+
+        /** How long the particle currently has lived */
         float lifetime = 0.0;
 
         /** If less than 0, the particle never dies */
         float maxLifetime = 4.0f;
+
+        /** Velocity through world space */
         glm::vec3 velocity{ 0.0f };
 
-        // Temporary
-        float randomRadius;
+        /** The shape to display the particle with */
+        scope<ParticleShape> displayEntity;
 
-        scope<Entity> displayEntity;
-
+        /** Whether the particle is still alive */
         bool isAlive = true;
 
+        /** The particle's color */
         glm::vec4 color{ 1.0f };
     };
 
@@ -44,7 +77,7 @@ namespace FW {
     {
     public:
         Emitter();
-        virtual ~Emitter();
+        virtual ~Emitter() = default;
 
         /**
          * Update the emitter and particles.
@@ -146,13 +179,6 @@ namespace FW {
 
     private:
         /**
-         * Initiate the emitter.
-         * @details Configure and prepare foundational elements to draw with
-         * OpenGL.
-         */
-        void initiateEmitter();
-
-        /**
          * Recalculate a particle's model matrix.
          * @details This should be called before drawing.
          */
@@ -201,9 +227,21 @@ namespace FW {
         // Miscellaneous
         // ------------
         ref<Shader> shader;
-        VertexArray* vertexArray = nullptr;
-        VertexBuffer* vertexBuffer = nullptr;
-        IndexBuffer* indexBuffer = nullptr;
+        ref<ParticleShape> particleShape;
         glm::mat4 modelMatrix;
+    };
+
+    class ParticleShape
+    {
+    public:
+        ParticleShape();
+        virtual ~ParticleShape() = default;
+
+    private:
+        friend class Emitter;
+        friend class Particle;
+        ref<VertexArray> vertexArray;
+        ref<VertexBuffer> vertexBuffer;
+        ref<IndexBuffer> indexBuffer;
     };
 }

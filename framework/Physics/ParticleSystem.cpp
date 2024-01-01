@@ -7,7 +7,6 @@ namespace FW {
 #pragma region Particle
     Particle::Particle(glm::vec3 initialVelocity)
     {
-        randomRadius = rng(0.25, 2.5f);
         velocity = initialVelocity;
     }
 
@@ -67,7 +66,7 @@ namespace FW {
             recalculateModelMatrix(
               particle->position, glm::vec3(0.0f), glm::vec3(particle->size));
             shader->setMat4("u_model", modelMatrix);
-            RenderCommand::drawIndex(*vertexArray);
+            RenderCommand::drawIndex(*particleShape->vertexArray.get());
         }
     }
 
@@ -103,49 +102,14 @@ namespace FW {
         }
     }
 
-    void Emitter::initiateEmitter()
+    Emitter::Emitter()
     {
-        auto entityAttribLayout = FW::BufferLayout({
-          { FW::ShaderDataType::Float3, "a_position" },
-          { FW::ShaderDataType::Float4, "a_color" },
-          { FW::ShaderDataType::Float2, "a_texCoord" },
-          { FW::ShaderDataType::Float3, "a_normal" },
-        });
-
-        auto vertices = UnitCubeGeometry3D();
-        auto indices = UnitCubeGeometry3DIndices();
-
-        vertexArray = new VertexArray();
-        vertexArray->bind();
-
-        indexBuffer = new IndexBuffer(&indices.front(), indices.size());
-
-        vertexBuffer =
-          new VertexBuffer(&vertices.front(), vertices.size() * sizeof(float));
-
-        vertexBuffer->setLayout(entityAttribLayout);
-        vertexArray->setIndexBuffer(indexBuffer);
-        vertexArray->addVertexBuffer(vertexBuffer);
-
         shader = FW::createRef<FW::Shader>(
           FW_PHYSICS_RESOURCES_DIR + std::string("shaders/particleVertex.glsl"),
           FW_PHYSICS_RESOURCES_DIR + std::string("shaders/particleFrag.glsl"));
+        particleShape = createRef<ParticleShape>();
     }
 
-    Emitter::Emitter()
-    {
-        initiateEmitter();
-    }
-
-    Emitter::~Emitter()
-    {
-        delete vertexArray;
-        vertexArray = nullptr;
-        delete vertexBuffer;
-        vertexBuffer = nullptr;
-        delete indexBuffer;
-        indexBuffer = nullptr;
-    }
     void Emitter::recalculateModelMatrix(glm::vec3 translate,
                                          glm::vec3 rotate,
                                          glm::vec3 scale)
@@ -196,4 +160,28 @@ namespace FW {
         return static_cast<int32_t>(particlesPool.size());
     }
 #pragma endregion
+    ParticleShape::ParticleShape()
+    {
+        auto entityAttribLayout = FW::BufferLayout({
+          { FW::ShaderDataType::Float3, "a_position" },
+          { FW::ShaderDataType::Float4, "a_color" },
+          { FW::ShaderDataType::Float2, "a_texCoord" },
+          { FW::ShaderDataType::Float3, "a_normal" },
+        });
+
+        auto vertices = UnitCubeGeometry3D();
+        auto indices = UnitCubeGeometry3DIndices();
+
+        vertexArray = createRef<VertexArray>();
+        vertexArray->bind();
+
+        indexBuffer = createRef<IndexBuffer>(&indices.front(), indices.size());
+
+        vertexBuffer =
+          createRef<VertexBuffer>(&vertices.front(), vertices.size() * sizeof(float));
+
+        vertexBuffer->setLayout(entityAttribLayout);
+        vertexArray->setIndexBuffer(indexBuffer.get());
+        vertexArray->addVertexBuffer(vertexBuffer.get());
+    }
 }
