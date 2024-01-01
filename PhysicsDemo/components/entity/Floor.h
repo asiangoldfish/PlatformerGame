@@ -12,7 +12,8 @@ class Floor : public FW::Entity
 public:
     Floor(float tiles)
     {
-        initDrawable(FW::UnitGridGeometry2D(tiles, tiles, 1, 1), FW::UnitGridIndices2D(tiles * tiles));
+        initDrawable(FW::UnitCheckerboard2D(tiles, tiles, 1, 1),
+                     FW::UnitCheckerboardIndices2D(tiles * tiles));
     }
 
     virtual ~Floor() = default;

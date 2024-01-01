@@ -13,10 +13,10 @@ public:
     Floor() = default;
     Floor(FW::ref<FW::Shader> shader, glm::vec2 tiling, glm::vec2 size)
     {
-        auto vertices = FW::UnitGridGeometry2D(
-          tiling.x, tiling.y, size.x, size.y);
+        auto vertices =
+          FW::UnitCheckerboard2D(tiling.x, tiling.y, size.x, size.y);
 
-        auto indices = FW::UnitGridIndices2D(tiling.x * tiling.y);
+        auto indices = FW::UnitCheckerboardIndices2D(tiling.x * tiling.y);
         initDrawable(vertices, indices);
     }
 

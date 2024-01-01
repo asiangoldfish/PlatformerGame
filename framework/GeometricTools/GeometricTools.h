@@ -49,7 +49,7 @@ namespace FW {
      * @param sizeY Increase the grid's size in the y-axis
      * @return
      */
-    inline std::vector<float> UnitGridGeometry2D(int tilingX,
+    inline std::vector<float> UnitCheckerboard2D(int tilingX,
                                                  int tilingY,
                                                  float sizeX = 1.0f,
                                                  float sizeY = 1.0f)
@@ -113,11 +113,11 @@ namespace FW {
      *
      * @param numOfQuads Total number of quads in the grid.
      * @return A vector with all the generated indices.
-     * @see UnitGridGeometry2D()
+     * @see UnitCheckerboard2D()
      * @example If a grid has 3x3 cells, it has a total of 9 cells. This means
      * numOfQuads is also 9.
      */
-    inline std::vector<uint32_t> UnitGridIndices2D(int numOfQuads)
+    inline std::vector<uint32_t> UnitCheckerboardIndices2D(int numOfQuads)
     {
         // Base indices for one quad.
         std::vector<uint32_t> baseIndices = { 0, 1, 2, 2, 3, 0 };
@@ -135,14 +135,14 @@ namespace FW {
     }
 
     /**
-     * Shorthand for UnitGridIndices2D(1).
+     * Shorthand for UnitCheckerboardIndices2D(1).
      *
      * @return Indices for a quad.
-     * @see UnitGridIndices2D(...)
+     * @see UnitCheckerboardIndices2D(...)
      */
     inline std::vector<uint32_t> UnitGridIndices2D()
     {
-        return UnitGridIndices2D(1);
+        return UnitCheckerboardIndices2D(1);
     }
 
     /**
@@ -152,7 +152,7 @@ namespace FW {
      */
     inline std::vector<float> UnitGridGeometry2D()
     {
-        return UnitGridGeometry2D(1, 1);
+        return UnitCheckerboard2D(1, 1);
     }
 
     /**
