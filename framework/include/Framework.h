@@ -18,8 +18,7 @@
 #include "GeometricTools.h"
 
 // Rendering
-#include "Buffers/BufferLayout.h"
-#include "Buffers/Framebuffer.h"
+#include "Buffer.h"
 
 #include "Camera/OrthographicCamera.h"
 #include "Camera/PerspectiveCamera.h"

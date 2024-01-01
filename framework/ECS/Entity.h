@@ -1,12 +1,6 @@
 #pragma once
 
-// C libraries
-#include <cstdint>
-
-// C++ libraries
-#include <algorithm>
-#include <vector>
-#include <string>
+#include "pch.h"
 
 // External
 #include "glad/glad.h"

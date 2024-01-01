@@ -15,9 +15,7 @@
 #include "Log.h"
 
 // OpenGL
-#include "Buffers/VertexArray.h"
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/IndexBuffer.h"
+#include "Buffer.h"
 
 #include "GeometricTools.h"
 

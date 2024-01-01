@@ -7,7 +7,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <memory>
-#include "Buffers/VertexArray.h"
+#include "Buffer.h"
 
 namespace RenderCommand {
     /**

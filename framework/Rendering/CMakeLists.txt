@@ -1,12 +1,7 @@
 project(FRAMEWORK_RENDERING)
 
 add_library(${PROJECT_NAME} STATIC
-    # Buffers
-    Buffers/VertexBuffer.h  Buffers/VertexBuffer.cpp
-    Buffers/IndexBuffer.h   Buffers/IndexBuffer.cpp
-    Buffers/BufferLayout.h
-    Buffers/VertexArray.h   Buffers/VertexArray.cpp
-    Buffers/Framebuffer.h   Buffers/Framebuffer.cpp
+    Buffer.h        Buffer.cpp
 
     # Camera
     Camera/Camera.h                 Camera/Camera.cpp

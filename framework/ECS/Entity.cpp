@@ -1,8 +1,3 @@
-// ----------
-// C++ libraries
-// ----------
-#include <vector>
-
 // ---------
 // External libraries
 // ---------
@@ -14,9 +9,7 @@
 #include "Log.h"
 
 // OpenGL
-#include "Buffers/VertexArray.h"
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/IndexBuffer.h"
+#include "Buffer.h"
 
 // Rendering
 #include "RenderCommands.h"

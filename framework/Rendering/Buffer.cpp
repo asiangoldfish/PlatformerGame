@@ -1,11 +1,129 @@
-// External libraries
-#include <glad/glad.h>
+#include "Buffer.h"
 
-// Framework
-#include "Framebuffer.h"
-#include "TextureManager.h"
+namespace FW
+{
+#pragma region Vertex Array
+    VertexArray::VertexArray() {
+        // Create new VAO
+        glGenVertexArrays(1, &vertexArrayID);
+    }
 
-namespace FW {
+    VertexArray::~VertexArray()
+    {
+        glDeleteBuffers(1, &vertexArrayID);
+    }
+
+    void VertexArray::bind() const {
+        glBindVertexArray(vertexArrayID);
+    }
+
+    void VertexArray::unbind() const {
+        glBindVertexArray(0);
+    }
+
+    void VertexArray::addVertexBuffer(
+      VertexBuffer* vertexBuffer) {
+
+        glBindVertexArray(vertexArrayID);
+        vertexBuffer->bind();
+
+        // Set vertex attributes
+        int index = 0;
+        const auto& layout = vertexBuffer->getLayout();
+        for (const auto& attribute : layout) {
+            glEnableVertexAttribArray(index);
+            glVertexAttribPointer(
+              index,
+              (GLint)attribute.getComponentCount(),
+              ShaderDataTypeToOpenGLBaseType(attribute.type),
+              attribute.normalized ? GL_TRUE : GL_FALSE,
+              layout.getStride(),
+              (const void*)attribute.offset
+            );
+            index++;
+        }
+
+        vertexBuffers.push_back(vertexBuffer);
+    }
+
+    void VertexArray::setIndexBuffer(
+      IndexBuffer* indexBuffer) {
+        glBindVertexArray(vertexArrayID);
+        indexBuffer->bind();
+        this->indexBuffer = indexBuffer;
+    }
+
+    std::shared_ptr<VertexArray> VertexArray::create()
+    {
+        return std::make_shared<VertexArray>();
+    }
+#pragma endregion
+
+#pragma region Vertex Buffer
+    VertexBuffer::VertexBuffer(const void *vertices, GLsizei size, GLenum drawMethod) {
+        glGenBuffers(1, &vertexBufferId);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+        glBufferData(GL_ARRAY_BUFFER, size, vertices, drawMethod);
+    }
+
+    VertexBuffer::~VertexBuffer() {
+        glDeleteBuffers(1, &vertexBufferId);
+    }
+
+    void VertexBuffer::bind() const {
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+    }
+
+    void VertexBuffer::unbind() const {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void VertexBuffer::bufferSubData(GLintptr offset, GLsizeiptr size,
+                                     const void *data) const {
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+        glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+    }
+
+    std::shared_ptr<VertexBuffer> VertexBuffer::create(
+      const void* vertices,
+      GLsizei size,
+      GLenum drawMethod
+    ) {
+
+        return std::make_shared<VertexBuffer>(vertices, size, drawMethod);
+    }
+#pragma endregion
+
+#pragma region Index Buffer
+    IndexBuffer::IndexBuffer(uint32_t *indices, int count) {
+        glGenBuffers(1, &indexBufferID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (uint32_t)(count * sizeof(int)), indices, GL_STATIC_DRAW);
+
+        this->count = count;
+    }
+
+    IndexBuffer::~IndexBuffer() {
+        glDeleteBuffers(1, &indexBufferID);
+    }
+
+    void IndexBuffer::bind() const {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+    }
+
+    void IndexBuffer::unbind() const {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    std::shared_ptr<IndexBuffer> IndexBuffer::create(
+      GLuint* indices, GLsizei count) {
+
+        return std::make_shared<IndexBuffer>(indices, count);
+    }
+#pragma endregion
+
+#pragma region Framebuffer
     Framebuffer::Framebuffer()
     {
         createFramebuffer();
@@ -116,4 +234,5 @@ namespace FW {
     {
         glBindTexture(GL_TEXTURE_2D, colorAttachment);
     }
-} // Framework
+#pragma endregion
+}
