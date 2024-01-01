@@ -67,16 +67,11 @@ namespace FW {
              * Note: Normal is negative Z, as the grid is created in 2D space.
              * This means it's facing
              */
-            // Position				// Color
-            // // Tex coords   // Normals
-            -0.5f, -0.5f, 0.0f, baseColor, baseColor, baseColor,
-            1.0f,  0,     0,    0,         0,         1,
-            0.5f,  -0.5f, 0.0f, baseColor, baseColor, baseColor,
-            1.0f,  1,     0,    0,         0,         1,
-            0.5f,  0.5f,  0.0f, baseColor, baseColor, baseColor,
-            1.0f,  1,     1,    0,         0,         1,
-            -0.5f, 0.5f,  0.0f, baseColor, baseColor, baseColor,
-            1.0f,  0,     1,    0,         0,         1
+            // Position				// Color         // Tex coords   // Normals
+            -0.5f, -0.5f, 0.0f, baseColor, baseColor, baseColor, 1.0f,  0,     0,    0,         0,         1,
+            0.5f,  -0.5f, 0.0f, baseColor, baseColor, baseColor, 1.0f,  1,     0,    0,         0,         1,
+            0.5f,  0.5f,  0.0f, baseColor, baseColor, baseColor, 1.0f,  1,     1,    0,         0,         1,
+            -0.5f, 0.5f,  0.0f, baseColor, baseColor, baseColor, 1.0f,  0,     1,    0,         0,         1
         };
 
         // Grid to return from this function. Because the vector's elements
@@ -125,7 +120,7 @@ namespace FW {
     inline std::vector<uint32_t> UnitGridIndices2D(int numOfQuads)
     {
         // Base indices for one quad.
-        std::vector<uint32_t> baseIndices = { 0, 1, 3, 1, 3, 2 };
+        std::vector<uint32_t> baseIndices = { 0, 1, 2, 2, 3, 0 };
 
         // Vector to return to the caller.
         std::vector<uint32_t> returnIndices;
