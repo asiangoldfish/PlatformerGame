@@ -10,7 +10,25 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define FW_VERTEX_ATTRIBUTES uint32_t
+// Prevent compiler error
+#ifndef KEY_BIT
+#define KEY_BIT(key) (1UL << key)
+#endif
+
 namespace FW {
+    enum class VERTEX_ATTRIBUTE : uint32_t
+    {
+        POSITION = KEY_BIT(0),
+        COLOR = KEY_BIT(1),
+        TEXTURE_COORD = KEY_BIT(2),
+        VERTEX_NORMAL = KEY_BIT(3)
+    };
+
+    inline bool operator&(VERTEX_ATTRIBUTE lhs, VERTEX_ATTRIBUTE rhs) {
+        return (static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs)) != 0;
+    }
+
     /**
      * Generate a 2-dimensional triangle with positions
      */
@@ -22,56 +40,91 @@ namespace FW {
      */
     inline std::vector<float> UnitSquareVertices2D = {
         // Triangle 1       // Corners:
-        -1.0f, -1.0f, -1.0f,   // A
-        1.0f, -1.0f, -1.0f,   // B
-        1.0f, 1.0f, -1.0f,   // C
-        -1.0f, 1.0f, -1.0f,   // D
+        -1.0f, -1.0f, -1.0f, // A
+        1.0f,  -1.0f, -1.0f, // B
+        1.0f,  1.0f,  -1.0f, // C
+        -1.0f, 1.0f,  -1.0f, // D
     };
 
-    inline std::vector<uint32_t> UnitSquareIndices2D = {
-        0, 1, 2,
-        2, 3, 0,
+    inline std::vector<uint32_t> UnitGridIndices2D = {
+        0, 1, 2, 2, 3, 0,
     };
 
+    inline std::vector<float> UnitGridGeometry2D(VERTEX_ATTRIBUTE flags = VERTEX_ATTRIBUTE::POSITION)
+    {
+        float baseColor = 1.0f;
+        std::array<float, 8> texCoords = {
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+        };
 
+        std::vector<float> out;
 
+        // Add attributes based on flags
+        for (int i = 0; i < 4; i++) {
+            if (flags & VERTEX_ATTRIBUTE::POSITION) {
+                int offset = i * 3;
+                out.push_back(UnitSquareVertices2D[0 + offset]);
+                out.push_back(UnitSquareVertices2D[1 + offset]);
+                out.push_back(UnitSquareVertices2D[2 + offset]);
+            }
+
+            if (flags & VERTEX_ATTRIBUTE::COLOR) {
+                // Base color in R, G and B. 1.0f in A
+                out.push_back(baseColor);
+                out.push_back(baseColor);
+                out.push_back(baseColor);
+                out.push_back(1.0f);
+            }
+
+            if (flags & VERTEX_ATTRIBUTE::TEXTURE_COORD) {
+                int offset = i * 2;
+                out.push_back(texCoords[0 + offset]);
+                out.push_back(texCoords[1 + offset]);
+            }
+
+            if (flags & VERTEX_ATTRIBUTE::VERTEX_NORMAL) {
+                out.push_back(0.0f);
+                out.push_back(0.0f);
+                out.push_back(1.0f);
+            }
+        }
+
+        return out;
+    }
+
+    // TODO: Tile the checkerboard, but it still remains 1x1 size
+    /*
+     * TODO: Add enum class that lets the user choose what orientation to
+     * generate the checkerboard in. Example: XY, YZ
+     */
     /**
-     * Generate a unit grid
+     * Generate a checkerboard.
      *
-     * By leaving tiling to 1, the geometry will be a unit grid. For each,
-     * additional grids will be appended to the output vector, effectively
-     * increasing the final grid additively. The size parameters will increase
-     * the overall grid size.
-     *
-     * @param tilingX Tile additional grids in the x-axis
-     * @param tilingY Tile additional grids in the y-axis
-     * @param sizeX Increase the grid's size in the x-axis
-     * @param sizeY Increase the grid's size in the y-axis
+     * @param tilingX Tiling in x-direction
+     * @param tilingY Tiling in y-direction
      * @return
      */
-    inline std::vector<float> UnitCheckerboard2D(int tilingX,
-                                                 int tilingY,
-                                                 float sizeX = 1.0f,
-                                                 float sizeY = 1.0f)
+    inline std::vector<float> UnitCheckerboard2D(int tilingX, int tilingY)
     {
         float baseColor = 1.0f;
 
-        // Must be at least 1 repetition
-        if (tilingX <= 0 || tilingY <= 0) {
-            tilingX = 1;
-            tilingY = 1;
-        }
+        // Tiling cannot be less than 0
+        tilingX = tilingX < 0 ? 0 : tilingX;
+        tilingY = tilingY < 0 ? 0 : tilingY;
 
         std::vector<float> baseGrid = {
             /*
              * Note: Normal is negative Z, as the grid is created in 2D space.
              * This means it's facing
              */
-            // Position				// Color         // Tex coords   // Normals
-            -0.5f, -0.5f, 0.0f, baseColor, baseColor, baseColor, 1.0f,  0,     0,    0,         0,         1,
-            0.5f,  -0.5f, 0.0f, baseColor, baseColor, baseColor, 1.0f,  1,     0,    0,         0,         1,
-            0.5f,  0.5f,  0.0f, baseColor, baseColor, baseColor, 1.0f,  1,     1,    0,         0,         1,
-            -0.5f, 0.5f,  0.0f, baseColor, baseColor, baseColor, 1.0f,  0,     1,    0,         0,         1
+            // Position		    // Color                                  // Tex coords   // Normals
+            -0.5f, -0.5f, 0.0f,     baseColor, baseColor, baseColor, 1.0f,    0, 0,           0, 0, 1,
+            0.5f,  -0.5f, 0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 0,           0, 0, 1,
+            0.5f,  0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 1,           0, 0, 1,
+            -0.5f, 0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    0, 1,           0, 0, 1
         };
 
         // Grid to return from this function. Because the vector's elements
@@ -91,9 +144,9 @@ namespace FW {
                 for (int i = 0; i < baseGrid.size(); i++) {
                     int attributeIndex = i % (numOfAttributes);
                     if (attributeIndex == 0) {
-                        returnGrid.push_back((baseGrid[i] + (float)x) * sizeX);
+                        returnGrid.push_back(baseGrid[i] + (float)x);
                     } else if (attributeIndex == 1) {
-                        returnGrid.push_back((baseGrid[i] + (float)y) * sizeY);
+                        returnGrid.push_back(baseGrid[i] + (float)y);
                     } else {
                         returnGrid.push_back(baseGrid[i]);
                     }
@@ -135,27 +188,6 @@ namespace FW {
     }
 
     /**
-     * Shorthand for UnitCheckerboardIndices2D(1).
-     *
-     * @return Indices for a quad.
-     * @see UnitCheckerboardIndices2D(...)
-     */
-    inline std::vector<uint32_t> UnitGridIndices2D()
-    {
-        return UnitCheckerboardIndices2D(1);
-    }
-
-    /**
-     * Shorthand for UnitGridGeometry(1, 1).
-     *
-     * @return Vertex attributes for a unit grid.
-     */
-    inline std::vector<float> UnitGridGeometry2D()
-    {
-        return UnitCheckerboard2D(1, 1);
-    }
-
-    /**
      * Generate a unit cube.
      *
      * The following attributes are generated:
@@ -168,7 +200,7 @@ namespace FW {
     inline std::vector<float> UnitCubeGeometry3D()
     {
         float baseColor = 1.0f, alpha = 1.0f;
-         std::vector<float> container = {
+        std::vector<float> container = {
             // Position				// Color // UV  // Normals
             // Front
             -0.5f,	-0.5f, -0.5f,	baseColor, baseColor, baseColor, alpha, 0, 0,   0, 0, -1,
@@ -255,40 +287,88 @@ namespace FW {
     {
         return {
             // Front
-            -0.5f,	-0.5f, -0.5f,
-            0.5f,	-0.5f, -0.5f,
-            0.5f,	0.5f,  -0.5f,
-            -0.5f,	0.5f,  -0.5f,
+            -0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
 
             // Rear
-            -0.5f,	-0.5f,	0.5f,
-            0.5f,	-0.5f,	0.5f,
-            0.5f,	0.5f,	0.5f,
-            -0.5f,	0.5f,	0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
 
             // Top
-            -0.5f,	0.5f,	-0.5f,
-            0.5f,	0.5f,	-0.5f,
-            0.5f,	0.5f,	 0.5f,
-            -0.5f,	0.5f,	 0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
 
             // Bottom
-            -0.5f,      -0.5f,	-0.5f,
-            0.5f,	-0.5f,	-0.5f,
-            0.5f,	-0.5f,	 0.5f,
-            -0.5f,      -0.5f,	 0.5f,
+            -0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
 
             // Right
-            -0.5f,	-0.5f,	-0.5f,
-            -0.5f,	0.5f,	-0.5f,
-            -0.5f,	0.5f,	0.5f,
-            -0.5f,	-0.5f,	0.5f,
+            -0.5f,
+            -0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
 
             // Left
-            0.5f,	-0.5f,	-0.5f,
-            0.5f,	0.5f,	-0.5f,
-            0.5f,	0.5f,	0.5f,
-            0.5f,	-0.5f,	0.5f,
+            0.5f,
+            -0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
+            0.5f,
+            0.5f,
+            0.5f,
+            -0.5f,
+            0.5f,
         };
     }
 

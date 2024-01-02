@@ -1,12 +1,8 @@
-/**
- * Header only file that contains rendering commands
- */
-
 #pragma once
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <memory>
+#include "pch.h"
+
+// Framework
 #include "Buffer.h"
 
 namespace RenderCommand {
@@ -26,6 +22,30 @@ namespace RenderCommand {
         WIREFRAME,
         POINT
     };
+
+    struct QuadProperties
+    {};
+
+    struct RenderingContext
+    {
+        FW::ref<FW::VertexArray> vertexArray;
+        FW::ref<FW::VertexBuffer> vertexBuffer;
+        FW::ref<FW::IndexBuffer> indexBuffer;
+    };
+
+    static FW::scope<RenderingContext> quadContext = nullptr;
+
+    /**
+     * This function must be called before draw calls are performed.
+     */
+    void init();
+
+    /**
+     * This must be called <u>once</u> only during the application's lifetime.
+     * @details It is recommended to call this function after the game loop has
+     * ended and before <u>glfwTerminate()</u>
+     */
+    void destroy();
 
     /**
      * Tell OpenGL what color to put on the screen after clearing it.
@@ -52,26 +72,7 @@ namespace RenderCommand {
      * Set render modes, like solid or wireframe mode.
      * @param mode Solid, wireframe or point render modes.
      */
-    inline void setPolygonMode(PolygonMode mode)
-    {
-        GLuint polyMode;
-        switch (mode) {
-            case PolygonMode::SOLID:
-                polyMode = GL_FILL;
-                break;
-            case PolygonMode::WIREFRAME:
-                polyMode = GL_LINE;
-                break;
-            case PolygonMode::POINT:
-                polyMode = GL_POINT;
-                break;
-            default:
-                polyMode = 0x00;
-        }
-
-        // Face should only be GL_FRONT_AND_BACK
-        glPolygonMode(GL_FRONT_AND_BACK, polyMode);
-    }
+    void setPolygonMode(PolygonMode mode);
 
     /**
      * Draw indexed objects.
@@ -79,14 +80,8 @@ namespace RenderCommand {
      * @param vertexArrayObject Vertex Array Object to bind
      * @param primitive OpenGL primitive to draw with. Default: GL_TRIANGLES
      */
-    inline void drawIndex(const FW::VertexArray& vertexArrayObject,
-                          GLenum primitive = GL_TRIANGLES)
-    {
-        uint32_t count = vertexArrayObject.getIndexBuffer()->getCount();
-
-        vertexArrayObject.bind();
-        glDrawElements(GL_TRIANGLES, (int)count, GL_UNSIGNED_INT, nullptr);
-    }
+    void drawIndex(const FW::VertexArray& vertexArrayObject,
+                   GLenum primitive = GL_TRIANGLES);
 
     inline void drawIndex(const std::shared_ptr<FW::VertexArray>& vao,
                           GLenum primitive = GL_TRIANGLES)
@@ -127,7 +122,8 @@ namespace RenderCommand {
      * </ul>
      * @return The currently used function
      */
-    inline GLenum getCurrentDepthFunc() {
+    inline GLenum getCurrentDepthFunc()
+    {
         return currentlyUsedDepthFunc;
     }
 
@@ -146,7 +142,8 @@ namespace RenderCommand {
      * <li>GL_GEQUAL</li>
      * </ul>
      */
-    inline void setCurrentDepthFunc(GLenum func) {
+    inline void setCurrentDepthFunc(GLenum func)
+    {
         currentlyUsedDepthFunc = func;
     }
 }

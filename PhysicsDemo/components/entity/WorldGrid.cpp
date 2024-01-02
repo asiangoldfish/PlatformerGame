@@ -5,8 +5,8 @@ WorldGrid::WorldGrid() {
       { FW::ShaderDataType::Float3, "a_position" }
     });
 
-    auto vertices = FW::UnitSquareVertices2D;
-    auto indices = FW::UnitSquareIndices2D;
+    auto vertices = FW::UnitGridGeometry2D();
+    auto indices = FW::UnitGridIndices2D;
 
     vertexArray = FW::createRef<FW::VertexArray>();
     vertexArray->bind();

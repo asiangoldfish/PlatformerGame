@@ -165,12 +165,15 @@ namespace FW {
         auto entityAttribLayout = FW::BufferLayout({
           { FW::ShaderDataType::Float3, "a_position" },
           { FW::ShaderDataType::Float4, "a_color" },
-          { FW::ShaderDataType::Float2, "a_texCoord" },
-          { FW::ShaderDataType::Float3, "a_normal" },
+//          { FW::ShaderDataType::Float2, "a_texCoord" },
+//          { FW::ShaderDataType::Float3, "a_normal" },
         });
 
-        auto vertices = UnitCubeGeometry3D();
-        auto indices = UnitCubeGeometry3DIndices();
+//        auto vertices = UnitCubeGeometry3D();
+//        auto indices = UnitCubeGeometry3DIndices();
+
+        auto vertices = UnitGridGeometry2D(FW::VERTEX_ATTRIBUTE::POSITION);
+        auto indices = UnitGridIndices2D;
 
         vertexArray = createRef<VertexArray>();
         vertexArray->bind();

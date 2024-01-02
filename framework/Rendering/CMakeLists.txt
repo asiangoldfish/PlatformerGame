@@ -24,7 +24,7 @@ add_library(${PROJECT_NAME} STATIC
     Light/Skybox.h              Light/Skybox.cpp
 
     # Miscellaneous
-    RenderCommands.h
+    RenderCommands.h            RenderCommands.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

@@ -12,7 +12,7 @@ class Floor : public FW::Entity
 public:
     Floor(float tiles)
     {
-        initDrawable(FW::UnitCheckerboard2D(tiles, tiles, 1, 1),
+        initDrawable(FW::UnitCheckerboard2D(tiles, tiles),
                      FW::UnitCheckerboardIndices2D(tiles * tiles));
     }
 

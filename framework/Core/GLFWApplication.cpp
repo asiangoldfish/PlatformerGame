@@ -52,6 +52,8 @@ namespace FW {
 
     GLFWApplication::~GLFWApplication()
     {
+        RenderCommand::destroy();
+
         // Destroy window and terminate GLFW.
         // NOTE: DO NOT run any GLFW functions after calling glfwTerminate()!!
         glfwDestroyWindow(window);
@@ -137,6 +139,9 @@ namespace FW {
         gApp = this;
 
         INFO("GLFW callback functions successfully bound");
+
+        // Rendering
+        RenderCommand::init();
 
         INFO("GLFWApplication \'{}\' successfully initiated", appName);
 

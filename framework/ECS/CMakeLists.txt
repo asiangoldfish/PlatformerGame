@@ -1,7 +1,8 @@
 project(FRAMEWORK_ECS)
 
 add_library(${PROJECT_NAME} STATIC
-    Entity.h Entity.cpp
+    Entity.h            Entity.cpp
+    PrimitiveShape.h    PrimitiveShape.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -19,6 +20,7 @@ PRIVATE
 target_link_libraries(${PROJECT_NAME} PUBLIC
     # External
     glm
+    glad
     spdlog
 
     # Internal
