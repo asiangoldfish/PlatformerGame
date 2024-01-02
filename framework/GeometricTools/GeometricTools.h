@@ -25,7 +25,8 @@ namespace FW {
         VERTEX_NORMAL = KEY_BIT(3)
     };
 
-    inline bool operator&(VERTEX_ATTRIBUTE lhs, VERTEX_ATTRIBUTE rhs) {
+    inline bool operator&(VERTEX_ATTRIBUTE lhs, VERTEX_ATTRIBUTE rhs)
+    {
         return (static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs)) != 0;
     }
 
@@ -50,14 +51,12 @@ namespace FW {
         0, 1, 2, 2, 3, 0,
     };
 
-    inline std::vector<float> UnitGridGeometry2D(VERTEX_ATTRIBUTE flags = VERTEX_ATTRIBUTE::POSITION)
+    inline std::vector<float> UnitGridGeometry2D(
+      VERTEX_ATTRIBUTE flags = VERTEX_ATTRIBUTE::POSITION)
     {
         float baseColor = 1.0f;
         std::array<float, 8> texCoords = {
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
         };
 
         std::vector<float> out;
@@ -73,10 +72,10 @@ namespace FW {
 
             if (flags & VERTEX_ATTRIBUTE::COLOR) {
                 // Base color in R, G and B. 1.0f in A
-                out.push_back(baseColor);
-                out.push_back(baseColor);
-                out.push_back(baseColor);
-                out.push_back(1.0f);
+                out.push_back(baseColor); // R
+                out.push_back(baseColor); // G
+                out.push_back(baseColor); // B
+                out.push_back(1.0f);      // A
             }
 
             if (flags & VERTEX_ATTRIBUTE::TEXTURE_COORD) {
@@ -115,7 +114,9 @@ namespace FW {
         tilingX = tilingX < 0 ? 0 : tilingX;
         tilingY = tilingY < 0 ? 0 : tilingY;
 
-        std::vector<float> baseGrid = {
+        std::vector<float>
+          baseGrid = {
+              // clang-format off
             /*
              * Note: Normal is negative Z, as the grid is created in 2D space.
              * This means it's facing
@@ -125,7 +126,8 @@ namespace FW {
             0.5f,  -0.5f, 0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 0,           0, 0, 1,
             0.5f,  0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 1,           0, 0, 1,
             -0.5f, 0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    0, 1,           0, 0, 1
-        };
+              // clang-format on
+          };
 
         // Grid to return from this function. Because the vector's elements
         // are stored in heap, we can return a reference to the vector.
@@ -201,6 +203,7 @@ namespace FW {
     {
         float baseColor = 1.0f, alpha = 1.0f;
         std::vector<float> container = {
+            // clang-format off
             // Position				// Color // UV  // Normals
             // Front
             -0.5f,	-0.5f, -0.5f,	baseColor, baseColor, baseColor, alpha, 0, 0,   0, 0, -1,
@@ -237,7 +240,8 @@ namespace FW {
             0.5f,	0.5f,	-0.5f,	baseColor, baseColor, baseColor, alpha, 1, 0,   1, 0, 0,
             0.5f,	0.5f,	0.5f,	baseColor, baseColor, baseColor, alpha, 1, 1,   1, 0, 0,
             0.5f,	-0.5f,	0.5f,	baseColor, baseColor, baseColor, alpha, 0, 1,   1, 0, 0,
-    };
+            // clang-format on
+        };
         return container;
     }
 
@@ -286,89 +290,43 @@ namespace FW {
     inline std::vector<float> SkyboxGeometryVertices()
     {
         return {
+            // clang-format off
             // Front
-            -0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
+            -0.5f,	-0.5f, -0.5f,
+            0.5f,	-0.5f, -0.5f,
+            0.5f,	0.5f,  -0.5f,
+            -0.5f,	0.5f,  -0.5f,
 
             // Rear
-            -0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
+            -0.5f,	-0.5f,	0.5f,
+            0.5f,	-0.5f,	0.5f,
+            0.5f,	0.5f,	0.5f,
+            -0.5f,	0.5f,	0.5f,
 
             // Top
-            -0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
+            -0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	 0.5f,
+            -0.5f,	0.5f,	 0.5f,
 
             // Bottom
-            -0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
+            -0.5f,      -0.5f,	-0.5f,
+            0.5f,	-0.5f,	-0.5f,
+            0.5f,	-0.5f,	 0.5f,
+            -0.5f,      -0.5f,	 0.5f,
 
             // Right
-            -0.5f,
-            -0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
+            -0.5f,	-0.5f,	-0.5f,
+            -0.5f,	0.5f,	-0.5f,
+            -0.5f,	0.5f,	0.5f,
+            -0.5f,	-0.5f,	0.5f,
 
             // Left
-            0.5f,
-            -0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
-            0.5f,
-            0.5f,
-            0.5f,
-            -0.5f,
-            0.5f,
+            0.5f,	-0.5f,	-0.5f,
+            0.5f,	0.5f,	-0.5f,
+            0.5f,	0.5f,	0.5f,
+            0.5f,	-0.5f,	0.5f,
+            // clang-format on
         };
     }
 
