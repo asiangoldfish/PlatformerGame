@@ -163,8 +163,8 @@ namespace FW {
     ParticleShape::ParticleShape()
     {
         auto entityAttribLayout = FW::BufferLayout({
-          { FW::ShaderDataType::Float3, "a_position" },
-          { FW::ShaderDataType::Float4, "a_color" },
+          { FW::ShaderDataType::Float3, "a_position" }
+//          { FW::ShaderDataType::Float4, "a_color" },
 //          { FW::ShaderDataType::Float2, "a_texCoord" },
 //          { FW::ShaderDataType::Float3, "a_normal" },
         });
