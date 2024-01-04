@@ -4,6 +4,10 @@
 
 #include "PhysicsApp.h"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 // Framework API
 #include "Framework.h"
 
@@ -103,6 +107,34 @@ PhysicsApp::init()
     emitter->setGravity(0.0098f);
     emitter->setMaxParticles(100);
 
+    // Dear ImGui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    // When clicking on a drag component, user can enter a value
+    io.ConfigDragClickToInputText = true;
+
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    // Styling
+    ImGui::StyleColorsDark();
+
+    // When viewports are enabled we tweak WindowRounding/WindowBg so
+    // platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        // style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    // Setup ImGui backends
+    ImGui_ImplGlfw_InitForOpenGL(getWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 430");
+
+
     INFO("Client application successfully initialized");
 
     return true;
@@ -117,6 +149,12 @@ PhysicsApp::run()
     while (!glfwWindowShouldClose(getWindow())) {
         RenderCommand::clear();
         glfwPollEvents();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow();
+
         keyboardInput();
         timer.updateDeltaTime();
 
@@ -141,6 +179,17 @@ PhysicsApp::run()
         }
 
         emitter->draw();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();
@@ -176,6 +225,9 @@ PhysicsApp::keyboardInput()
 PhysicsApp::~PhysicsApp()
 {
     FW::TextureManager::clearTextures();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
 void

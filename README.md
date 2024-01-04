@@ -49,4 +49,4 @@ Due to the deprecation of OpenGL on MacOS, the said operating system is not supp
 - [glm](https://github.com/g-truc/glm)
 - [spdlog](https://github.com/gabime/spdlog)
 - [stb](https://github.com/nothings/stb)
-- [DearImGUI](https://github.com/ocornut/imgui)
+- [Dear ImGui](https://github.com/ocornut/imgui)
