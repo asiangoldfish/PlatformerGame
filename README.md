@@ -42,3 +42,11 @@ The engine aims to support the following platforms:
 - BSD (not tested)
 
 Due to the deprecation of OpenGL on MacOS, the said operating system is not supported.
+
+# Dependencies
+- [glad](https://github.com/Dav1dde/glad)
+- [glfw](https://github.com/glfw/glfw)
+- [glm](https://github.com/g-truc/glm)
+- [spdlog](https://github.com/gabime/spdlog)
+- [stb](https://github.com/nothings/stb)
+- [DearImGUI](https://github.com/ocornut/imgui)

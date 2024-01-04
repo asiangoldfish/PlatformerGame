@@ -8,6 +8,8 @@ add_executable(${PROJECT_NAME}
 add_subdirectory(components)
 
 target_link_libraries(${PROJECT_NAME}
+    imgui
+
     # Framework
     Framework
     COMPONENT_entity2
