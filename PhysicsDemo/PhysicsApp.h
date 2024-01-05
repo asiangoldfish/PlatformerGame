@@ -87,6 +87,8 @@ public:
     virtual void mouseScrollCallback(double xoffset, double yoffset) override;
     virtual void framebufferSizeCallback(int width, int height) override;
 
+    FW::ref<FW::Framebuffer> getViewportFramebuffer() { return viewportFramebuffer; }
+
 public:
     bool isRightButtonMousePressed = false;
     bool isLeftButtonMousePressed = false;
@@ -117,6 +119,8 @@ private:
     FW::Timer timer;
 
     FW::ref<Floor> grid;
+
+    FW::ref<FW::Framebuffer> viewportFramebuffer;
 
     FW::ref<FW::Shader> worldGridShader;
     FW::ref<WorldGrid> worldGrid;

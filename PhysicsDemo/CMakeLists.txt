@@ -1,8 +1,8 @@
 project(PhysicsDemo)
 
 add_executable(${PROJECT_NAME}
-    PhysicsApp.h
-    PhysicsApp.cpp
+    PhysicsApp.h    PhysicsApp.cpp
+    ImGuiWidgets.hpp
 )
 
 add_subdirectory(components)

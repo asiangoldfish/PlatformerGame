@@ -1,9 +1,9 @@
 #include "Buffer.h"
 
-namespace FW
-{
+namespace FW {
 #pragma region Vertex Array
-    VertexArray::VertexArray() {
+    VertexArray::VertexArray()
+    {
         // Create new VAO
         glGenVertexArrays(1, &vertexArrayID);
     }
@@ -13,16 +13,18 @@ namespace FW
         glDeleteBuffers(1, &vertexArrayID);
     }
 
-    void VertexArray::bind() const {
+    void VertexArray::bind() const
+    {
         glBindVertexArray(vertexArrayID);
     }
 
-    void VertexArray::unbind() const {
+    void VertexArray::unbind() const
+    {
         glBindVertexArray(0);
     }
 
-    void VertexArray::addVertexBuffer(
-      VertexBuffer* vertexBuffer) {
+    void VertexArray::addVertexBuffer(VertexBuffer* vertexBuffer)
+    {
 
         glBindVertexArray(vertexArrayID);
         vertexBuffer->bind();
@@ -38,16 +40,15 @@ namespace FW
               ShaderDataTypeToOpenGLBaseType(attribute.type),
               attribute.normalized ? GL_TRUE : GL_FALSE,
               layout.getStride(),
-              (const void*)attribute.offset
-            );
+              (const void*)attribute.offset);
             index++;
         }
 
         vertexBuffers.push_back(vertexBuffer);
     }
 
-    void VertexArray::setIndexBuffer(
-      IndexBuffer* indexBuffer) {
+    void VertexArray::setIndexBuffer(IndexBuffer* indexBuffer)
+    {
         glBindVertexArray(vertexArrayID);
         indexBuffer->bind();
         this->indexBuffer = indexBuffer;
@@ -60,64 +61,79 @@ namespace FW
 #pragma endregion
 
 #pragma region Vertex Buffer
-    VertexBuffer::VertexBuffer(const void *vertices, GLsizei size, GLenum drawMethod) {
+    VertexBuffer::VertexBuffer(const void* vertices,
+                               GLsizei size,
+                               GLenum drawMethod)
+    {
         glGenBuffers(1, &vertexBufferId);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
         glBufferData(GL_ARRAY_BUFFER, size, vertices, drawMethod);
     }
 
-    VertexBuffer::~VertexBuffer() {
+    VertexBuffer::~VertexBuffer()
+    {
         glDeleteBuffers(1, &vertexBufferId);
     }
 
-    void VertexBuffer::bind() const {
+    void VertexBuffer::bind() const
+    {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
     }
 
-    void VertexBuffer::unbind() const {
+    void VertexBuffer::unbind() const
+    {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void VertexBuffer::bufferSubData(GLintptr offset, GLsizeiptr size,
-                                     const void *data) const {
+    void VertexBuffer::bufferSubData(GLintptr offset,
+                                     GLsizeiptr size,
+                                     const void* data) const
+    {
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
     }
 
-    std::shared_ptr<VertexBuffer> VertexBuffer::create(
-      const void* vertices,
-      GLsizei size,
-      GLenum drawMethod
-    ) {
+    std::shared_ptr<VertexBuffer> VertexBuffer::create(const void* vertices,
+                                                       GLsizei size,
+                                                       GLenum drawMethod)
+    {
 
         return std::make_shared<VertexBuffer>(vertices, size, drawMethod);
     }
 #pragma endregion
 
 #pragma region Index Buffer
-    IndexBuffer::IndexBuffer(uint32_t *indices, int count) {
+    IndexBuffer::IndexBuffer(uint32_t* indices, int count)
+    {
         glGenBuffers(1, &indexBufferID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (uint32_t)(count * sizeof(int)), indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     (uint32_t)(count * sizeof(int)),
+                     indices,
+                     GL_STATIC_DRAW);
 
         this->count = count;
     }
 
-    IndexBuffer::~IndexBuffer() {
+    IndexBuffer::~IndexBuffer()
+    {
         glDeleteBuffers(1, &indexBufferID);
     }
 
-    void IndexBuffer::bind() const {
+    void IndexBuffer::bind() const
+    {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     }
 
-    void IndexBuffer::unbind() const {
+    void IndexBuffer::unbind() const
+    {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    std::shared_ptr<IndexBuffer> IndexBuffer::create(
-      GLuint* indices, GLsizei count) {
+    std::shared_ptr<IndexBuffer> IndexBuffer::create(GLuint* indices,
+                                                     GLsizei count)
+    {
 
         return std::make_shared<IndexBuffer>(indices, count);
     }
@@ -131,29 +147,29 @@ namespace FW
 
     Framebuffer::~Framebuffer()
     {
-        glDeleteFramebuffers(1, &framebuffer);
+        glDeleteFramebuffers(1, &fbo);
         glDeleteTextures(1, &colorAttachment);
         glDeleteTextures(1, &depthAttachment);
     }
 
     void Framebuffer::createFramebuffer()
     {
-        glActiveTexture(GL_TEXTURE0);
-        glCreateFramebuffers(1, &framebuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glGenFramebuffers(1, &fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-        // Color - RGBA
-        glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
+        glGenTextures(1, &colorAttachment);
         glBindTexture(GL_TEXTURE_2D, colorAttachment);
+
         glTexImage2D(GL_TEXTURE_2D,
                      0,
-                     GL_RGBA8,
-                     1280,
+                     GL_RGB,
                      720,
+                     480,
                      0,
-                     GL_RGBA,
+                     GL_RGB,
                      GL_UNSIGNED_BYTE,
-                     nullptr);
+                     NULL);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -166,7 +182,7 @@ namespace FW
         // Depth
         glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
         glBindTexture(GL_TEXTURE_2D, depthAttachment);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 800, 600);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 720, 480);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER,
                                GL_DEPTH_STENCIL_ATTACHMENT,
@@ -222,7 +238,7 @@ namespace FW
 
     void Framebuffer::bind() const
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     }
 
     void Framebuffer::unbind() const

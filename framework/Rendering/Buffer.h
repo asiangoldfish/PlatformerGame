@@ -316,6 +316,8 @@ namespace FW {
         void bindTexture() const;
         [[nodiscard]] uint32_t getColorAttachment() const { return colorAttachment; }
 
+        uint32_t getTexture() { return colorAttachment; }
+
     private:
         void createFramebuffer();
 
@@ -324,7 +326,7 @@ namespace FW {
         glm::vec2 size{ 0.0f };
 
         /** Identifier for the framebuffer object */
-        uint32_t framebuffer;
+        uint32_t fbo;
 
         /** Identifier for the render buffer object */
         uint32_t renderBufferObject;
