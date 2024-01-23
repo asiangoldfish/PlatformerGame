@@ -149,14 +149,14 @@ PhysicsApp::run()
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
         Game::beginImGuiDraw();
-        Game::ImGuiDocking();
+        //Game::ImGuiDocking();
 
         RenderCommand::clear();
 
         keyboardInput();
         timer.updateDeltaTime();
 
-        viewportFramebuffer->bind();
+        //viewportFramebuffer->bind();
 
         emitterTimer.update(timer.getDeltaTime());
 
@@ -180,7 +180,7 @@ PhysicsApp::run()
 
         emitter->draw();
 
-        viewportFramebuffer->unbind();
+        //viewportFramebuffer->unbind();
 
         // Menu bar
         Game::drawMenuBar(*this);
