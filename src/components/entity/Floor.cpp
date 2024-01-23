@@ -1,8 +1,5 @@
 #include "Floor.h"
 
-#include "Buffers/VertexArray.h"
-#include "Buffers/VertexBuffer.h"
-
 void Floor::setTiles(uint32_t x, uint32_t y)
 {
     tilesX = x;

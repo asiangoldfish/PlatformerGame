@@ -43,4 +43,4 @@ if [ "$TARGET" == '-h' ] || [ "$TARGET" == "help"  ]; then
     exit 0
 fi
 
-cmake -S . -B build && cmake --build build && execute "MyApplication"
+cmake -S . -B build && cmake --build build --target "$1"  && execute "$1"
