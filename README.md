@@ -5,6 +5,12 @@
 
 A render engine based on the [Learn OpenGL](https://learnopengl.com/) book.
 
+# Dependencies
+**Ubuntu:**
+```
+sudo apt install libxinerama-dev x11-xserver-utils libxss-dev x11proto-xinerama-dev libxcb-xinerama0-dev libxrandr-dev
+```
+
 # Usage
 ## Linux
 Execute the included bash script to get started:
