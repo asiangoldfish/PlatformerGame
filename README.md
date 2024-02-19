@@ -8,7 +8,7 @@ A render engine based on the [Learn OpenGL](https://learnopengl.com/) book.
 # Dependencies
 **Ubuntu:**
 ```
-sudo apt install libxinerama-dev x11-xserver-utils libxss-dev x11proto-xinerama-dev libxcb-xinerama0-dev libxrandr-dev
+sudo apt install libxinerama-dev x11-xserver-utils libxss-dev x11proto-xinerama-dev libxcb-xinerama0-dev libxrandr-dev libxcursor-dev libxi-dev
 ```
 
 # Usage
