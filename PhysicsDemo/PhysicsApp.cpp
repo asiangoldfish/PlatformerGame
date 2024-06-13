@@ -153,7 +153,6 @@ PhysicsApp::run()
 
         viewportFramebuffer->bind();  // Render graphics on a separate viewport
         RenderCommand::clear();
-        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         keyboardInput();
         timer.updateDeltaTime();
@@ -164,6 +163,8 @@ PhysicsApp::run()
 
         worldGrid->draw(worldGridShader);
 
+        // Below line must happen after drawing the world grid because of depth
+        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         cameraController->update(shader);
 
@@ -189,7 +190,17 @@ PhysicsApp::run()
         Game::propertiesPanel(*this);
 
         // Viewport
-        Game::viewport(*this);
+        glm::vec2 newCamSize;
+        glm::vec2 oldCamSize = getCameraController()->
+                                    getPerspectiveCamera()->
+                                    getFrustum().getSize();
+        Game::viewport(*this, newCamSize);
+
+        if (newCamSize != oldCamSize) {
+            getCameraController()->getPerspectiveCamera()->updateViewportSize(
+                newCamSize
+            );
+        }
 
         // Must be called after all other ImGui draw calls
         Game::endImGuiDraw();

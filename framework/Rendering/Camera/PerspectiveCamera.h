@@ -25,6 +25,10 @@ namespace FW {
                 , height(height)
                 , nearClip(nearClip)
                 , farClip(farClip) {}
+
+            glm::vec2 getSize() {
+                return glm::vec2{width, height};
+            }
         };
 
     public:

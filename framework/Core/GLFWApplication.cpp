@@ -200,7 +200,11 @@ FW_GLFWKey_Callback(GLFWwindow* window,
 void
 FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height)
 {
-    gApp->framebufferSizeCallback(width, height);
+    // If the Editor uses the default frame buffer object, then this should be
+    // uncommented.
+    //
+    // Update the default frame buffer object's size with the GLFW window size
+    // gApp->framebufferSizeCallback(width, height);
 }
 
 // Output messages from OpenGL

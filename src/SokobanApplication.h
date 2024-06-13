@@ -79,7 +79,7 @@ private:
     FW::ref<FW::Shader> skyboxShader;
     FW::ref<FW::Skybox> skybox;
 
-    FW::ref<FW::Model> backpackModel;
+    // FW::ref<FW::Model> backpackModel;
     FW::ref<Cube> testCube;
     FW::scope<FW::PlayerController> playerController;
 

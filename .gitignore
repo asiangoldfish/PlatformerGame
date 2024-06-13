@@ -11,6 +11,5 @@ out/
 .cache/
 
 # Debugging
-core
 dump
 core_dump
