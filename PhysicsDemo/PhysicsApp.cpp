@@ -149,21 +149,21 @@ PhysicsApp::run()
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
         Game::beginImGuiDraw();
-        //Game::ImGuiDocking();
+        Game::ImGuiDocking();
 
+        viewportFramebuffer->bind();  // Render graphics on a separate viewport
         RenderCommand::clear();
+        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         keyboardInput();
         timer.updateDeltaTime();
 
-        //viewportFramebuffer->bind();
-
         emitterTimer.update(timer.getDeltaTime());
 
         cameraController->update(worldGridShader);
+
         worldGrid->draw(worldGridShader);
 
-        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
         cameraController->update(shader);
 
@@ -180,7 +180,7 @@ PhysicsApp::run()
 
         emitter->draw();
 
-        //viewportFramebuffer->unbind();
+        viewportFramebuffer->unbind();
 
         // Menu bar
         Game::drawMenuBar(*this);
