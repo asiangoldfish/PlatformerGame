@@ -154,6 +154,9 @@ namespace FW {
 
     void Framebuffer::createFramebuffer()
     {
+        int buffer_width = 720;
+        int buffer_height = 480;
+
         glGenFramebuffers(1, &fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -163,8 +166,8 @@ namespace FW {
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RGB,
-                     720,
-                     480,
+                     buffer_width,
+                     buffer_height,
                      0,
                      GL_RGB,
                      GL_UNSIGNED_BYTE,
@@ -182,7 +185,7 @@ namespace FW {
         // Depth
         glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
         glBindTexture(GL_TEXTURE_2D, depthAttachment);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 720, 480);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, buffer_width, buffer_height);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER,
                                GL_DEPTH_STENCIL_ATTACHMENT,

@@ -134,14 +134,21 @@ namespace Game {
     /**
      * Draw the OpenGL viewport
      * @param app The physics app
+     * @param size the viewport's new size
      */
-    void viewport(PhysicsApp& app)
+    void viewport(PhysicsApp& app, glm::vec2& size)
     {
         if (ImGui::Begin("Viewport")) {
-            ImGui::Image((void*)app.getViewportFramebuffer()->getTexture(), ImVec2(720, 480),
+            ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+            int sizeX = (int)viewportSize.x;
+            int sizeY = (int)viewportSize.y;
+            ImGui::Image((void*)app.getViewportFramebuffer()->getTexture(),
+                         viewportSize,
                          ImVec2{ 0, 1 },
                          ImVec2{ 1, 0 });
             ImGui::End();
+
+            size = {sizeX, sizeY};
         }
     }
 
