@@ -12,7 +12,7 @@ spawnWall(glm::vec3 pos, uint32_t diffTexId, FW::Entity* parent)
 {
     Cube* cube = new Cube();
     cube->setPosition(pos);
-    cube->getMaterial().getProperties().diffuseTextureId = diffTexId;
+    cube->getMaterial().getProperties().diffuseTextureID = diffTexId;
     cube->setParent(parent);
     return cube;
 }

@@ -14,7 +14,7 @@ public:
     Floor(FW::ref<FW::Shader> shader, glm::vec2 tiling, glm::vec2 size)
     {
         auto vertices =
-          FW::UnitCheckerboard2D(tiling.x, tiling.y, size.x, size.y);
+          FW::UnitCheckerboard2D(tiling.x, tiling.y);
 
         auto indices = FW::UnitCheckerboardIndices2D(tiling.x * tiling.y);
         initDrawable(vertices, indices);
