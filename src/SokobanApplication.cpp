@@ -41,11 +41,11 @@ SokobanApplication::init()
 
     gApp =
       this; // This needs to happen before anything else to prevent segfault
-    glfwSetKeyCallback(getWindow(), keyCallback);
-    glfwSetCursorPosCallback(getWindow(), cursorPos_callback);
-    glfwSetMouseButtonCallback(getWindow(), cursorMouseButton_callback);
-    glfwSetScrollCallback(getWindow(), mouseScrollBack_callback);
-    glfwSetFramebufferSizeCallback(getWindow(), framebufferSize_callback);
+    // glfwSetKeyCallback(getWindow(), keyCallback);
+    // glfwSetCursorPosCallback(getWindow(), cursorPos_callback);
+    // glfwSetMouseButtonCallback(getWindow(), cursorMouseButton_callback);
+    // glfwSetScrollCallback(getWindow(), mouseScrollBack_callback);
+    // glfwSetFramebufferSizeCallback(getWindow(), framebufferSize_callback);
 
     INFO("GLFW callback functions successfully bound");
 
@@ -94,10 +94,10 @@ SokobanApplication::init()
     FW::scope<FW::Entity> playerCube = FW::createScope<Cube>();
     //    playerCube->setScale(0.8f);
     playerCube->setPosition({ 2, 3, 0 });
-    playerCube->getMaterial().getProperties().diffuseTextureId =
+    playerCube->getMaterial().getProperties().diffuseTextureID =
       FW::TextureManager::getTextureID("metal_plate_diff");
     playerCube->setMaterial(FW::MaterialPreset::CHROME);
-    playerController = FW::createScope<FW::PlayerController>(playerCube);
+    playerController = nullptr; // FW::createScope<FW::PlayerController>(playerCube);
 
     // ---------
     // Rendering
