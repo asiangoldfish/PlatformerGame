@@ -133,6 +133,21 @@ namespace FW {
                       glm::scale(modelMatrix, scale);
     }
 
+    Entity* Entity::removeChildById(int id)
+    {
+        auto found = std::find_if(children.begin(), children.end(), [id](Entity* e) {
+            return e->getId() == id;
+        });
+
+        if (found != children.end()) {
+            Entity* e = *found;
+            children.erase(found);
+            return e;
+        } else {
+            return nullptr;
+        }
+    }
+
     void Entity::setRotation(glm::vec3 rotation)
     {
         setRotation(rotation.x, rotation.y, rotation.z);

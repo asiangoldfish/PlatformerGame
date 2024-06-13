@@ -78,14 +78,7 @@ namespace FW {
          * Please be cautious that removing a child will not delete it. It must
          * manually be deleted by the user.
          */
-        Entity* removeChildById(int id)
-        {
-            std::find_if(children.begin(), children.end(), [id](Entity* e) {
-                return e->getId() == id;
-            });
-
-            return nullptr;
-        }
+        Entity* removeChildById(int id);
 
         /**
          * Return the entity's unique identifier.
