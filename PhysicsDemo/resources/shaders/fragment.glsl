@@ -43,7 +43,10 @@ struct DirectionalLight {
     vec3 diffuse;
     vec3 specular;
 };
-#define NR_DIRECTIONAL_LIGHT 128
+
+// TODO find some way to dynamically find the max limit. Too large number causes
+// constant register 1024 to be exceeded
+#define NR_DIRECTIONAL_LIGHT 64
 uniform DirectionalLight u_directionalLight[NR_DIRECTIONAL_LIGHT];
 uniform int numOfDirectionalLights = 0;
 
@@ -59,7 +62,7 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };
-#define NR_POINT_LIGHTS 128
+#define NR_POINT_LIGHTS 64
 uniform PointLight u_pointLight[NR_POINT_LIGHTS];
 uniform int numOfPointLights = 0;
 
