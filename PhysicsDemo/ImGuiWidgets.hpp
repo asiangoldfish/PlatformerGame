@@ -5,7 +5,9 @@
 
 #include "PhysicsApp.h"
 
-namespace Game {
+namespace Editor {
+    
+
     void ImGuiDocking();
 
     /**

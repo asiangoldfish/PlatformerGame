@@ -148,8 +148,8 @@ PhysicsApp::run()
 
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
-        Game::beginImGuiDraw();
-        Game::ImGuiDocking();
+        Editor::beginImGuiDraw();
+        Editor::ImGuiDocking();
 
         viewportFramebuffer->bind();  // Render graphics on a separate viewport
         RenderCommand::clear();
@@ -184,17 +184,17 @@ PhysicsApp::run()
         viewportFramebuffer->unbind();
 
         // Menu bar
-        Game::drawMenuBar(*this);
+        Editor::drawMenuBar(*this);
 
         // Properties panel
-        Game::propertiesPanel(*this);
+        Editor::propertiesPanel(*this);
 
         // Viewport
         glm::vec2 newCamSize;
         glm::vec2 oldCamSize = getCameraController()->
                                     getPerspectiveCamera()->
                                     getFrustum().getSize();
-        Game::viewport(*this, newCamSize);
+        Editor::viewport(*this, newCamSize);
 
         if (newCamSize != oldCamSize) {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
@@ -203,7 +203,7 @@ PhysicsApp::run()
         }
 
         // Must be called after all other ImGui draw calls
-        Game::endImGuiDraw();
+        Editor::endImGuiDraw();
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();
