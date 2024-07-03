@@ -3,6 +3,11 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
+#include "inipp.h"
+
+#include <fstream>
+#include <string>
+
 #include "PhysicsApp.h"
 
 namespace Editor {
@@ -50,9 +55,17 @@ namespace Editor {
         // RESOURCES_DIR + std::string("shaders/vertex.glsl")
 
         // Font
+        inipp::Ini<char> ini;
+        std::string iniName = RESOURCES_DIR + std::string("config/editor.ini");
+	    std::ifstream is(iniName.c_str());
+        ini.parse(is);
+
+        float fontScale = 0.0f;
+        inipp::get_value(ini.sections["Default"], "fontScale", fontScale);
+
         // Source: https://fonts.google.com/specimen/Open+Sans
         std::string fontPath = RESOURCES_DIR + std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
-        io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 13); //, nullptr, nullptr);
+        io.Fonts->AddFontFromFileTTF(fontPath.c_str(), fontScale); //, nullptr, nullptr);
         // io.Fonts->GetTexDataAsRGBA32();
 
         // Setup ImGui backends for OpenGL

@@ -35,6 +35,7 @@ add_subdirectory(external/glm)
 add_subdirectory(external/spdlog)
 #add_subdirectory(external/assimp)
 add_subdirectory(external/imgui)
+add_subdirectory(external/inipp)
 
 # stb
 add_library(stb INTERFACE)
