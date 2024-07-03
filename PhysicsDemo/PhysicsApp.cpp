@@ -105,32 +105,8 @@ PhysicsApp::init()
     emitter->setGravity(0.0098f);
     emitter->setMaxParticles(100);
 
-    // Dear ImGui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    // When clicking on a drag component, user can enter a value
-    io.ConfigDragClickToInputText = true;
-
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-    // Styling
-    ImGui::StyleColorsDark();
-
-    // When viewports are enabled we tweak WindowRounding/WindowBg so
-    // platform windows can look identical to regular ones.
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        style.WindowRounding = 0.0f;
-        // style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
-
-    // Setup ImGui backends
-    ImGui_ImplGlfw_InitForOpenGL(getWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 430");
+    // Init Dear ImGui
+    Editor::initEditorImgui(getWindow());
 
     // Framebuffer for rendering GL on ImGui
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();
@@ -183,6 +159,9 @@ PhysicsApp::run()
 
         viewportFramebuffer->unbind();
 
+        // Uncomment to enable the ImGui demo window
+        // ImGui::ShowDemoWindow();
+
         // Menu bar
         Editor::drawMenuBar(*this);
 
@@ -194,7 +173,7 @@ PhysicsApp::run()
         glm::vec2 oldCamSize = getCameraController()->
                                     getPerspectiveCamera()->
                                     getFrustum().getSize();
-        Editor::viewport(*this, newCamSize);
+        Editor::drawViewport(*this, newCamSize);
 
         if (newCamSize != oldCamSize) {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(

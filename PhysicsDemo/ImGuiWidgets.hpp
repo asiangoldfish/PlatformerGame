@@ -6,9 +6,60 @@
 #include "PhysicsApp.h"
 
 namespace Editor {
-    
-
     void ImGuiDocking();
+
+    /**
+     * Initialise Dear ImGui.
+     * 
+     * Required ImGui parameters are initialised. They are project specific.
+     * Users can edit this function for specific needs. Some function calls are
+     * required; however, and omitting these can lead to crashes.
+     * 
+     * @param window The GL window to draw on.
+     */
+    void initEditorImgui(GLFWwindow* window) {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+
+        // -----
+        // Configure ImGui
+        // -----
+        // When clicking on a drag component, user can enter a value
+        io.ConfigDragClickToInputText = true;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+        // Styling
+        ImGui::StyleColorsDark();
+
+        // When viewports are enabled we tweak WindowRounding/WindowBg so
+        // platform windows can look identical to regular ones.
+        ImGuiStyle& style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            style.WindowRounding = 0.0f;
+            // style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
+
+        // Scale
+        // ImGuiStyle::ScaleAllSizes(2.0);
+        style.ScaleAllSizes(1.0);
+
+        // RESOURCES_DIR + std::string("shaders/vertex.glsl")
+
+        // Font
+        // Source: https://fonts.google.com/specimen/Open+Sans
+        std::string fontPath = RESOURCES_DIR + std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
+        io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 13); //, nullptr, nullptr);
+        // io.Fonts->GetTexDataAsRGBA32();
+
+        // Setup ImGui backends for OpenGL
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 430");
+
+    }
 
     /**
      * Must be called at the beginning of each frame whenever ImGui is drawing.
@@ -138,7 +189,7 @@ namespace Editor {
      * @param app The physics app
      * @param size the viewport's new size
      */
-    void viewport(PhysicsApp& app, glm::vec2& size)
+    void drawViewport(PhysicsApp& app, glm::vec2& size)
     {
         if (ImGui::Begin("Viewport")) {
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
