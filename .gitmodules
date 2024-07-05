@@ -16,3 +16,6 @@
 [submodule "external/assimp"]
 	path = external/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "external/inipp"]
+	path = external/inipp
+	url = https://github.com/mcmtroffaes/inipp.git
