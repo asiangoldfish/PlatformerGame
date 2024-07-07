@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Khai Duong
+ * Copyright 2023-2024 Khai Duong
  */
 
 #include "PhysicsApp.h"
