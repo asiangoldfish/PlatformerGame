@@ -35,20 +35,6 @@ PhysicsApp::init()
       RESOURCES_DIR + std::string("shaders/worldGridVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/worldGridFrag.glsl"));
 
-    FW::TextureManager::loadTexture2D(
-      { { "metal_plate_diff",
-          TEXTURES_DIR +
-            std::string("polyhaven/metal_plate/metal_plate_diff_1k.jpg") },
-        { "metal_plate_spec",
-          TEXTURES_DIR +
-            std::string("polyhaven/metal_plate/metal_plate_spec_1k_GIMP.jpg") },
-        { "coral_stone_diff",
-          TEXTURES_DIR +
-            std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg") },
-        { "coral_stone_spec",
-          TEXTURES_DIR +
-            std::string("polyhaven/coral_stone/coral_stone_wall_diff_1k.jpg") },
-        { "wall", TEXTURES_DIR + std::string("wall.jpg") } });
 
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
