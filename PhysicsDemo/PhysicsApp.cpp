@@ -24,6 +24,12 @@ PhysicsApp::init()
         return false;
     }
 
+
+    // ------
+    // Configurations
+    // ------
+    configureDefaultEditorSettings();
+
     // -----------
     // Textures and shaders
     // -----------
@@ -175,6 +181,15 @@ PhysicsApp::run()
     }
 }
 
+bool
+PhysicsApp::configureDirectories()
+{
+    std::filesystem::create_directory(RESOURCES_DIR);
+    std::filesystem::create_directory(TEXTURES_DIR);
+    std::filesystem::create_directory(CONFIG_DIR);
+
+    return true;
+}
 /** Keyboard input function. Called every frame */
 void
 PhysicsApp::keyboardInput()
@@ -402,4 +417,23 @@ PhysicsApp::framebufferSizeCallback(int width, int height)
     setWindowSize({ width, height });
     getCameraController()->getPerspectiveCamera()->updateViewportSize(
       { width, height });
+}
+
+void
+PhysicsApp::configureDefaultEditorSettings()
+{
+    cfg = {CONFIG_DIR + std::string("editor.json")};
+
+    if (std::filesystem::exists(CONFIG_DIR + std::string("editor.json"))) {
+        cfg.parse();
+        return;
+    }
+
+    cfg.jObject["ui"]["fontSize"] = 14;
+    
+    if (!cfg.write()) {
+        WARN("Failed to write to config/editor.json");
+    } else {
+        INFO("config/editor.ini write out");
+    }
 }

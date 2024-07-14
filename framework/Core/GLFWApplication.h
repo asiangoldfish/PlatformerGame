@@ -133,6 +133,14 @@ namespace FW {
         virtual bool init();
 
         /**
+         * Configure directories.
+         * 
+         * Create or configure directories where game or engine files are
+         * located.
+         */
+        virtual bool configureDirectories() {};
+
+        /**
          * The main loop.
          *
          * @details When the loop ends, the application also ends. Clean up

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <string>
 
 namespace FW {
@@ -68,7 +69,7 @@ namespace Files {
          * https://github.com/nlohmann/json?tab=readme-ov-file#json-as-first-
          * class-data-type
          */
-        json jObject;
+        nlohmann::json jObject;
 
         /// If true, then the output for Config::write() is prettified.
         bool prettified = true;

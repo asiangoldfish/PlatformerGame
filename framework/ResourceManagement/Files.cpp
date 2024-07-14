@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Files.h"
-#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace FW {
 namespace Files {
@@ -8,18 +9,16 @@ namespace Files {
     bool Config::parse()
     {
         if (fileName == "") {
-            FATAL("Attempted to parse JSON configuration file, but it was" +
-            " empty.");
+            FATAL("Attempted to parse JSON configuration file, but it was empty.");
             return false;
         }
 
         if (!std::filesystem::exists(fileName)) {
-            FATAL("Attempted to read JSON configuration file " +
-            "\'%s\', but it was not found.", fileName)
+            FATAL("Attempted to read JSON configuration file \'%s\', but it was not found.", fileName);
         }
 
         std::ifstream infile(fileName);
-        fileName >> jObject;
+        jObject = json::parse(infile);
         infile.close();
         return true;
     }
@@ -27,8 +26,7 @@ namespace Files {
     bool Config::write()
     {
         if (fileName == "") {
-            FATAL("Attempted to parse JSON configuration file, but it was" +
-            " empty.");
+            FATAL("Attempted to parse JSON configuration file, but it was empty.");
             return false;
         }
 

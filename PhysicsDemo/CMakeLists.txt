@@ -18,6 +18,7 @@ target_link_libraries(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     TEXTURES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/"
     RESOURCES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/"
+    CONFIG_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config/"
 )
 
 # Copy assets directory to binary destination

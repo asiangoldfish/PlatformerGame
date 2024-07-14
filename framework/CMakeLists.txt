@@ -18,7 +18,7 @@ add_subdirectory(GeometricTools)
 add_subdirectory(Rendering)
 add_subdirectory(ECS)
 add_subdirectory(Physics)
-#add_subdirectory(ResourceManagement)
+add_subdirectory(ResourceManagement)
 add_subdirectory(Util)
 add_subdirectory(Gameplay)
 
@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE
     FRAMEWORK_GEOMETRICTOOLS
     FRAMEWORK_RENDERING
     FRAMEWORK_ECS
- #   FRAMEWORK_RESOURCE_MANAGEMENT
+    FRAMEWORK_RESOURCE_MANAGEMENT
     FRAMEWORK_UTIL
     FRAMEWORK_GAMEPLAY
 )

@@ -15,6 +15,11 @@ namespace FW {
     class TextureManager;
 }
 
+// -----
+// Global variables
+// -----
+FW::Files::Config cfg;
+
 class PhysicsApp : public FW::GLFWApplication
 {
 public:
@@ -36,6 +41,8 @@ public:
     bool init() override;
     /** Game loop. Runs until the application quits. */
     void run() override;
+
+    bool configureDirectories() override;
 
     // ---------
     // Camera and rendering
@@ -88,6 +95,15 @@ public:
     virtual void framebufferSizeCallback(int width, int height) override;
 
     FW::ref<FW::Framebuffer> getViewportFramebuffer() { return viewportFramebuffer; }
+
+private:
+    /**
+     * Configure default settings for the editor if the file does not exist.
+     * 
+     * TODO:
+     * Verify the file's content for missing fields.
+     */
+    void configureDefaultEditorSettings();
 
 public:
     bool isRightButtonMousePressed = false;

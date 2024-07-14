@@ -143,6 +143,12 @@ namespace FW {
         // Rendering
         RenderCommand::init();
 
+        if (!configureDirectories()) {
+            FATAL("Failed to configure directories");
+        } else {
+            INFO("Created game directories");
+        }
+
         INFO("GLFWApplication \'{}\' successfully initiated", appName);
 
         return true;
