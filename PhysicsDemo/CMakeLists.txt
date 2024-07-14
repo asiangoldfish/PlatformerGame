@@ -10,9 +10,6 @@ add_subdirectory(components)
 target_link_libraries(${PROJECT_NAME}
     imgui
 
-    # Ini parser
-    inipp::inipp
-
     # Framework
     Framework
     COMPONENT_entity2
