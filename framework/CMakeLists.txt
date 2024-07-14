@@ -28,6 +28,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE
     glm
     stb
     spdlog
+    nlohmann_json
 
     FRAMEWORK_CORE
     FRAMEWORK_GEOMETRICTOOLS

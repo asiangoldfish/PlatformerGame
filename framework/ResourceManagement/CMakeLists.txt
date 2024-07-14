@@ -2,6 +2,8 @@ project(FRAMEWORK_RESOURCE_MANAGEMENT)
 
 add_library(${PROJECT_NAME}
     Model.h     Model.cpp
+
+    Files.h     Files.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -11,10 +13,11 @@ PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    assimp
     glm
     glfw
     stb
+
+    nlohmann_json
 
     FRAMEWORK_RENDERING
 )
