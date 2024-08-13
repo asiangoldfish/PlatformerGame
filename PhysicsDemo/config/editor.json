@@ -2,5 +2,12 @@
     "ui": {
         "fontSize": 32,
         "enableDocking": 0
+    },
+    "window": {
+        "default_size": [
+            1280,
+            720
+        ],
+        "windowMode": "window"
     }
 }

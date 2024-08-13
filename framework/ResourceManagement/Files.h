@@ -5,6 +5,10 @@
 
 namespace FW {
 namespace Files {
+    /**
+     * Example how to get some variable:
+     * Config::jObject["ui"]["fontSize"]
+     */
     class Config {
     public:
         /**

@@ -154,6 +154,57 @@ namespace FW {
         return true;
     }
 
+    void GLFWApplication::changeWindowMode(WindowMode mode) {
+        // Safe guard for developer error in case the window does not exist.
+        // We set a warning so they should create a window first. This improves
+        // code readability.
+        if (window == nullptr) {
+            // Set default values to window size if they are uninitialised
+            if (windowSize.x == 0 || windowSize.y == 0) {
+                windowSize = { 1280, 720 };
+            }
+
+            window = glfwCreateWindow(
+                windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
+        }
+
+        GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
+        const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
+
+        switch (mode)
+        {
+        case WindowMode::WINDOW:
+            /*  Order of priority:
+                1. Use the windowSize class member
+                2. Use default window size
+                3. Use hard coded window size
+            */
+            // We also set some threshold to prevent un-resizable tiny windows
+            if (windowSize.x < 62.0f || windowSize.y < 62.f) {
+                windowSize = { 1280, 720 };
+            }
+            break;
+
+        case WindowMode::BORDERLESS:
+            WARN("WindowMode::BORDERLESS not implemented");
+            windowSize = { 1280, 720 };
+            break;
+
+        case WindowMode::FULLSCREEN:
+            windowSize = { vidmode->width, vidmode->height };
+            break;
+
+        default:
+            FATAL("GKFWApplication.cpp: WindowMode option not implemented");
+            INFO("Error occurred. Please WindowMode option was not implemented. Resetting to default values");
+                        window = glfwCreateWindow(
+                windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
+
+        }
+
+        glfwSetWindowMonitor(window, monitor, 0, 0, windowSize.x, windowSize.y, vidmode->refreshRate);
+    }
+
 } // namespace Framework
 
 /**

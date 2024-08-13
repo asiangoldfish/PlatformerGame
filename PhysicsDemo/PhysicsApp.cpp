@@ -24,11 +24,21 @@ PhysicsApp::init()
         return false;
     }
 
-
     // ------
     // Configurations
     // ------
     configureDefaultEditorSettings();
+
+    // Initialise the window mode if this is set in the configurations.
+    // TODO: Check for invalid value and type
+    std::string defaultWindowMode = cfg.jObject["window"]["windowMode"];
+    if (defaultWindowMode == "window") {
+        changeWindowMode(FW::WindowMode::WINDOW);
+    } else if (defaultWindowMode == "borderless") {
+        changeWindowMode(FW::WindowMode::BORDERLESS);
+    } else {
+        changeWindowMode(FW::WindowMode::FULLSCREEN);
+    }
 
     // -----------
     // Textures and shaders

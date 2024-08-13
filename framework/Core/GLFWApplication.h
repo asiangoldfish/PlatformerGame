@@ -10,6 +10,12 @@
 #include <glm/glm.hpp>
 
 namespace FW {
+    enum class WindowMode {
+        WINDOW = 0,
+        BORDERLESS,
+        FULLSCREEN
+    };
+
     /**
      * Application class
      *
@@ -248,6 +254,8 @@ namespace FW {
          */
         virtual void framebufferSizeCallback(int width, int height) {}
 
+        void changeWindowMode(WindowMode mode);
+
     private:
         /** Application name. This is also the window class. */
         std::string appName;
@@ -256,11 +264,14 @@ namespace FW {
         std::string appVersion;
 
         /** The application window where all rendering happens */
-        GLFWwindow* window;
+        GLFWwindow* window = nullptr;
 
         /** The current window size. This is the <u>GLFWwindow</u>, not the
          * viewport size */
         glm::vec2 windowSize;
+
+        /** Default window mode upon launch */
+        WindowMode windowMode = WindowMode::WINDOW;
     };
 
     GLFWApplication* createApplication();
