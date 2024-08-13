@@ -28,3 +28,11 @@ add_custom_target (${PROJECT_NAME}_COPY_ASSETS
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
 )
 add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_ASSETS)
+
+# Copy assets directory to binary destination
+set (source "${CMAKE_CURRENT_SOURCE_DIR}/config")
+set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config")
+add_custom_target (${PROJECT_NAME}_COPY_CONFIG
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
+)
+add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_CONFIG)
