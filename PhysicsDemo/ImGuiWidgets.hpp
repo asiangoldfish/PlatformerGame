@@ -127,7 +127,7 @@ namespace Editor {
                 }
 
                 ImGui::Separator();
-                ImGui::MenuItem("Settings", NULL, false, false);
+                //ImGui::MenuItem("Settings", NULL, false, false);
                 if (ImGui::BeginMenu("Preferences")) {
                     ImGui::MenuItem("General");
                     ImGui::MenuItem("Keyboard Shortcuts");
