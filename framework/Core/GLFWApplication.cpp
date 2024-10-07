@@ -171,6 +171,8 @@ namespace FW {
         GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
         const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
 
+        glm::vec2 posOnScreen = glm::vec2{0, 0};
+
         switch (mode)
         {
         case WindowMode::WINDOW:
@@ -183,14 +185,22 @@ namespace FW {
             if (windowSize.x < 62.0f || windowSize.y < 62.f) {
                 windowSize = { 1280, 720 };
             }
+            
+            // TODO Center window on screen
+            posOnScreen = glm::vec2{1920, 1280};
+            monitor = nullptr;
             break;
 
         case WindowMode::BORDERLESS:
+            // TODO Implement this
             WARN("WindowMode::BORDERLESS not implemented");
             windowSize = { 1280, 720 };
+            posOnScreen = glm::vec2{1920, 1280};
+            monitor = nullptr;
             break;
 
         case WindowMode::FULLSCREEN:
+            // TODO Get monitor resolution
             windowSize = { vidmode->width, vidmode->height };
             break;
 
@@ -202,7 +212,7 @@ namespace FW {
 
         }
 
-        glfwSetWindowMonitor(window, monitor, 0, 0, windowSize.x, windowSize.y, vidmode->refreshRate);
+        glfwSetWindowMonitor(window, monitor, posOnScreen.x, posOnScreen.y, windowSize.x, windowSize.y, vidmode->refreshRate);
     }
 
 } // namespace Framework
