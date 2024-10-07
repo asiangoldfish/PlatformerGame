@@ -1,3 +1,7 @@
+/**
+ * This file contains all relevant OpenGL buffers used in the game engine
+ */
+
 #pragma once
 
 #include "pch.h"
