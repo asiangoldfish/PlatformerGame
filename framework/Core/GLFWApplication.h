@@ -244,6 +244,15 @@ namespace FW {
 
         void changeWindowMode(WindowMode mode);
 
+        /**
+         * Create or recreate a window.
+         * 
+         * If a window already exists. Nevertheless a new one will be created.
+         * 
+         * @param isFullscreen sets the window to the primary monitor if true.
+         */
+        void createWindow(bool isFullscreen);
+
     protected:
         /** Collection of settings related to a window */
         WindowSettings windowSettings;

@@ -27,15 +27,18 @@ bool PhysicsApp::init() {
     // ------
     configureDefaultEditorSettings();
 
+    // TODO Move this to Framework as an engine feature.
     // Initialise the window mode if this is set in the configurations.
-    // TODO: Check for invalid value and type
     std::string defaultWindowMode = cfg.jObject["window"]["windowMode"];
     if (defaultWindowMode == "window") {
         changeWindowMode(FW::WindowMode::WINDOW);
     } else if (defaultWindowMode == "borderless") {
         changeWindowMode(FW::WindowMode::BORDERLESS);
-    } else {
+    } else if (defaultWindowMode == "fullscreen") {
         changeWindowMode(FW::WindowMode::FULLSCREEN);
+    } else {
+        WARN("defaultWindowMode value '{0}' in PhysicsApp is invalid",
+             defaultWindowMode);
     }
 
     // -----------

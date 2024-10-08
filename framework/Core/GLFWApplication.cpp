@@ -69,18 +69,6 @@ namespace FW {
             return false;
         }
 
-        // Create window
-        window = glfwCreateWindow(windowSettings.size.x,
-                                  windowSettings.size.y,
-                                  appName.c_str(),
-                                  nullptr,
-                                  nullptr);
-
-        if (!window) {
-            WARN("GLFW::WINDOW::Unable to create window");
-            return false;
-        }
-
         // ------------------
         // Configure and setup window context
         // ------------------
@@ -93,7 +81,8 @@ namespace FW {
         // functions with GLAD using gladLoadGLLoader(...).
         // More about GLFW context:
         // https://computergraphics.stackexchange.com/a/4563
-        glfwMakeContextCurrent(window);
+        // Create window
+        createWindow(false);
 
         // Load OpenGL functions in runtime
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -156,29 +145,13 @@ namespace FW {
     }
 
     void GLFWApplication::changeWindowMode(WindowMode mode) {
-        // Safe guard for developer error in case the window does not exist.
-        // We set a warning so they should create a window first. This improves
-        // code readability.
-        if (window == nullptr) {
-            // Set default values to window size if they are uninitialised
-            if (windowSettings.size.x == 0 || windowSettings.size.y == 0) {
-                windowSettings.size = { 1280, 720 };
-            }
+        const GLFWvidmode* vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-            window = glfwCreateWindow(windowSettings.size.x,
-                                      windowSettings.size.y,
-                                      appName.c_str(),
-                                      nullptr,
-                                      nullptr);
-        }
-
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
-
-        glm::vec2 posOnScreen = glm::vec2{ 0, 0 };
+        bool isFullscreen = false;
 
         switch (mode) {
             case WindowMode::WINDOW:
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
                 /*  Order of priority:
                     1. Use the windowSize class member
                     2. Use default window size
@@ -190,46 +163,64 @@ namespace FW {
                     windowSettings.size.y < 62.f) {
                     windowSettings.size = { 1280, 720 };
                 }
-
-                // TODO Center window on screen
-                posOnScreen =
-                  glm::vec2{ (vidmode->width / 2) - (windowSettings.size.x / 2),
-                             (vidmode->height / 2) -
-                               (windowSettings.size.y / 2) };
-                monitor = nullptr;
                 break;
 
             case WindowMode::BORDERLESS:
-                // TODO Implement this
-                WARN("WindowMode::BORDERLESS not implemented");
-                windowSettings.size = { 1280, 720 };
-                posOnScreen = glm::vec2{ 1920, 1280 };
-                monitor = nullptr;
+                // Requirements:
+                // - Windows size = monitor size
+                // - Not movable
+                windowSettings.size = { vidmode->width, vidmode->height };
+                glfwWindowHint(GLFW_DECORATED, GL_FALSE);
                 break;
 
             case WindowMode::FULLSCREEN:
-                // TODO Get monitor resolution
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
                 windowSettings.size = { vidmode->width, vidmode->height };
+                isFullscreen = true;
                 break;
 
             default:
-                FATAL("GKFWApplication.cpp: WindowMode option not implemented");
-                INFO("Error occurred. Please WindowMode option was not "
-                     "implemented. Resetting to default values");
-                window = glfwCreateWindow(windowSettings.size.x,
-                                          windowSettings.size.y,
-                                          appName.c_str(),
-                                          nullptr,
-                                          nullptr);
+                // This should never happen
+                FATAL("Window mode is not implemented. Did you forget to "
+                      "implement it?");
+
+                // TODO Send error message to the editor and create default
+                // window
+                break;
         }
 
-        glfwSetWindowMonitor(window,
-                             monitor,
-                             posOnScreen.x,
-                             posOnScreen.y,
-                             windowSettings.size.x,
-                             windowSettings.size.y,
-                             vidmode->refreshRate);
+        // Making window not resizable requires recreating the window
+        createWindow(isFullscreen);
+    }
+
+    void GLFWApplication::createWindow(bool isFullscreen) {
+        if (window) {
+            glfwDestroyWindow(window);
+        }
+
+        // For fullscreen mode
+        // FIXME this is not correctly implemented fullscreen mode
+        GLFWmonitor* monitor =
+          (isFullscreen) ? glfwGetPrimaryMonitor() : nullptr;
+
+        window = glfwCreateWindow(windowSettings.size.x,
+                                  windowSettings.size.y,
+                                  appName.c_str(),
+                                  monitor,
+                                  nullptr);
+
+        if (!window) {
+            FATAL("GLFW::WINDOW::Unable to create window");
+        }
+
+        // Center window on screen
+        const GLFWvidmode* vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glm::vec2 newPos =
+          glm::vec2{ (vidmode->width / 2) - (windowSettings.size.x / 2),
+                     (vidmode->height / 2) - (windowSettings.size.y / 2) };
+        glfwSetWindowPos(window, newPos.x, newPos.y);
+
+        glfwMakeContextCurrent(window);
     }
 
 } // namespace Framework
