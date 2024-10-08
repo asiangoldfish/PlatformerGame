@@ -54,6 +54,11 @@ function generate_doxygen() {
     fi
 
     doxygen Doxyfile
+
+    # Open the website right away
+    if command -v 'firefox' > /dev/null; then
+        firefox 'doxygen-docs/html/index.html'
+    fi
 }
 
 # Runs help message if no arguments were found

@@ -1,7 +1,7 @@
 # Doxyfile configuration file for generating UML diagrams with Doxygen
 
 # Project related settings
-PROJECT_NAME           = "MyProject"
+PROJECT_NAME           = "PlatformerGame"
 PROJECT_BRIEF          = "A brief description of MyProject"
 OUTPUT_DIRECTORY       = doxygen-docs
 GENERATE_LATEX         = NO
@@ -11,7 +11,7 @@ GENERATE_XML           = YES
 RECURSIVE              = YES
 
 # Input files
-INPUT                  = src include
+INPUT                  = framework src PhysicsDemo
 FILE_PATTERNS          = *.cpp *.h
 
 # Output settings
