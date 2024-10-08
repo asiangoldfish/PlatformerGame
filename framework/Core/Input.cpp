@@ -103,20 +103,13 @@ namespace FW {
         registerKeyJustPressed.leftAlt = false;
     }
 
-    int Input::setWindow(GLFWwindow* win)
-    {
-        // Window is already set.
-        if (window) {
-            return 1;
-        }
-
-        // w is a nullptr
+    bool Input::setWindow(GLFWwindow* win) {
         if (!win) {
-            return 2;
+            return false;
         }
 
         window = win;
-        return 0;
+        return true;
     }
 
     void Input::updateModKeyState(int key, int action)

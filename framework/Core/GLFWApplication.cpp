@@ -84,21 +84,7 @@ namespace FW {
         // Create window
         createWindow(false);
 
-        // Load OpenGL functions in runtime
-        gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-        glEnable(GL_BLEND); // For transparency
-
-        // Depth testing
-        glEnable(GL_DEPTH_TEST);
-        RenderCommand::setCurrentDepthFunc(GL_LESS);
-
-        // Culling
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CCW);
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        setWindowBlendMode();
 
         // Uncomment this only for debugging
         glEnable(GL_DEBUG_OUTPUT);
@@ -106,24 +92,6 @@ namespace FW {
         glDebugMessageCallback(OpenGL_DebugMessages, nullptr);
         glDebugMessageControl(
           GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-
-        // User input - Register the window.
-        // These errors should never happen, but there is no harm in checking
-        // them. Input::setWindow() returns 0 if everything is OK, and non-zero
-        // integer if something went wrong.
-        if (Input::setWindow(window)) {
-            WARN("GLFWApplication::Init: Failed to set window. This should "
-                 "never happen");
-            return false;
-        }
-
-        // Input callbacks
-        glfwSetKeyCallback(getWindow(), FW_GLFWKey_Callback);
-        glfwSetCursorPosCallback(getWindow(), FW_GLFWCursorPos_Callback);
-        glfwSetMouseButtonCallback(getWindow(), FW_GLFWMouseButton_Callback);
-        glfwSetScrollCallback(getWindow(), FW_GLFWMouseScroll_Callback);
-        glfwSetFramebufferSizeCallback(getWindow(),
-                                       FW_GLFWFramebufferSize_Callback);
 
         // Static pointer to this application for setting up callback functions
         gApp = this;
@@ -219,8 +187,45 @@ namespace FW {
           glm::vec2{ (vidmode->width / 2) - (windowSettings.size.x / 2),
                      (vidmode->height / 2) - (windowSettings.size.y / 2) };
         glfwSetWindowPos(window, newPos.x, newPos.y);
-
         glfwMakeContextCurrent(window);
+        setWindowBlendMode();
+
+        // User input - Register the window.
+        // If this returns false, then there is a developer error somewhere.
+        if (!Input::setWindow(window)) {
+            FATAL("GLFWApplication::Init: Failed to set window. This should "
+                  "never happen");
+        }
+
+        // Register input callbacks
+        glfwSetKeyCallback(getWindow(), FW_GLFWKey_Callback);
+        glfwSetCursorPosCallback(getWindow(), FW_GLFWCursorPos_Callback);
+        glfwSetMouseButtonCallback(getWindow(), FW_GLFWMouseButton_Callback);
+        glfwSetScrollCallback(getWindow(), FW_GLFWMouseScroll_Callback);
+        glfwSetFramebufferSizeCallback(getWindow(),
+                                       FW_GLFWFramebufferSize_Callback);
+    }
+
+    void GLFWApplication::setWindowBlendMode() {
+        if (!window) {
+            FATAL("Window is NULL");
+        }
+
+        // Load OpenGL functions in runtime
+        gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+        glEnable(GL_BLEND); // For transparency
+
+        // Depth testing
+        glEnable(GL_DEPTH_TEST);
+        RenderCommand::setCurrentDepthFunc(GL_LESS);
+
+        // Culling
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
 } // namespace Framework
@@ -273,7 +278,7 @@ void FW_GLFWFramebufferSize_Callback(GLFWwindow* window,
     // uncommented.
     //
     // Update the default frame buffer object's size with the GLFW window size
-    // gApp->framebufferSizeCallback(width, height);
+    gApp->framebufferSizeCallback(width, height);
 }
 
 // Output messages from OpenGL

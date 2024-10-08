@@ -175,7 +175,7 @@ namespace FW {
          * @param win The assigned window
          * @return Error codes
          */
-        static int setWindow(GLFWwindow* win);
+        static bool setWindow(GLFWwindow* win);
 
         static int getCurrentKeyState() { return currentKeyState; }
 
