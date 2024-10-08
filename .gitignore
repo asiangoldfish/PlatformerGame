@@ -13,3 +13,6 @@ out/
 # Debugging
 dump
 core_dump
+
+# Documentation
+doxygen-docs/

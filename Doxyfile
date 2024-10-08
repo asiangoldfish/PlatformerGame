@@ -1,0 +1,38 @@
+# Doxyfile configuration file for generating UML diagrams with Doxygen
+
+# Project related settings
+PROJECT_NAME           = "MyProject"
+PROJECT_BRIEF          = "A brief description of MyProject"
+OUTPUT_DIRECTORY       = doxygen-docs
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES
+
+# Build related settings
+RECURSIVE              = YES
+
+# Input files
+INPUT                  = src include
+FILE_PATTERNS          = *.cpp *.h
+
+# Output settings
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+
+# Graphviz related settings for UML generation
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 4
+DOT_IMAGE_FORMAT       = png
+DOT_GRAPH_MAX_NODES    = 100
+
+# Additional settings for UML generation
+CLASS_DIAGRAMS         = YES
+HIDE_UNDOC_RELATIONS    = NO
+
+# Additional options
+GENERATE_TREEVIEW      = YES
+GENERATE_PDF           = NO
+INTERACTIVE_SVG        = YES
+ALIASES                = UML=UML Diagram
+
+# Exclude files or directories
+EXCLUDE                = tests

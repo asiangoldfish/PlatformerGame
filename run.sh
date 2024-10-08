@@ -34,11 +34,26 @@ Options:
                       all available generators for your platform.
   -h, --help          show this help message and exit.
   -t, --target        target project to build
+      --docs          generate Doxygen documentation to 'doxygen-docs'
 
 Targets:
   PhysicsDemo
   MyApplication
 EOF
+}
+
+function generate_doxygen() {
+    if ! command -v 'doxygen' > /dev/null; then
+        echo "Doxygen is not installed."
+        return 1
+    fi
+
+    if [ ! -f "./Doxyfile" ]; then
+        echo "Doxyfile does not exist in the project directory"
+        return 1
+    fi
+
+    doxygen Doxyfile
 }
 
 # Runs help message if no arguments were found
@@ -59,6 +74,7 @@ for arg in "$@"; do
         -g | --generator) GENERATOR="$2" ;;
         -h | --help) usage ;;
         -t | --target) TARGET="$2" ;;
+        --docs) generate_doxygen; exit "$?" ;;
     esac
     shift
 done
