@@ -20,9 +20,9 @@ layout(location = 0) out vec4 outColor;
 in mat4 fragView;
 in mat4 fragProj;
 
-// TODO - Get the real near and far clip from application
-uniform float near = 0.01;
-uniform float far = 100.0;
+// Near and far clip from camera frustum
+uniform float u_nearClip = 0.01;
+uniform float u_farClip = 100.0;
 
 uniform vec3 lineColor = vec3(0.1);
 uniform float tileScale = 1.0;
@@ -53,8 +53,8 @@ float computeDepth(vec3 pos) {
 float computeLinearDepth(vec3 pos) {
     vec4 clip_space_pos = fragProj * fragView * vec4(pos.xyz, 1.0);
     float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
-    float linearDepth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near)); // get linear value between 0.01 and 100
-    return linearDepth / far; // normalize
+    float linearDepth = (2.0 * u_nearClip * u_farClip) / (u_farClip + u_nearClip - clip_space_depth * (u_farClip - u_nearClip)); // get linear value between 0.01 and 100
+    return linearDepth / u_farClip; // normalize
 }
 void main() {
     float t = -nearPoint.y / (farPoint.y - nearPoint.y);

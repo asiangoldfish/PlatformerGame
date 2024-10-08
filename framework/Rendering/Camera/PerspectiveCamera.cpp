@@ -12,8 +12,7 @@ namespace FW {
     PerspectiveCamera::PerspectiveCamera(
       const PerspectiveCamera::Frustum& frustum,
       const glm::vec3& position)
-      : frustum(frustum)
-    {
+      : frustum(frustum) {
         // Use the frustrum to construct the projection matrix
         computeProjectionMatrix();
 
@@ -23,15 +22,13 @@ namespace FW {
     }
 
     PerspectiveCamera::PerspectiveCamera(const PerspectiveCamera& camera)
-      : Camera(camera)
-    {
+      : Camera(camera) {
         lookAt = camera.lookAt;
         upVector = camera.upVector;
         frustum = camera.frustum;
     }
 
-    void PerspectiveCamera::computeViewMatrix()
-    {
+    void PerspectiveCamera::computeViewMatrix() {
         if (enablePanning) {
             glm::vec3 front(0.0f);
 
@@ -49,8 +46,7 @@ namespace FW {
         }
     }
 
-    void PerspectiveCamera::computeProjectionMatrix()
-    {
+    void PerspectiveCamera::computeProjectionMatrix() {
         projectionMatrix =
           glm::perspective(glm::radians(frustum.angle),
                            (float)frustum.width / (float)frustum.height,
@@ -58,15 +54,16 @@ namespace FW {
                            frustum.farClip);
     }
 
-    void PerspectiveCamera::update(const ref<Shader>& shader)
-    {
+    void PerspectiveCamera::update(const ref<Shader>& shader) {
         shader->bind();
         shader->setMat4("u_projection", getProjectionMatrix());
         shader->setMat4("u_view", getViewMatrix());
         shader->setFloat3("u_cameraPosition", getPosition());
+        shader->setFloat("u_nearClip", frustum.nearClip);
+        shader->setFloat("u_farClip", frustum.farClip);
     }
-    void PerspectiveCamera::updateViewportSize(glm::vec2 size)
-    {
+
+    void PerspectiveCamera::updateViewportSize(glm::vec2 size) {
         // Match the camera frustum's width and height to the new window size
         FW::PerspectiveCamera::Frustum oldFrustum = frustum;
 

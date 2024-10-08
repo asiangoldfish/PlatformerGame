@@ -46,6 +46,7 @@ namespace FW {
       : appName(name)
       , appVersion(version)
       , window(nullptr) {
+
         windowSettings.size = windowSize;
     }
 
