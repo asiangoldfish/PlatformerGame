@@ -10,10 +10,10 @@
 #include <glm/glm.hpp>
 
 namespace FW {
-    enum class WindowMode {
-        WINDOW = 0,
-        BORDERLESS,
-        FULLSCREEN
+    enum class WindowMode { WINDOW = 0, BORDERLESS, FULLSCREEN };
+    struct WindowSettings {
+        glm::vec2 size = { 1280, 720 };
+        WindowMode windowMode = WindowMode::WINDOW;
     };
 
     /**
@@ -104,8 +104,7 @@ namespace FW {
      * }
      * @endcode
      */
-    class GLFWApplication
-    {
+    class GLFWApplication {
     public:
         /**
          * Default constructor for the Application.
@@ -114,7 +113,7 @@ namespace FW {
          *
          * @param name The application name. This will appear on the operating
          * system's status bar
-         * @param version Application version
+         * @param version Helps determining whether the application is outdated
          */
         GLFWApplication(const std::string& name,
                         const std::string& version,
@@ -139,35 +138,25 @@ namespace FW {
         virtual bool init();
 
         /**
-         * Configure directories.
-         * 
-         * Create or configure directories where game or engine files are
-         * located.
+         * Create configuration directories for the game or engine files
          */
-        virtual bool configureDirectories() {};
+        virtual bool configureDirectories() { return true; };
 
         /**
-         * The main loop.
+         * An infinite while-loop that runs once each frame.
          *
          * @details When the loop ends, the application also ends. Clean up
-         * process should happen after ending this loop
+         * process should happen after ending this loop.
          */
         virtual void run() = 0;
 
         /**
          * Return the window this application runs in.
          *
-         * @details Currently the application supports only window.
+         * @details Currently the application supports only one window.
          * @return The application window.
          */
         inline GLFWwindow* getWindow() const { return window; }
-
-        /**
-         * Return the window size. This is always the current size.
-         *
-         * @return The current window size.
-         */
-        const glm::vec2 getWindowSize() & { return windowSize; }
 
         /**
          * Set the new window size.
@@ -176,10 +165,9 @@ namespace FW {
          *
          * @param size The viewport's new size
          */
-        void setWindowSize(const glm::vec2 size)
-        {
+        void setWindowSize(const glm::vec2& size) {
             glViewport(0, 0, size.x, size.y);
-            windowSize = size;
+            windowSettings.size = size;
         }
 
         /**
@@ -256,6 +244,10 @@ namespace FW {
 
         void changeWindowMode(WindowMode mode);
 
+    protected:
+        /** Collection of settings related to a window */
+        WindowSettings windowSettings;
+
     private:
         /** Application name. This is also the window class. */
         std::string appName;
@@ -265,13 +257,6 @@ namespace FW {
 
         /** The application window where all rendering happens */
         GLFWwindow* window = nullptr;
-
-        /** The current window size. This is the <u>GLFWwindow</u>, not the
-         * viewport size */
-        glm::vec2 windowSize;
-
-        /** Default window mode upon launch */
-        WindowMode windowMode = WindowMode::WINDOW;
     };
 
     GLFWApplication* createApplication();

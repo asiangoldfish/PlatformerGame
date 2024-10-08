@@ -3,7 +3,6 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
-
 #include <fstream>
 #include <string>
 
@@ -14,11 +13,11 @@ namespace Editor {
 
     /**
      * Initialise Dear ImGui.
-     * 
+     *
      * Required ImGui parameters are initialised. They are project specific.
      * Users can edit this function for specific needs. Some function calls are
      * required; however, and omitting these can lead to crashes.
-     * 
+     *
      * @param window The GL window to draw on.
      */
     void initEditorImgui(GLFWwindow* window) {
@@ -52,21 +51,23 @@ namespace Editor {
         style.ScaleAllSizes(1.0);
 
         // Source: https://fonts.google.com/specimen/Open+Sans
-        std::string fontPath = RESOURCES_DIR + std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
-        io.Fonts->AddFontFromFileTTF(fontPath.c_str(), cfg.jObject["ui"]["fontSize"]); //, nullptr, nullptr);
+        std::string fontPath =
+          RESOURCES_DIR +
+          std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
+        io.Fonts->AddFontFromFileTTF(
+          fontPath.c_str(),
+          cfg.jObject["ui"]["fontSize"]); //, nullptr, nullptr);
         // io.Fonts->GetTexDataAsRGBA32();
 
         // Setup ImGui backends for OpenGL
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 430");
-
     }
 
     /**
      * Must be called at the beginning of each frame whenever ImGui is drawing.
      */
-    void beginImGuiDraw()
-    {
+    void beginImGuiDraw() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -76,8 +77,7 @@ namespace Editor {
     /**
      * Must be called at the end of each frame after all other ImGui draw calls.
      */
-    void endImGuiDraw()
-    {
+    void endImGuiDraw() {
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -95,8 +95,7 @@ namespace Editor {
      * Draw the main menu bar at the top of the window.
      * @param app Physics application.
      */
-    void drawMenuBar(PhysicsApp& app)
-    {
+    void drawMenuBar(PhysicsApp& app) {
         ImGuiWindowFlags window_flags = 0;
 
         if (ImGui::BeginMainMenuBar()) {
@@ -127,7 +126,7 @@ namespace Editor {
                 }
 
                 ImGui::Separator();
-                //ImGui::MenuItem("Settings", NULL, false, false);
+                // ImGui::MenuItem("Settings", NULL, false, false);
                 if (ImGui::BeginMenu("Preferences")) {
                     ImGui::MenuItem("General");
                     ImGui::MenuItem("Keyboard Shortcuts");
@@ -178,8 +177,7 @@ namespace Editor {
      * selected entities in the scene.
      * @param app The physics app
      */
-    void propertiesPanel(PhysicsApp& app)
-    {
+    void propertiesPanel(PhysicsApp& app) {
         if (ImGui::Begin("Properties")) {
             ImGui::End();
         }
@@ -190,19 +188,20 @@ namespace Editor {
      * @param app The physics app
      * @param size the viewport's new size
      */
-    void drawViewport(PhysicsApp& app, glm::vec2& size)
-    {
+    void drawViewport(PhysicsApp& app, glm::vec2& size) {
         if (ImGui::Begin("Viewport")) {
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
             int sizeX = (int)viewportSize.x;
             int sizeY = (int)viewportSize.y;
-            ImGui::Image((void*)app.getViewportFramebuffer()->getTexture(),
-                         viewportSize,
-                         ImVec2{ 0, 1 },
-                         ImVec2{ 1, 0 });
+            // TODO Ugly code. Reformat this.
+            ImGui::Image(
+              (void*)(uint64_t)app.getViewportFramebuffer()->getTexture(),
+              viewportSize,
+              ImVec2{ 0, 1 },
+              ImVec2{ 1, 0 });
             ImGui::End();
 
-            size = {sizeX, sizeY};
+            size = { sizeX, sizeY };
         }
     }
 
@@ -212,8 +211,7 @@ namespace Editor {
      * @details This function should be called at the beginning of each frame,
      * after calling <u>beginImGuiDraw()</u>
      */
-    void ImGuiDocking()
-    {
+    void ImGuiDocking() {
         // ------
         // BEGIN Dockspace
         // ------

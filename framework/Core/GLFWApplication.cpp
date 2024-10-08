@@ -10,31 +10,31 @@
 #include "RenderCommands.h"
 #include "Input.h"
 
-static void
-FW_GLFWKey_Callback(GLFWwindow* window,
-                    int key,
-                    int scancode,
-                    int action,
-                    int mods);
-static void
-FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos);
-static void
-FW_GLFWMouseButton_Callback(GLFWwindow* window,
-                            int button,
-                            int action,
-                            int mods);
-static void
-FW_GLFWMouseScroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
-static void
-FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height);
-static void GLAPIENTRY
-OpenGL_DebugMessages(GLenum source,
-                     GLenum type,
-                     GLuint id,
-                     GLenum severity,
-                     GLsizei length,
-                     const GLchar* message,
-                     const void* userParam);
+static void FW_GLFWKey_Callback(GLFWwindow* window,
+                                int key,
+                                int scancode,
+                                int action,
+                                int mods);
+static void FW_GLFWCursorPos_Callback(GLFWwindow* window,
+                                      double xpos,
+                                      double ypos);
+static void FW_GLFWMouseButton_Callback(GLFWwindow* window,
+                                        int button,
+                                        int action,
+                                        int mods);
+static void FW_GLFWMouseScroll_Callback(GLFWwindow* window,
+                                        double xoffset,
+                                        double yoffset);
+static void FW_GLFWFramebufferSize_Callback(GLFWwindow* window,
+                                            int width,
+                                            int height);
+static void GLAPIENTRY OpenGL_DebugMessages(GLenum source,
+                                            GLenum type,
+                                            GLuint id,
+                                            GLenum severity,
+                                            GLsizei length,
+                                            const GLchar* message,
+                                            const void* userParam);
 
 static FW::GLFWApplication* gApp = nullptr;
 
@@ -45,13 +45,11 @@ namespace FW {
                                      glm::vec2 windowSize)
       : appName(name)
       , appVersion(version)
-      , window(nullptr)
-      , windowSize(windowSize)
-    {
+      , window(nullptr) {
+        windowSettings.size = windowSize;
     }
 
-    GLFWApplication::~GLFWApplication()
-    {
+    GLFWApplication::~GLFWApplication() {
         RenderCommand::destroy();
 
         // Destroy window and terminate GLFW.
@@ -60,8 +58,7 @@ namespace FW {
         glfwTerminate();
     }
 
-    bool GLFWApplication::init()
-    {
+    bool GLFWApplication::init() {
         // ------------------
         // Initialize GLFW and create the application window.
         // ------------------
@@ -72,8 +69,11 @@ namespace FW {
         }
 
         // Create window
-        window = glfwCreateWindow(
-          windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
+        window = glfwCreateWindow(windowSettings.size.x,
+                                  windowSettings.size.y,
+                                  appName.c_str(),
+                                  nullptr,
+                                  nullptr);
 
         if (!window) {
             WARN("GLFW::WINDOW::Unable to create window");
@@ -160,59 +160,75 @@ namespace FW {
         // code readability.
         if (window == nullptr) {
             // Set default values to window size if they are uninitialised
-            if (windowSize.x == 0 || windowSize.y == 0) {
-                windowSize = { 1280, 720 };
+            if (windowSettings.size.x == 0 || windowSettings.size.y == 0) {
+                windowSettings.size = { 1280, 720 };
             }
 
-            window = glfwCreateWindow(
-                windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
+            window = glfwCreateWindow(windowSettings.size.x,
+                                      windowSettings.size.y,
+                                      appName.c_str(),
+                                      nullptr,
+                                      nullptr);
         }
 
-        GLFWmonitor* monitor =  glfwGetPrimaryMonitor();
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
 
-        glm::vec2 posOnScreen = glm::vec2{0, 0};
+        glm::vec2 posOnScreen = glm::vec2{ 0, 0 };
 
-        switch (mode)
-        {
-        case WindowMode::WINDOW:
-            /*  Order of priority:
-                1. Use the windowSize class member
-                2. Use default window size
-                3. Use hard coded window size
-            */
-            // We also set some threshold to prevent un-resizable tiny windows
-            if (windowSize.x < 62.0f || windowSize.y < 62.f) {
-                windowSize = { 1280, 720 };
-            }
-            
-            // TODO Center window on screen
-            posOnScreen = glm::vec2{1920, 1280};
-            monitor = nullptr;
-            break;
+        switch (mode) {
+            case WindowMode::WINDOW:
+                /*  Order of priority:
+                    1. Use the windowSize class member
+                    2. Use default window size
+                    3. Use hard coded window size
+                */
+                // We also set some threshold to prevent un-resizable tiny
+                // windows
+                if (windowSettings.size.x < 62.0f ||
+                    windowSettings.size.y < 62.f) {
+                    windowSettings.size = { 1280, 720 };
+                }
 
-        case WindowMode::BORDERLESS:
-            // TODO Implement this
-            WARN("WindowMode::BORDERLESS not implemented");
-            windowSize = { 1280, 720 };
-            posOnScreen = glm::vec2{1920, 1280};
-            monitor = nullptr;
-            break;
+                // TODO Center window on screen
+                posOnScreen =
+                  glm::vec2{ (vidmode->width / 2) - (windowSettings.size.x / 2),
+                             (vidmode->height / 2) -
+                               (windowSettings.size.y / 2) };
+                monitor = nullptr;
+                break;
 
-        case WindowMode::FULLSCREEN:
-            // TODO Get monitor resolution
-            windowSize = { vidmode->width, vidmode->height };
-            break;
+            case WindowMode::BORDERLESS:
+                // TODO Implement this
+                WARN("WindowMode::BORDERLESS not implemented");
+                windowSettings.size = { 1280, 720 };
+                posOnScreen = glm::vec2{ 1920, 1280 };
+                monitor = nullptr;
+                break;
 
-        default:
-            FATAL("GKFWApplication.cpp: WindowMode option not implemented");
-            INFO("Error occurred. Please WindowMode option was not implemented. Resetting to default values");
-                        window = glfwCreateWindow(
-                windowSize.x, windowSize.y, appName.c_str(), nullptr, nullptr);
+            case WindowMode::FULLSCREEN:
+                // TODO Get monitor resolution
+                windowSettings.size = { vidmode->width, vidmode->height };
+                break;
 
+            default:
+                FATAL("GKFWApplication.cpp: WindowMode option not implemented");
+                INFO("Error occurred. Please WindowMode option was not "
+                     "implemented. Resetting to default values");
+                window = glfwCreateWindow(windowSettings.size.x,
+                                          windowSettings.size.y,
+                                          appName.c_str(),
+                                          nullptr,
+                                          nullptr);
         }
 
-        glfwSetWindowMonitor(window, monitor, posOnScreen.x, posOnScreen.y, windowSize.x, windowSize.y, vidmode->refreshRate);
+        glfwSetWindowMonitor(window,
+                             monitor,
+                             posOnScreen.x,
+                             posOnScreen.y,
+                             windowSettings.size.x,
+                             windowSettings.size.y,
+                             vidmode->refreshRate);
     }
 
 } // namespace Framework
@@ -220,9 +236,7 @@ namespace FW {
 /**
  * Called whenever the mouse position is changed.
  */
-void
-FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos)
-{
+void FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos) {
     gApp->cursorPosCallback(xpos, ypos);
 }
 
@@ -230,43 +244,39 @@ FW_GLFWCursorPos_Callback(GLFWwindow* window, double xpos, double ypos)
  * Called whenever the mouse's scroll wheel is used. For middle click,  see
  * <u>FW_GLFWMouseButton_Callback()</u>
  */
-void
-FW_GLFWMouseScroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
-{
+void FW_GLFWMouseScroll_Callback(GLFWwindow* window,
+                                 double xoffset,
+                                 double yoffset) {
     gApp->mouseScrollCallback(xoffset, yoffset);
 }
 
 /**
  * Called whenever a mouse button is pressed.
  */
-void
-FW_GLFWMouseButton_Callback(GLFWwindow* window,
-                            int button,
-                            int action,
-                            int mods)
-{
+void FW_GLFWMouseButton_Callback(GLFWwindow* window,
+                                 int button,
+                                 int action,
+                                 int mods) {
     gApp->mouseButtonCallback(button, action, mods);
 }
 
 /**
  * Called whenever a key is pressed
  */
-void
-FW_GLFWKey_Callback(GLFWwindow* window,
-                    int key,
-                    int scancode,
-                    int action,
-                    int mods)
-{
+void FW_GLFWKey_Callback(GLFWwindow* window,
+                         int key,
+                         int scancode,
+                         int action,
+                         int mods) {
     gApp->keyCallback(key, scancode, action, mods);
 }
 
 /**
  * Called whenever the framebuffer size is changed.
  */
-void
-FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height)
-{
+void FW_GLFWFramebufferSize_Callback(GLFWwindow* window,
+                                     int width,
+                                     int height) {
     // If the Editor uses the default frame buffer object, then this should be
     // uncommented.
     //
@@ -275,15 +285,13 @@ FW_GLFWFramebufferSize_Callback(GLFWwindow* window, int width, int height)
 }
 
 // Output messages from OpenGL
-static void GLAPIENTRY
-OpenGL_DebugMessages(GLenum source,
-                     GLenum type,
-                     GLuint id,
-                     GLenum severity,
-                     GLsizei length,
-                     const GLchar* message,
-                     const void* userParam)
-{
+static void GLAPIENTRY OpenGL_DebugMessages(GLenum source,
+                                            GLenum type,
+                                            GLuint id,
+                                            GLenum severity,
+                                            GLsizei length,
+                                            const GLchar* message,
+                                            const void* userParam) {
     std::cerr << "GL CALLBACK:"
               << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "")
               << "type = 0x" << type << ", severity = 0x" << severity

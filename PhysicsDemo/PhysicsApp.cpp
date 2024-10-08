@@ -14,9 +14,7 @@
 
 #include "ImGuiWidgets.hpp"
 
-bool
-PhysicsApp::init()
-{
+bool PhysicsApp::init() {
     // ------
     // Configure application
     // ------
@@ -50,7 +48,6 @@ PhysicsApp::init()
     worldGridShader = FW::createRef<FW::Shader>(
       RESOURCES_DIR + std::string("shaders/worldGridVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/worldGridFrag.glsl"));
-
 
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
@@ -118,9 +115,7 @@ PhysicsApp::init()
     return true;
 }
 
-void
-PhysicsApp::run()
-{
+void PhysicsApp::run() {
     FW::Timer emitterTimer;
     emitterTimer.resetTimer();
 
@@ -129,7 +124,7 @@ PhysicsApp::run()
         Editor::beginImGuiDraw();
         Editor::ImGuiDocking();
 
-        viewportFramebuffer->bind();  // Render graphics on a separate viewport
+        viewportFramebuffer->bind(); // Render graphics on a separate viewport
         RenderCommand::clear();
 
         keyboardInput();
@@ -172,15 +167,13 @@ PhysicsApp::run()
 
         // Viewport
         glm::vec2 newCamSize;
-        glm::vec2 oldCamSize = getCameraController()->
-                                    getPerspectiveCamera()->
-                                    getFrustum().getSize();
+        glm::vec2 oldCamSize =
+          getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
         Editor::drawViewport(*this, newCamSize);
 
         if (newCamSize != oldCamSize) {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
-                newCamSize
-            );
+              newCamSize);
         }
 
         // Must be called after all other ImGui draw calls
@@ -191,9 +184,7 @@ PhysicsApp::run()
     }
 }
 
-bool
-PhysicsApp::configureDirectories()
-{
+bool PhysicsApp::configureDirectories() {
     std::filesystem::create_directory(RESOURCES_DIR);
     std::filesystem::create_directory(TEXTURES_DIR);
     std::filesystem::create_directory(CONFIG_DIR);
@@ -201,9 +192,7 @@ PhysicsApp::configureDirectories()
     return true;
 }
 /** Keyboard input function. Called every frame */
-void
-PhysicsApp::keyboardInput()
-{
+void PhysicsApp::keyboardInput() {
     float speed = cameraSpeed * timer.getDeltaTime();
     // Camera controller spectator mode
     if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
@@ -226,17 +215,14 @@ PhysicsApp::keyboardInput()
     }
 }
 
-PhysicsApp::~PhysicsApp()
-{
+PhysicsApp::~PhysicsApp() {
     FW::TextureManager::clearTextures();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void
-PhysicsApp::keyCallback(int key, int scancode, int action, int mods)
-{
+void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     FW::Input::updateJustPressed(key, action);
 
     // Update the key press state for left and right SHIFT, ALT, SUPER and
@@ -289,9 +275,7 @@ PhysicsApp::keyCallback(int key, int scancode, int action, int mods)
         savedCameraPosition = getCameraController()->getPosition();
     }
 }
-void
-PhysicsApp::cursorPosCallback(double xpos, double ypos)
-{
+void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
     glm::vec2 diff = glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
     auto controller = getCameraController();
 
@@ -309,7 +293,7 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
     if (isRightButtonMousePressed) {
         if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_SHIFT_BIT)) {
             // Shift: Move forward/backward
-            float mouseDistance = ypos - getWindowSize().y / 2.0f;
+            float mouseDistance = ypos - windowSettings.size.y / 2.0f;
             getCameraController()->moveForward(-mouseDistance * dt * 8.0f);
             centralizeCursorInWindow();
         } else if (FW::Input::isModKeyCombinationPressed(
@@ -370,12 +354,9 @@ PhysicsApp::cursorPosCallback(double xpos, double ypos)
         }
     }
 }
-void
-PhysicsApp::mouseButtonCallback(int button, int action, int mods)
-{
+void PhysicsApp::mouseButtonCallback(int button, int action, int mods) {
     // Detect the first time the mouse button is pressed;
-    struct MouseButtons
-    {
+    struct MouseButtons {
         bool left = false;
         bool middle = false;
         bool right = false;
@@ -409,9 +390,7 @@ PhysicsApp::mouseButtonCallback(int button, int action, int mods)
         glfwSetInputMode(getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
-void
-PhysicsApp::mouseScrollCallback(double xoffset, double yoffset)
-{
+void PhysicsApp::mouseScrollCallback(double xoffset, double yoffset) {
     if (FW::Input::isKeyPressed(FW_KEY_LEFT_SHIFT) ||
         FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
         setCameraSpeed(getCameraSpeed() + 4.f * yoffset);
@@ -420,19 +399,15 @@ PhysicsApp::mouseScrollCallback(double xoffset, double yoffset)
         getCameraController()->moveForward(yoffset * cameraSpeed * 0.25f);
     }
 }
-void
-PhysicsApp::framebufferSizeCallback(int width, int height)
-{
+void PhysicsApp::framebufferSizeCallback(int width, int height) {
     // Update the glWindow size
     setWindowSize({ width, height });
     getCameraController()->getPerspectiveCamera()->updateViewportSize(
       { width, height });
 }
 
-void
-PhysicsApp::configureDefaultEditorSettings()
-{
-    cfg = {CONFIG_DIR + std::string("editor.json")};
+void PhysicsApp::configureDefaultEditorSettings() {
+    cfg = { CONFIG_DIR + std::string("editor.json") };
 
     if (std::filesystem::exists(CONFIG_DIR + std::string("editor.json"))) {
         cfg.parse();
@@ -440,7 +415,7 @@ PhysicsApp::configureDefaultEditorSettings()
     }
 
     cfg.jObject["ui"]["fontSize"] = 14;
-    
+
     if (!cfg.write()) {
         WARN("Failed to write to config/editor.json");
     } else {
