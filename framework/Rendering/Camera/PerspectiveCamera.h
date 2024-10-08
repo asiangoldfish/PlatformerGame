@@ -26,8 +26,16 @@ namespace FW {
                 , nearClip(nearClip)
                 , farClip(farClip) {}
 
-            glm::vec2 getSize() {
-                return glm::vec2{width, height};
+            glm::vec2 getSize() { return glm::vec2{ width, height }; }
+
+            /**
+             * Update the frustum's width and height.
+             *
+             * This must match the window resolution (not monitor).
+             */
+            void setSize(glm::vec2 size) {
+                this->width = size.x;
+                this->height = size.y;
             }
         };
 
@@ -66,7 +74,7 @@ namespace FW {
         void computeProjectionMatrix();
         void update(const ref<Shader>& shader) override;
 
-        void updateViewportSize(glm::vec2 size) override;
+        void updateViewportSize(const glm::vec2& size) override;
 
     protected:
         void computeViewMatrix() override;

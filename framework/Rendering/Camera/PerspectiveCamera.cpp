@@ -47,6 +47,8 @@ namespace FW {
     }
 
     void PerspectiveCamera::computeProjectionMatrix() {
+        // Prevent objects from changing size:
+        // https://stackoverflow.com/a/3270733
         projectionMatrix =
           glm::perspective(glm::radians(frustum.angle),
                            (float)frustum.width / (float)frustum.height,
@@ -63,13 +65,9 @@ namespace FW {
         shader->setFloat("u_farClip", frustum.farClip);
     }
 
-    void PerspectiveCamera::updateViewportSize(glm::vec2 size) {
-        // Match the camera frustum's width and height to the new window size
-        FW::PerspectiveCamera::Frustum oldFrustum = frustum;
-
-        oldFrustum.width = static_cast<float>(size.x);
-        oldFrustum.height = static_cast<float>(size.y);
-        setFrustum(oldFrustum);
+    void PerspectiveCamera::updateViewportSize(const glm::vec2& size) {
+        frustum.setSize(size);
+        glViewport(0, 0, size.x, size.y);
 
         // We must compute the projection matrix again for the change to take
         // effect.

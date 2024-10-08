@@ -186,13 +186,11 @@ namespace Editor {
     /**
      * Draw the OpenGL viewport
      * @param app The physics app
-     * @param size the viewport's new size
+     * @return the viewport's new size
      */
-    void drawViewport(PhysicsApp& app, glm::vec2& size) {
+    glm::vec2 drawViewport(PhysicsApp& app) {
         if (ImGui::Begin("Viewport")) {
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-            int sizeX = (int)viewportSize.x;
-            int sizeY = (int)viewportSize.y;
             // TODO Ugly code. Reformat this.
             ImGui::Image(
               (void*)(uint64_t)app.getViewportFramebuffer()->getTexture(),
@@ -201,8 +199,10 @@ namespace Editor {
               ImVec2{ 1, 0 });
             ImGui::End();
 
-            size = { sizeX, sizeY };
+            return glm::vec2{ viewportSize.x, viewportSize.y };
         }
+
+        return glm::vec2{};
     }
 
     /**

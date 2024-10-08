@@ -169,10 +169,9 @@ void PhysicsApp::run() {
         Editor::propertiesPanel(*this);
 
         // Viewport
-        glm::vec2 newCamSize;
         glm::vec2 oldCamSize =
           getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
-        Editor::drawViewport(*this, newCamSize);
+        glm::vec2 newCamSize = Editor::drawViewport(*this);
 
         if (newCamSize != oldCamSize) {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(

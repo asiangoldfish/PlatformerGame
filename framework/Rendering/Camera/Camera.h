@@ -70,7 +70,7 @@ namespace FW {
         // -------------
         void setLookAtCenter(const glm::vec3& center) { lookAtCenter = center; }
 
-        virtual void updateViewportSize(glm::vec2 size) = 0;
+        virtual void updateViewportSize(const glm::vec2& size) = 0;
 
         const glm::vec3& getCameraFront() { return cameraFront; }
 
