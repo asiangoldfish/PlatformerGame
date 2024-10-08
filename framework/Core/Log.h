@@ -21,6 +21,7 @@
 
 #include "spdlog/spdlog.h"
 #include "assertions.h"
+#include <iostream>
 
 /**
  * Trace code flow.
@@ -54,7 +55,13 @@
  * While warnings may not always be optimal, it may also log when an action was unsuccessful, like a HTTP request.
  * Despite this, as a general rule of thumb, try to limit the use of warnings.
  */
-#define WARN(...) spdlog::warn(__VA_ARGS__)
+// FIXME: Actually customise spdlog to output file and line number
+#define WARN(...)                                                              \
+    spdlog::warn(__VA_ARGS__);                                                 \
+    std::cout << "\tFile: " << __FILE__ << ":" << __LINE__ << std::endl
+
+// For reference: Macros for debugging purpose:
+// https://stackoverflow.com/a/2849847
 
 /**
  * Critical errors for developers and administrators.
