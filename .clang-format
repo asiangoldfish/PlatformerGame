@@ -20,8 +20,8 @@ AllowShortFunctionsOnASingleLine: Inline
 AllowShortLambdasOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterDefinitionReturnType: TopLevel
-AlwaysBreakAfterReturnType: TopLevel
+AlwaysBreakAfterDefinitionReturnType: None # None | TopLevel | All
+AlwaysBreakAfterReturnType: None # TopLevel
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 AttributeMacros:
@@ -49,7 +49,7 @@ BraceWrapping:
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: None
 BreakBeforeConceptDeclarations: true
-BreakBeforeBraces: Mozilla
+BreakBeforeBraces: Attach # Attach | Mozilla
 BreakBeforeInheritanceComma: false
 BreakInheritanceList: BeforeComma
 BreakBeforeTernaryOperators: true
@@ -158,7 +158,7 @@ Standard: Latest
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
-TabWidth: 8
+TabWidth: 4
 UseCRLF: false
 UseTab: Never
 WhitespaceSensitiveMacros:
