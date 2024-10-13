@@ -12,7 +12,7 @@
 #include "Floor.h"
 #include "WorldGrid.h"
 
-#include "ImGuiWidgets.hpp"
+#include "Widgets/ImGuiWidgets.hpp"
 
 bool PhysicsApp::init() {
     // ------
@@ -29,7 +29,7 @@ bool PhysicsApp::init() {
 
     // TODO Move this to Framework as an engine feature.
     // Initialise the window mode if this is set in the configurations.
-    std::string defaultWindowMode = cfg.jObject["window"]["windowMode"];
+    std::string defaultWindowMode = editorConfig->get()["window"]["windowMode"];
     if (defaultWindowMode == "window") {
         changeWindowMode(FW::WindowMode::WINDOW);
     } else if (defaultWindowMode == "borderless") {
@@ -60,6 +60,11 @@ bool PhysicsApp::init() {
     // -------------
     // Entities
     // -------------
+    FW::TextureManager::loadTexture2D(
+      "metal_plate_diff",
+      RESOURCES_DIR +
+        std::string("textures/polyhaven/metal_plate/metal_plate_diff_1k.jpg"));
+
     playerCube = FW::createRef<Cube>();
     playerCube->setScale({ 1.0f, 1.0f, 1.0f });
     playerCube->setPosition({ 0, playerCube->getScale().y / 2.0f, 0 });
@@ -108,7 +113,8 @@ bool PhysicsApp::init() {
     emitter->setMaxParticles(100);
 
     // Init Dear ImGui
-    Editor::initEditorImgui(getWindow());
+    Editor::initEditorImgui(getWindow(), editorConfig);
+
 
     // Framebuffer for rendering GL on ImGui
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();
@@ -124,8 +130,7 @@ void PhysicsApp::run() {
 
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
-        Editor::beginImGuiDraw();
-        Editor::ImGuiDocking();
+        Editor::beginImGuiDraw(getWindow());
 
         viewportFramebuffer->bind(); // Render graphics on a separate viewport
         RenderCommand::clear();
@@ -148,30 +153,22 @@ void PhysicsApp::run() {
         //        playerCube->draw(shader);
 
         cameraController->update(emitter->getShader());
-        emitter->update(timer.getDeltaTime());
+        // emitter->update(timer.getDeltaTime());
 
-        if (emitterTimer.getElapsedTime() > FW::rng(0.15f, 0.5f)) {
-            emitter->addParticle(FW::rng(5, 15));
-            emitterTimer.resetTimer();
-        }
+        // if (emitterTimer.getElapsedTime() > FW::rng(0.15f, 0.5f)) {
+        //     emitter->addParticle(FW::rng(5, 15));
+        //     emitterTimer.resetTimer();
+        // }
 
-        emitter->draw();
+        // emitter->draw();
+        playerCube->draw(shader);
 
         viewportFramebuffer->unbind();
-
-        // Uncomment to enable the ImGui demo window
-        // ImGui::ShowDemoWindow();
-
-        // Menu bar
-        Editor::drawMenuBar(*this);
-
-        // Properties panel
-        Editor::propertiesPanel(*this);
 
         // Viewport
         glm::vec2 oldCamSize =
           getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
-        glm::vec2 newCamSize = Editor::drawViewport(*this);
+        glm::vec2 newCamSize = Editor::drawViewport(viewportFramebuffer->getTexture());
 
         if (newCamSize != oldCamSize) {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
@@ -409,16 +406,16 @@ void PhysicsApp::framebufferSizeCallback(int width, int height) {
 }
 
 void PhysicsApp::configureDefaultEditorSettings() {
-    cfg = { CONFIG_DIR + std::string("editor.json") };
+    editorConfig = FW::createRef<FW::JSONParser>();
 
-    if (std::filesystem::exists(CONFIG_DIR + std::string("editor.json"))) {
-        cfg.parse();
-        return;
+    if (!editorConfig->parse(CONFIG_DIR + std::string("editor.json"))) {
+        // TODO Create error dialog to show this error
+        FATAL("Failed to configure editor config file");
     }
 
-    cfg.jObject["ui"]["fontSize"] = 14;
+    editorConfig->get()["ui"]["fontSize"] = 14;
 
-    if (!cfg.write()) {
+    if (!editorConfig->write(true)) {
         WARN("Failed to write to config/editor.json");
     } else {
         INFO("config/editor.ini write out");

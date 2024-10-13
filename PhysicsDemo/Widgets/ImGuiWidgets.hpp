@@ -1,15 +1,39 @@
+#pragma once
+
+// ImGui internal libraries
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
+// Standard libraries
 #include <fstream>
 #include <string>
 
-#include "PhysicsApp.h"
+// Graphics libraries
+#include <GLFW/glfw3.h>
+
+// Custom ImGui widgets
+#include "MenuBarWidget.hpp"
+#include "SettingsWidget.hpp"
 
 namespace Editor {
+    /**
+     * This struct provides a method to store persistent state across widgets.
+     */
+    struct ImGuiWidgetsState {
+        bool isSettingsVisible = false;
+    };
+
     void ImGuiDocking();
+
+    /**
+     * This function provides a quick API to draw custom ImGui widgets.
+     */
+    void drawImguiWidgets(GLFWwindow* window) {
+        drawMenuBar(window);
+        propertiesPanel(window);
+    }
 
     /**
      * Initialise Dear ImGui.
@@ -20,7 +44,7 @@ namespace Editor {
      *
      * @param window The GL window to draw on.
      */
-    void initEditorImgui(GLFWwindow* window) {
+    void initEditorImgui(GLFWwindow* window, FW::ref<FW::JSONParser> editorConfig) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
@@ -56,7 +80,7 @@ namespace Editor {
           std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
         io.Fonts->AddFontFromFileTTF(
           fontPath.c_str(),
-          cfg.jObject["ui"]["fontSize"]); //, nullptr, nullptr);
+          editorConfig->get()["ui"]["fontSize"]); //, nullptr, nullptr);
         // io.Fonts->GetTexDataAsRGBA32();
 
         // Setup ImGui backends for OpenGL
@@ -66,12 +90,19 @@ namespace Editor {
 
     /**
      * Must be called at the beginning of each frame whenever ImGui is drawing.
+     * 
+     * @param window GLFW window which the imgui widgets are rendered to.
      */
-    void beginImGuiDraw() {
+    void beginImGuiDraw(GLFWwindow* window) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        Editor::ImGuiDocking();
+
+        // Uncomment this to see the demo window.
         // ImGui::ShowDemoWindow();
+
+        drawImguiWidgets(window);
     }
 
     /**
@@ -92,108 +123,17 @@ namespace Editor {
     }
 
     /**
-     * Draw the main menu bar at the top of the window.
-     * @param app Physics application.
-     */
-    void drawMenuBar(PhysicsApp& app) {
-        ImGuiWindowFlags window_flags = 0;
-
-        if (ImGui::BeginMainMenuBar()) {
-            if (ImGui::BeginMenu("File")) {
-                ImGui::MenuItem("Files", NULL, false, false);
-                if (ImGui::MenuItem("New")) {
-                }
-                if (ImGui::MenuItem("Open", "Ctrl+O")) {
-                }
-                if (ImGui::BeginMenu("Open Recent")) {
-                    ImGui::MenuItem("fish_hat.c");
-                    ImGui::MenuItem("fish_hat.inl");
-                    ImGui::MenuItem("fish_hat.h");
-                    if (ImGui::BeginMenu("More..")) {
-                        ImGui::MenuItem("Hello");
-                        ImGui::MenuItem("Sailor");
-                        if (ImGui::BeginMenu("Recurse..")) {
-                            //                            ShowExampleMenuFile();
-                            ImGui::EndMenu();
-                        }
-                        ImGui::EndMenu();
-                    }
-                    ImGui::EndMenu();
-                }
-                if (ImGui::MenuItem("Save", "Ctrl+S")) {
-                }
-                if (ImGui::MenuItem("Save As..")) {
-                }
-
-                ImGui::Separator();
-                // ImGui::MenuItem("Settings", NULL, false, false);
-                if (ImGui::BeginMenu("Preferences")) {
-                    ImGui::MenuItem("General");
-                    ImGui::MenuItem("Keyboard Shortcuts");
-                    ImGui::PushItemFlag(ImGuiItemFlags_SelectableDontClosePopup,
-                                        true);
-                    if (ImGui::BeginMenu("Themes")) {
-                        ImGui::MenuItem("Dark");
-                        ImGui::MenuItem("Light");
-                        ImGui::MenuItem("More...");
-                        ImGui::EndMenu();
-                    }
-                    ImGui::PopItemFlag();
-                    ImGui::EndMenu();
-                }
-
-                // Quit
-                ImGui::Separator();
-                ImGui::PushItemFlag(ImGuiItemFlags_SelectableDontClosePopup,
-                                    true);
-                if (ImGui::MenuItem("Quit Application", "Escape")) {
-                    glfwSetWindowShouldClose(app.getWindow(), 1);
-                }
-                ImGui::PopItemFlag();
-
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Edit")) {
-                if (ImGui::MenuItem("Undo", "CTRL+Z")) {
-                }
-                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {
-                } // Disabled item
-                ImGui::Separator();
-                if (ImGui::MenuItem("Cut", "CTRL+X")) {
-                }
-                if (ImGui::MenuItem("Copy", "CTRL+C")) {
-                }
-                if (ImGui::MenuItem("Paste", "CTRL+V")) {
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
-        }
-    }
-
-    /**
-     * Draw the properties panel. It dynamically fetches the properties of
-     * selected entities in the scene.
-     * @param app The physics app
-     */
-    void propertiesPanel(PhysicsApp& app) {
-        if (ImGui::Begin("Properties")) {
-            ImGui::End();
-        }
-    }
-
-    /**
      * Draw the OpenGL viewport
      * @param app The physics app
+     * @param framebufferId the id of the buffer that the viewport is drawn on.
      * @return the viewport's new size
      */
-    glm::vec2 drawViewport(PhysicsApp& app) {
+    glm::vec2 drawViewport(uint32_t framebufferId) {
         if (ImGui::Begin("Viewport")) {
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
             // TODO Ugly code. Reformat this.
             ImGui::Image(
-              (void*)(uint64_t)app.getViewportFramebuffer()->getTexture(),
+              (void*)(uint64_t)framebufferId,
               viewportSize,
               ImVec2{ 0, 1 },
               ImVec2{ 1, 0 });

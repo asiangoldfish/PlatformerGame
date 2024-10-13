@@ -1,9 +1,7 @@
 project(FRAMEWORK_RESOURCE_MANAGEMENT)
 
 add_library(${PROJECT_NAME}
-    # Model.h     Model.cpp
-
-    Files.h     Files.cpp
+    JSONParser.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

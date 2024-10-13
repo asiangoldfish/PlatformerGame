@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Framework.h"
+#include "Widgets/ImGuiWidgets.hpp"
 
 class Cube;
 class Floor;
@@ -14,11 +15,6 @@ namespace FW {
     class PerspectiveCamera;
     class TextureManager;
 }
-
-// -----
-// Global variables
-// -----
-FW::Files::Config cfg;
 
 class PhysicsApp : public FW::GLFWApplication {
 public:
@@ -139,6 +135,11 @@ private:
 
     // Particle system
     FW::scope<FW::Emitter> emitter;
+
+    FW::ref<FW::JSONParser> editorConfig;
+
+private:
+    Editor::ImGuiWidgetsState widgetState;
 };
 
 FW::GLFWApplication* FW::createApplication() {
