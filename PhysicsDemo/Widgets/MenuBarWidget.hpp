@@ -71,7 +71,7 @@ namespace Editor {
 
                 // Quit
                 ImGui::Separator();
-                ImGui::PushItemFlag(ImGuiItemFlags_SelectableDontClosePopup,
+                ImGui::PushItemFlag(ImGuiItemFlags_AutoClosePopups,
                                     true);
                 if (ImGui::MenuItem("Quit Application", "Escape")) {
                     glfwSetWindowShouldClose(window, 1);
