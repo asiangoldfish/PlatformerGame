@@ -14,25 +14,30 @@
 #include <GLFW/glfw3.h>
 
 // Custom ImGui widgets
+#include "ImGuiWidgetState.h"
 #include "MenuBarWidget.hpp"
 #include "SettingsWidget.hpp"
+#include "PropertiesPanel.hpp"
 
 namespace Editor {
-    /**
-     * This struct provides a method to store persistent state across widgets.
-     */
-    struct ImGuiWidgetsState {
-        bool isSettingsVisible = false;
-    };
 
     void ImGuiDocking();
 
     /**
      * This function provides a quick API to draw custom ImGui widgets.
      */
-    void drawImguiWidgets(GLFWwindow* window) {
-        drawMenuBar(window);
+    void drawImguiWidgets(GLFWwindow* window, ImGuiWidgetState* state) {
+        drawMenuBar(window, state);
         propertiesPanel(window);
+
+        if (state->editorPreferences) {
+            drawEditorPreferencesMenu(state);
+        }
+
+        // Uncomment this to see the demo window.
+        if (state->showDemo) {
+            ImGui::ShowDemoWindow();
+        }
     }
 
     /**
@@ -98,11 +103,6 @@ namespace Editor {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         Editor::ImGuiDocking();
-
-        // Uncomment this to see the demo window.
-        // ImGui::ShowDemoWindow();
-
-        drawImguiWidgets(window);
     }
 
     /**

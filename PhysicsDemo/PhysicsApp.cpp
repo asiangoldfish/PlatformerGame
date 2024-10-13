@@ -175,6 +175,10 @@ void PhysicsApp::run() {
               newCamSize);
         }
 
+
+        // INFO("Show preferences: {0}", widgetState.isSettingsVisible?"true": "false");
+        Editor::drawImguiWidgets(getWindow(), &widgetState);
+
         // Must be called after all other ImGui draw calls
         Editor::endImGuiDraw();
 

@@ -6,13 +6,14 @@
 #include <imgui_internal.h>
 
 #include <GLFW/glfw3.h>
+#include "ImGuiWidgetState.h"
 
 namespace Editor {
     /**
      * Draw the main menu bar at the top of the window.
      * @param app Physics application.
      */
-    void drawMenuBar(GLFWwindow* window) {
+    void drawMenuBar(GLFWwindow* window, ImGuiWidgetState* state) {
         ImGuiWindowFlags window_flags = 0;
 
         if (ImGui::BeginMainMenuBar()) {
@@ -43,21 +44,30 @@ namespace Editor {
                 }
 
                 ImGui::Separator();
-                // ImGui::MenuItem("Settings", NULL, false, false);
-                if (ImGui::BeginMenu("Preferences")) {
-                    ImGui::MenuItem("General");
-                    ImGui::MenuItem("Keyboard Shortcuts");
-                    ImGui::PushItemFlag(ImGuiItemFlags_SelectableDontClosePopup,
-                                        true);
-                    if (ImGui::BeginMenu("Themes")) {
-                        ImGui::MenuItem("Dark");
-                        ImGui::MenuItem("Light");
-                        ImGui::MenuItem("More...");
-                        ImGui::EndMenu();
-                    }
-                    ImGui::PopItemFlag();
-                    ImGui::EndMenu();
-                }
+                ImGui::MenuItem("Settings", NULL, false, false);
+                // if (ImGui::BeginMenu("Preferences")) {
+                //     if (ImGui::Button("Open Preferences")) {
+                //         INFO("Hi");
+                //         state.isSettingsVisible = true;
+                //     }
+                //     ImGui::MenuItem("Keyboard Shortcuts");
+                //     ImGui::PushItemFlag(ImGuiItemFlags_SelectableDontClosePopup,
+                //                         true);
+                //     if (ImGui::BeginMenu("Themes")) {
+                //         ImGui::MenuItem("Dark");
+                //         ImGui::MenuItem("Light");
+                //         ImGui::MenuItem("More...");
+                //         ImGui::EndMenu();
+                //     }
+                //     ImGui::PopItemFlag();
+                //     ImGui::EndMenu();
+                // }
+                ImGui::MenuItem("Preferences", NULL, &state->editorPreferences);
+
+                // Demo
+                ImGui::Separator();
+                ImGui::MenuItem("ImGui Demo", NULL, &state->showDemo);
+
 
                 // Quit
                 ImGui::Separator();
@@ -86,17 +96,6 @@ namespace Editor {
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
-        }
-    }
-
-    /**
-     * Draw the properties panel. It dynamically fetches the properties of
-     * selected entities in the scene.
-     * @param app The physics app
-     */
-    void propertiesPanel(GLFWwindow* window) {
-        if (ImGui::Begin("Properties")) {
-            ImGui::End();
         }
     }
 } // namespace Editor

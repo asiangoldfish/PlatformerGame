@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Framework.h"
-#include "Widgets/ImGuiWidgets.hpp"
+#include "Widgets/ImGuiWidgetState.h"
 
 class Cube;
 class Floor;
@@ -139,7 +139,7 @@ private:
     FW::ref<FW::JSONParser> editorConfig;
 
 private:
-    Editor::ImGuiWidgetsState widgetState;
+    Editor::ImGuiWidgetState widgetState;
 };
 
 FW::GLFWApplication* FW::createApplication() {
