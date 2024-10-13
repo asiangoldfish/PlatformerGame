@@ -51,7 +51,7 @@ namespace Editor {
         ImGui::Columns(2);
 
         ImGui::SetColumnWidth(0, columnWidth);
-        ImGui::Text(label.c_str()); // Label to display
+        ImGui::Text("%s", label.c_str()); // Label to display
         ImGui::NextColumn();
 
         ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
