@@ -67,7 +67,7 @@ namespace FW {
 
     void PerspectiveCamera::updateViewportSize(const glm::vec2& size) {
         frustum.setSize(size);
-        // glViewport(0, 0, size.x, size.y);
+        glViewport(0, 0, size.x, size.y);
 
         // We must compute the projection matrix again for the change to take
         // effect.

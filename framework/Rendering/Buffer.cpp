@@ -152,10 +152,16 @@ namespace FW {
         glDeleteTextures(1, &depthAttachment);
     }
 
-    void Framebuffer::createFramebuffer()
-    {
-        int buffer_width = 720;
-        int buffer_height = 480;
+    void Framebuffer::resize(const glm::vec2& new_size) {
+        glDeleteFramebuffers(1, &fbo);
+        glDeleteTextures(1, &colorAttachment);
+        glDeleteTextures(1, &depthAttachment);
+
+        createFramebuffer(new_size);
+    }
+
+    void Framebuffer::createFramebuffer(glm::vec2 size) {
+        this->size = size;
 
         glGenFramebuffers(1, &fbo);
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -166,8 +172,8 @@ namespace FW {
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RGB,
-                     buffer_width,
-                     buffer_height,
+                     size.x,
+                     size.y,
                      0,
                      GL_RGB,
                      GL_UNSIGNED_BYTE,
@@ -185,7 +191,7 @@ namespace FW {
         // Depth
         glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
         glBindTexture(GL_TEXTURE_2D, depthAttachment);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, buffer_width, buffer_height);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, size.x, size.y);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER,
                                GL_DEPTH_STENCIL_ATTACHMENT,

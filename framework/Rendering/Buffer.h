@@ -322,11 +322,20 @@ namespace FW {
 
         uint32_t getTexture() { return colorAttachment; }
 
-        void setSize(const glm::vec2& new_size) { size = new_size; }
+        /**
+         * Destroy the old framebuffer and create a new one.
+         * 
+         * This is an expensive operation. Use only when actually required.
+         */
+        void resize(const glm::vec2& new_size);
         const glm::vec2& getSize() { return size; }
 
     private:
-        void createFramebuffer();
+        /**
+         * Create a new framebuffer
+         * @param size set the frame buffer's size.
+         */
+        void createFramebuffer(glm::vec2 size = glm::vec2{720, 480});
 
     private:
         /** The framebuffer's size */

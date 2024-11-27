@@ -163,19 +163,18 @@ void PhysicsApp::run() {
         // emitter->draw();
         playerCube->draw(shader);
 
-        viewportFramebuffer->unbind();
-
         // Viewport
         glm::vec2 oldCamSize =
           getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
         glm::vec2 newCamSize = Editor::drawViewport(viewportFramebuffer->getTexture());
 
         if (newCamSize != oldCamSize) {
-            // viewportFramebuffer->setSize(newCamSize);
+            viewportFramebuffer->resize(newCamSize);
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
               newCamSize);
         }
 
+        viewportFramebuffer->unbind();
 
         // INFO("Show preferences: {0}", widgetState.isSettingsVisible?"true": "false");
         Editor::drawImguiWidgets(getWindow(), &widgetState);
