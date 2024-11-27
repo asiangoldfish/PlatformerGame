@@ -322,6 +322,9 @@ namespace FW {
 
         uint32_t getTexture() { return colorAttachment; }
 
+        void setSize(const glm::vec2& new_size) { size = new_size; }
+        const glm::vec2& getSize() { return size; }
+
     private:
         void createFramebuffer();
 

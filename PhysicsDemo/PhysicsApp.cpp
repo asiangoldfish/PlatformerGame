@@ -171,6 +171,7 @@ void PhysicsApp::run() {
         glm::vec2 newCamSize = Editor::drawViewport(viewportFramebuffer->getTexture());
 
         if (newCamSize != oldCamSize) {
+            // viewportFramebuffer->setSize(newCamSize);
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
               newCamSize);
         }
@@ -404,9 +405,9 @@ void PhysicsApp::mouseScrollCallback(double xoffset, double yoffset) {
 }
 void PhysicsApp::framebufferSizeCallback(int width, int height) {
     // Update the glWindow size
-    setWindowSize({ width, height });
-    getCameraController()->getPerspectiveCamera()->updateViewportSize(
-      { width, height });
+    // setWindowSize({ width, height });
+    // getCameraController()->getPerspectiveCamera()->updateViewportSize(
+    //   { width, height });
 }
 
 void PhysicsApp::configureDefaultEditorSettings() {

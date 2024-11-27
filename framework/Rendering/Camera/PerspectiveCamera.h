@@ -42,7 +42,7 @@ namespace FW {
     public:
         /** Perspective camera constructor */
         PerspectiveCamera(
-            const Frustum& frustum = { 45.0f, 1280.0f, 720.0f, 0.1f, 100.0f },
+            const Frustum& frustum = { 45.0f, 1920.0f, 1080.0f, 0.1f, 100.0f },
             const glm::vec3& position = glm::vec3(0.0f)
         );
 

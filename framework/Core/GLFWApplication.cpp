@@ -278,7 +278,7 @@ void FW_GLFWFramebufferSize_Callback(GLFWwindow* window,
     // uncommented.
     //
     // Update the default frame buffer object's size with the GLFW window size
-    // gApp->framebufferSizeCallback(width, height);
+    gApp->framebufferSizeCallback(width, height);
 }
 
 // Output messages from OpenGL
