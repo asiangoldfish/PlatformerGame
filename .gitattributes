@@ -15,11 +15,16 @@
 *.h++   text eol=lf diff=cpp
 *.hh    text eol=lf diff=cpp
 
+# Text files
+*.txt   text eol=lf
+*.json  text eol=lf
+*.conf  text eol=lf
+
+
 # Compiled Object files
 *.slo   binary
 *.lo    binary
 *.o     binary
-*.obj   binary
 
 # Precompiled Headers
 *.gch   binary
