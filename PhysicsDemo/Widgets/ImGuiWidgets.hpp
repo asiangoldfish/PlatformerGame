@@ -133,7 +133,7 @@ namespace Editor {
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
             // TODO Ugly code. Reformat this.
             ImGui::Image(
-              (void*)(uint64_t)framebufferId,
+              (unsigned long long)framebufferId,
               viewportSize,
               ImVec2{ 0, 1 },
               ImVec2{ 1, 0 });
