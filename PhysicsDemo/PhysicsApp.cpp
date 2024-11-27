@@ -112,6 +112,7 @@ bool PhysicsApp::init() {
 
     // Init Dear ImGui
     appWidget.init(getWindow());
+    appWidget.editorConfig = editorConfig;
     appWidget.setFontSize(editorConfig->get()["ui"]["fontSize"]);
 
     // Framebuffer for rendering GL on ImGui

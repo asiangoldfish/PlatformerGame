@@ -1,7 +1,7 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "Framework.h"
 
 /**
  * Container of states for opened or closed widgets.
@@ -9,6 +9,9 @@
 struct WidgetStateContainer {
     bool editorPreferences = false;
     bool showDemo = false;
+
+    /// @brief If true, then update the font size before the next new frame.
+    bool shouldUpdateFontSize = false;
 };
 
 /**
@@ -63,7 +66,8 @@ private:
 
 public:
     WidgetStateContainer widgetStates;
-    float fontSize = 8;
+    int fontSize = 8;
+    FW::ref<FW::JSONParser> editorConfig;
 
 private:
     GLFWwindow* window;

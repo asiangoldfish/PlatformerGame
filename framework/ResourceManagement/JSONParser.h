@@ -79,7 +79,7 @@ namespace FW {
          * 
          * @param prettified if true, then write to file with prettified format.
          */
-        bool write(bool prettified);
+        bool write(bool prettified = true);
 
         nlohmann::json get() { return jObject; }
 

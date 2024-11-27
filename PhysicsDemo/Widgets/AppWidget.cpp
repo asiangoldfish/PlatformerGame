@@ -7,6 +7,15 @@
 #include <imgui_internal.h>
 
 void AppWidget::beginDraw() {
+    // Because some things must be set or defined before NewFrame is called, we
+    // do them here.
+    if (widgetStates.shouldUpdateFontSize) {
+        widgetStates.shouldUpdateFontSize = false;
+        setFontSize(fontSize);
+        editorConfig->get()["ui"]["fontSize"] = fontSize;
+        editorConfig->write(true);
+    }
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -203,7 +212,9 @@ void AppWidget::drawEditorPreferencesMenu() {
                 ImGui::EndChild();
                 if (ImGui::Button("Revert")) {}
                 ImGui::SameLine();
-                if (ImGui::Button("Save")) {}
+                if (ImGui::Button("Save")) {
+                    widgetStates.shouldUpdateFontSize = true;
+                }
                 ImGui::EndGroup();
             }
         }
@@ -225,7 +236,6 @@ void AppWidget::windowSettings() {
         ImGui::TableNextColumn();
 
         int v_min = 4, v_max = 64;
-        static int fontSize = 16;
         int imguiType = ImGuiDataType_S32;
         ImGui::SetNextItemWidth(-FLT_MIN);
         ImGui::SliderInt("##Editor", &fontSize, v_min, v_max);
@@ -371,6 +381,19 @@ void AppWidget::setFontSize(float size) {
     unsigned char* texData;
     int texWidth, texHeight;
     io.Fonts->GetTexDataAsRGBA32(&texData, &texWidth, &texHeight);
+
+    // Upload the font texture to the GPU (example using OpenGL)
+    uint32_t fontTexture;
+    glGenTextures(1, &fontTexture);
+    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+    // Set texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Inform ImGui of the texture ID
+    io.Fonts->SetTexID((ImTextureID)(uint64_t)fontTexture);
 
     // Set the new font as the default font
     io.FontDefault = newFont;

@@ -11,12 +11,24 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     Widgets/
 )
 
+# Because Windows does not link automatically to OpenGL, we need to figure out
+# whether this is built on a Windows machine. This is used to reuplaod font
+# texture to the GPU by AppWidget.
+if(WIN32)
+    # On Windows, link against opengl32.lib
+    find_package(OpenGL REQUIRED)
+    set(OpenGlLib opengl32)
+else()
+    set(OpenGLLib "")
+endif()
+
 target_link_libraries(${PROJECT_NAME}
     imgui
 
     # Framework
     Framework
     COMPONENT_entity2
+    ${OpenGlLib}
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
