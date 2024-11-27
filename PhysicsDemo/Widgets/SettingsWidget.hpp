@@ -12,23 +12,23 @@ namespace Editor {
     void windowSettings();
 
     void drawEditorPreferencesMenu(ImGuiWidgetState* state) {
-ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
         
         if (ImGui::Begin("Example: Simple layout", &state->editorPreferences, ImGuiWindowFlags_MenuBar)) {
-        // IMGUI_DEMO_MARKER("Examples/Simple layout");
+            // IMGUI_DEMO_MARKER("Examples/Simple layout");
             if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("File"))
-            {
-                if (ImGui::MenuItem("Close", "Ctrl+W")) { state->editorPreferences = false; }
-                ImGui::EndMenu();
+                if (ImGui::BeginMenu("File"))
+                {
+                    if (ImGui::MenuItem("Close", "Ctrl+W")) { state->editorPreferences = false; }
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMenuBar();
             }
-            ImGui::EndMenuBar();
-        }
 
-        // Left
+            // Left
             static int selectedOption = 0;
-        {
-            ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
+            {
+                ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 
                 if (ImGui::Selectable("Window", selectedOption == 0)) {
                     selectedOption = 0;
@@ -40,16 +40,16 @@ ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
 
                 if (ImGui::Selectable("Placeholder 2", selectedOption == 2)) {
                     selectedOption = 2;
+                }
+
+                ImGui::EndChild();
             }
+            ImGui::SameLine();
 
-            ImGui::EndChild();
-        }
-        ImGui::SameLine();
-
-        // Right
-        {
-            ImGui::BeginGroup();
-            ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+            // Right
+            {
+                ImGui::BeginGroup();
+                ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
                 
                 switch(selectedOption) {
                     case 0:
@@ -71,20 +71,20 @@ ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
     void exampleSettings() {
         // ImGui::Text("MyObject: %d", selectedOption);
         // ImGui::Separator();
-            if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+        if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+        {
+            if (ImGui::BeginTabItem("Description"))
             {
-                if (ImGui::BeginTabItem("Description"))
-                {
-                    ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("Details"))
-                {
-                    ImGui::Text("ID: 0123456789");
-                    ImGui::EndTabItem();
-                }
-                ImGui::EndTabBar();
+                ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
+                ImGui::EndTabItem();
             }
+            if (ImGui::BeginTabItem("Details"))
+            {
+                ImGui::Text("ID: 0123456789");
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
     }
 
     void windowSettings() {
@@ -110,6 +110,6 @@ ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
         }
 
         ImGui::EndTable();
-}
+    }
 
 } // namespace Editor

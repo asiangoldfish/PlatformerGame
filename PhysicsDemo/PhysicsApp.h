@@ -139,6 +139,9 @@ private:
     FW::ref<FW::JSONParser> editorConfig;
 
 private:
+    /**
+     * Determine which window should be open.
+     */
     Editor::ImGuiWidgetState widgetState;
 };
 

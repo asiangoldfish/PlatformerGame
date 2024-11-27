@@ -277,6 +277,11 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         savedCursorPosition = glm::vec2(savedX, savedY);
         savedCameraPosition = getCameraController()->getPosition();
     }
+
+    // Window shortcuts
+    if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+        widgetState.editorPreferences = !widgetState.editorPreferences;
+    }
 }
 void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
     glm::vec2 diff = glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
