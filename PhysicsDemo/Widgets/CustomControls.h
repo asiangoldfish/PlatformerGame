@@ -24,11 +24,10 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
-// OpenGL libraries
-#include <glm/glm.hpp>
-
 // Standard libraries
 #include <string.h>
+
+#include <glm/glm.hpp>
 
 namespace Editor {
 

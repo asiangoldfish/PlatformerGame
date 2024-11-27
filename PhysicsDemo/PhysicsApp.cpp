@@ -12,8 +12,6 @@
 #include "Floor.h"
 #include "WorldGrid.h"
 
-#include "Widgets/ImGuiWidgets.hpp"
-
 bool PhysicsApp::init() {
     // ------
     // Configure application
@@ -113,8 +111,8 @@ bool PhysicsApp::init() {
     emitter->setMaxParticles(100);
 
     // Init Dear ImGui
-    Editor::initEditorImgui(getWindow(), editorConfig);
-
+    appWidget.init(getWindow());
+    appWidget.setFontSize(editorConfig->get()["ui"]["fontSize"]);
 
     // Framebuffer for rendering GL on ImGui
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();
@@ -130,7 +128,7 @@ void PhysicsApp::run() {
 
     while (!glfwWindowShouldClose(getWindow())) {
         glfwPollEvents();
-        Editor::beginImGuiDraw(getWindow());
+        appWidget.beginDraw();
 
         viewportFramebuffer->bind(); // Render graphics on a separate viewport
         RenderCommand::clear();
@@ -166,7 +164,7 @@ void PhysicsApp::run() {
         // Viewport
         glm::vec2 oldCamSize =
           getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
-        glm::vec2 newCamSize = Editor::drawViewport(viewportFramebuffer->getTexture());
+        glm::vec2 newCamSize = appWidget.drawViewport(viewportFramebuffer->getTexture());
 
         if (newCamSize != oldCamSize) {
             viewportFramebuffer->resize(newCamSize);
@@ -176,11 +174,8 @@ void PhysicsApp::run() {
 
         viewportFramebuffer->unbind();
 
-        // INFO("Show preferences: {0}", widgetState.isSettingsVisible?"true": "false");
-        Editor::drawImguiWidgets(getWindow(), &widgetState);
-
-        // Must be called after all other ImGui draw calls
-        Editor::endImGuiDraw();
+        appWidget.drawWidgets();
+        appWidget.endDraw();
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();
@@ -220,9 +215,6 @@ void PhysicsApp::keyboardInput() {
 
 PhysicsApp::~PhysicsApp() {
     FW::TextureManager::clearTextures();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 }
 
 void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
@@ -280,7 +272,7 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
 
     // Window shortcuts
     if (key == GLFW_KEY_P && action == GLFW_PRESS) {
-        widgetState.editorPreferences = !widgetState.editorPreferences;
+        appWidget.widgetStates.editorPreferences = !appWidget.widgetStates.editorPreferences;
     }
 }
 void PhysicsApp::cursorPosCallback(double xpos, double ypos) {

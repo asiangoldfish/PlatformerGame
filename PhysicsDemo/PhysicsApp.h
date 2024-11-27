@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Framework.h"
-#include "Widgets/ImGuiWidgetState.h"
+#include "Widgets/AppWidget.h"
 
 class Cube;
 class Floor;
@@ -138,11 +138,7 @@ private:
 
     FW::ref<FW::JSONParser> editorConfig;
 
-private:
-    /**
-     * Determine which window should be open.
-     */
-    Editor::ImGuiWidgetState widgetState;
+    AppWidget appWidget;
 };
 
 FW::GLFWApplication* FW::createApplication() {
