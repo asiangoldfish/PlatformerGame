@@ -15,6 +15,18 @@ struct WidgetStateContainer {
 };
 
 /**
+ * We need to store the mouse state, because our GLFW application does not
+ * register mouse events by default.
+ */
+struct MouseState {
+    bool isLeftButtonDown = false;
+    bool isRightButtonDown = false;
+    bool isViewportFocused = false;
+    bool isViewportHovered = false;
+    glm::vec2 mousePosition = glm::vec2(0,0);
+};
+
+/**
  * The AppWidget class provides an interface to interact with widgets.
  * 
  * A widget is an additional window created by DearImGUI to provide a feature
@@ -68,6 +80,7 @@ public:
     WidgetStateContainer widgetStates;
     int fontSize = 8;
     FW::ref<FW::JSONParser> editorConfig;
+    MouseState mouseState;
 
 private:
     GLFWwindow* window;

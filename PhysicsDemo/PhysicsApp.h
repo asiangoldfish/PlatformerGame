@@ -89,6 +89,8 @@ public:
     }
 
 public:
+    /** Used by AppWidget to force right mouse down */
+    bool overrideRightMouseDown = false;
     bool isRightButtonMousePressed = false;
     bool isLeftButtonMousePressed = false;
     bool isLeftAltPressed = false;
