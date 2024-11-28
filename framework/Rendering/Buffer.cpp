@@ -23,8 +23,7 @@ namespace FW {
         glBindVertexArray(0);
     }
 
-    void VertexArray::addVertexBuffer(VertexBuffer* vertexBuffer)
-    {
+    void VertexArray::addVertexBuffer(ref<VertexBuffer> vertexBuffer) {
 
         glBindVertexArray(vertexArrayID);
         vertexBuffer->bind();
@@ -47,8 +46,7 @@ namespace FW {
         vertexBuffers.push_back(vertexBuffer);
     }
 
-    void VertexArray::setIndexBuffer(IndexBuffer* indexBuffer)
-    {
+    void VertexArray::setIndexBuffer(ref<IndexBuffer> indexBuffer) {
         glBindVertexArray(vertexArrayID);
         indexBuffer->bind();
         this->indexBuffer = indexBuffer;
@@ -104,12 +102,11 @@ namespace FW {
 #pragma endregion
 
 #pragma region Index Buffer
-    IndexBuffer::IndexBuffer(uint32_t* indices, int count)
-    {
+    IndexBuffer::IndexBuffer(const void* indices, int64_t count) {
         glGenBuffers(1, &indexBufferID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     (uint32_t)(count * sizeof(int)),
+                     count * sizeof(GLsizeiptr),
                      indices,
                      GL_STATIC_DRAW);
 
@@ -131,9 +128,8 @@ namespace FW {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    std::shared_ptr<IndexBuffer> IndexBuffer::create(GLuint* indices,
-                                                     GLsizei count)
-    {
+    std::shared_ptr<IndexBuffer> IndexBuffer::create(const void* indices,
+                                                     int64_t count) {
 
         return std::make_shared<IndexBuffer>(indices, count);
     }

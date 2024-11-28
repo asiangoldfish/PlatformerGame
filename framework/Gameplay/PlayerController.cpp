@@ -4,9 +4,9 @@
 namespace FW {
     void PlayerController::addMovement(glm::vec3 moveBy)
     {
-        possessedEntity->setPosition(possessedEntity->getPosition() +
-                                     glm::vec3(moveBy));
-        possessedEntity->recalculateModelMatrix();
+        // possessedEntity->setPosition(possessedEntity->getPosition() +
+        //                              glm::vec3(moveBy));
+        // possessedEntity->recalculateModelMatrix();
     }
 
     void PlayerController::addRotation(float yawBy, float pitchBy, float rollBy)
@@ -14,7 +14,7 @@ namespace FW {
         yaw += yawBy;
         pitch += pitchBy;
         roll += rollBy;
-        possessedEntity->recalculateModelMatrix();
+        // possessedEntity->recalculateModelMatrix();
     }
 
     PlayerController::PlayerController(ref<Entity>& entity)

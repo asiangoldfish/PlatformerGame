@@ -6,6 +6,8 @@
 #include "Framework.h"
 #include "Widgets/AppWidget.h"
 
+#include "PhysicsScene.h"
+
 class Cube;
 class Floor;
 class WorldGrid;
@@ -112,28 +114,21 @@ public:
 
 private:
     FW::ref<FW::Shader> shader;
-    FW::ref<Cube> testCube;
     FW::scope<FW::PlayerController> playerController;
     FW::ref<FW::CameraController> cameraController;
-    FW::ref<FW::Entity> playerCube;
     float cameraSpeed = 15.0f;
     FW::Timer timer;
-
-    FW::ref<Floor> grid;
 
     FW::ref<FW::Framebuffer> viewportFramebuffer;
 
     FW::ref<FW::Shader> worldGridShader;
     FW::ref<WorldGrid> worldGrid;
 
-    // Particle system
-    FW::scope<FW::Emitter> emitter;
-
     FW::ref<FW::JSONParser> editorConfig;
 
     AppWidget appWidget;
 
-    FW::ref<FW::Scene> scene;
+    FW::ref<PhysicsScene> scene;
 };
 
 FW::GLFWApplication* FW::createApplication() {

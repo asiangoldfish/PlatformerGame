@@ -97,8 +97,9 @@ namespace FW {
             // TODO needs error handling
             char* configHome = std::getenv("XDG_CONFIG_HOME");
             char* userHome = std::getenv("HOME");
+            char overrideXdgHome[9] = "/.config";
             if (!configHome) {
-                configHome = strcat("/config", userHome);
+                configHome = strcat(userHome, overrideXdgHome);
             }
             
             userDataPath = std::string(configHome) + "/" + appName;

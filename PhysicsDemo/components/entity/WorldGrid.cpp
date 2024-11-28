@@ -17,8 +17,8 @@ WorldGrid::WorldGrid() {
       &vertices.front(), vertices.size() * sizeof(float));
 
     vertexBuffer->setLayout(entityAttribLayout);
-    vertexArray->setIndexBuffer(indexBuffer.get());
-    vertexArray->addVertexBuffer(vertexBuffer.get());
+    vertexArray->setIndexBuffer(indexBuffer);
+    vertexArray->addVertexBuffer(vertexBuffer);
 }
 void
 WorldGrid::draw(const FW::ref<FW::Shader> shader)

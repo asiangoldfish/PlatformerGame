@@ -1,9 +1,7 @@
 project(COMPONENT_entity2)
 
 add_library(${PROJECT_NAME} STATIC
-    Cube.h
-    Floor.h     Floor.cpp
-    WorldGrid.h WorldGrid.cpp
+    WorldGrid.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

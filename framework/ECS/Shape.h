@@ -12,7 +12,6 @@ namespace FW {
     class PrimitiveQuad;
     class PrimitiveCube;
 
-#pragma region Primitive Shape
     /**
      * The base shape for primitive geometries.
      *
@@ -21,13 +20,14 @@ namespace FW {
      * implementation and manages OpenGL objects lifecycles. Shapes that inherit
      * this class implement their own geometries.
      */
-    class PrimitiveShape
-    {
+    class Shape {
     public:
-        PrimitiveShape() = default;
-        PrimitiveShape(std::vector<float> vertices,
-                       std::vector<uint32_t> indices,
-                       bool instanced = false);
+        Shape() =  default;
+        virtual void init() = 0;
+
+        ref<VertexArray> getVertexArray() const { return vertexArray; }
+        ref<VertexBuffer> getVertexBuffer() const { return vertexBuffer; }
+        ref<IndexBuffer> getIndexBuffer() const { return indexBuffer; }
 
     protected:
         /**
@@ -36,7 +36,7 @@ namespace FW {
          */
         void createBuffers();
 
-    private:
+    protected:
         /** OpenGL Vertex Array Object. Used when binding before making a draw
          * call. */
         ref<VertexArray> vertexArray = nullptr;
@@ -51,22 +51,24 @@ namespace FW {
          * GL_DYNAMIC_DRAW.
          */
         GLenum drawType = GL_STATIC_DRAW;
-    };
-#pragma endregion
 
-#pragma region Primitive Quad
-    class PrimitiveQuad
-    {
+        std::vector<float> vertices;
+        std::vector<uint32_t> indices;
+    };
+
+    class PrimitiveQuad : public Shape {
     public:
+        PrimitiveQuad() = default;
+        virtual void init() {}
+
     private:
     };
-#pragma endregion
 
-#pragma region Primitive Cube
-    class PrimitiveCube
-    {
+    class PrimitiveCube : public Shape {
     public:
+        PrimitiveCube() = default;
+        virtual void init();
+
     private:
     };
-#pragma endregion
 }

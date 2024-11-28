@@ -49,8 +49,9 @@ namespace FW {
                            GL_STATIC_DRAW);
 
         vertexBuffer->setLayout(entityAttribLayout);
-        vertexArray->setIndexBuffer(indexBuffer);
-        vertexArray->addVertexBuffer(vertexBuffer);
+        // TODO - re-add these
+        // vertexArray->setIndexBuffer(indexBuffer);
+        // vertexArray->addVertexBuffer(vertexBuffer);
 
         recalculateModelMatrix();
     }
