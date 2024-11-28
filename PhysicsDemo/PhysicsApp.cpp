@@ -11,6 +11,7 @@
 #include "Cube.h"
 #include "Floor.h"
 #include "WorldGrid.h"
+#include "PhysicsScene.h"
 
 bool PhysicsApp::init() {
     // ------
@@ -113,6 +114,9 @@ bool PhysicsApp::init() {
     // Framebuffer for rendering GL on ImGui
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();
 
+    scene = FW::createRef<PhysicsScene>();
+    scene->init();
+
     INFO("Client application successfully initialized");
 
     return true;
@@ -155,7 +159,7 @@ void PhysicsApp::run() {
         // }
 
         // emitter->draw();
-        playerCube->draw(shader);
+        // playerCube->draw(shader);
 
         // Viewport
         glm::vec2 oldCamSize =
@@ -179,6 +183,9 @@ void PhysicsApp::run() {
             cursorPosCallback(appWidget.mouseState.mousePosition.x,
                 appWidget.mouseState.mousePosition.y);
         }
+
+        scene->update(timer.getDeltaTime());
+        appWidget.drawSceneTree(scene);
 
         appWidget.drawWidgets();
         appWidget.endDraw();

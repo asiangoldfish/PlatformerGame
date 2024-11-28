@@ -1,8 +1,9 @@
 project(FRAMEWORK_ECS)
 
 add_library(${PROJECT_NAME} STATIC
-    Entity.h            Entity.cpp
-    PrimitiveShape.h    PrimitiveShape.cpp
+    Entity.cpp
+    PrimitiveShape.cpp
+    Scene.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

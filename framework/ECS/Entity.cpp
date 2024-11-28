@@ -100,15 +100,15 @@ namespace FW {
     }
 
     // Recursively update itself and child nodes
-    void Entity::update()
-    {
+    void Entity::update(float delta)
+    {  
         if (isDrawable) {
             boundingBox.setPosition(position);
             boundingBox.setScale(scale);
         }
 
         for (const auto& child : children) {
-            child->update();
+            child->update(delta);
         }
     }
 
