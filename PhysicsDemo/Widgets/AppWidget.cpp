@@ -59,6 +59,14 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
             viewportSize,
             ImVec2{ 0, 1 },
             ImVec2{ 1, 0 });
+
+        mouseState.isViewportHovered = ImGui::IsItemHovered();
+        mouseState.isViewportFocused = ImGui::IsItemFocused();
+        mouseState.mousePosition = glm::vec2(
+            ImGui::GetMousePos().x, ImGui::GetMousePos().y);
+        mouseState.isLeftButtonDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
+        mouseState.isRightButtonDown = ImGui::IsMouseDown(ImGuiMouseButton_Right);
+
         ImGui::End();
 
         return glm::vec2{ viewportSize.x, viewportSize.y };

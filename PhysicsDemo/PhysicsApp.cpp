@@ -170,6 +170,16 @@ void PhysicsApp::run() {
 
         viewportFramebuffer->unbind();
 
+        // Because the GLFW application does not register mouse events in ImGui
+        // widgets by default, we should handle it ourselves.
+        overrideRightMouseDown = appWidget.mouseState.isRightButtonDown;
+        // BUG when moving rotating after forcing right mouse button down,
+        // the camera snaps a bit every time we right click.
+        if (!isRightButtonMousePressed) {
+            cursorPosCallback(appWidget.mouseState.mousePosition.x,
+                appWidget.mouseState.mousePosition.y);
+        }
+
         appWidget.drawWidgets();
         appWidget.endDraw();
 
@@ -286,7 +296,7 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
      * - Alt: Orbit around a point.
      * - None: Panning and tilting.
      */
-    if (isRightButtonMousePressed) {
+    if (isRightButtonMousePressed || overrideRightMouseDown) {
         if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_SHIFT_BIT)) {
             // Shift: Move forward/backward
             float mouseDistance = ypos - windowSettings.size.y / 2.0f;
