@@ -20,13 +20,8 @@ bool PhysicsApp::init() {
         return false;
     }
 
-    // ------
-    // Configurations
-    // ------
-    configureDefaultEditorSettings();
+    editorConfig = FW::createRef<FW::JSONParser>();
 
-    // TODO Move this to Framework as an engine feature.
-    // Initialise the window mode if this is set in the configurations.
     std::string defaultWindowMode = editorConfig->get()["window"]["windowMode"];
     if (defaultWindowMode == "window") {
         changeWindowMode(FW::WindowMode::WINDOW);
@@ -405,21 +400,4 @@ void PhysicsApp::framebufferSizeCallback(int width, int height) {
     // setWindowSize({ width, height });
     // getCameraController()->getPerspectiveCamera()->updateViewportSize(
     //   { width, height });
-}
-
-void PhysicsApp::configureDefaultEditorSettings() {
-    editorConfig = FW::createRef<FW::JSONParser>();
-
-    if (!editorConfig->parse(CONFIG_DIR + std::string("editor.json"))) {
-        // TODO Create error dialog to show this error
-        FATAL("Failed to configure editor config file");
-    }
-
-    editorConfig->get()["ui"]["fontSize"] = 14;
-
-    if (!editorConfig->write(true)) {
-        WARN("Failed to write to config/editor.json");
-    } else {
-        INFO("config/editor.ini write out");
-    }
 }

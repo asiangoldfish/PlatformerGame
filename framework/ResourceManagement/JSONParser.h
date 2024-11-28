@@ -2,26 +2,9 @@
 
 #include <nlohmann/json.hpp>
 #include "pch.h"
+#include <string>
 
 namespace FW {
-    /*
-    class Singleton
-    {
-    public:
-        Singleton(Singleton const&) = delete;
-        Singleton& operator=(Singleton const&) = delete;
-
-        static std::shared_ptr<Singleton> instance()
-        {
-            static std::shared_ptr<Singleton> s{new Singleton};
-            return s;
-        }
-
-    private:
-        Singleton() {}
-    };
-    */
-
     /**
      * JSONParser is a wrapper class and provides convinient API to parse and
      * write to JSON files.
@@ -47,7 +30,7 @@ namespace FW {
          * This constructor does nothing. The user is responsible for manually
          * parsing JSON configuration files accordingly.
          */
-        JSONParser() = default;
+        JSONParser();
 
         /**
          * Deconstructor.
@@ -66,7 +49,7 @@ namespace FW {
          * program will throw a traceback in DEBUG mode. This is disabled in
          * RELEASE mode, but both modes will return false.
          */
-        bool parse(std::string filepath);
+        bool parse();
 
         /**
          * Write the jObject to file.
@@ -81,7 +64,8 @@ namespace FW {
          */
         bool write(bool prettified = true);
 
-        nlohmann::json get() { return jObject; }
+        // TODO add a check whether jObject is not null
+        nlohmann::json& get() { return jObject; }
 
     public:
         /**
@@ -98,7 +82,13 @@ namespace FW {
         nlohmann::json jObject;
 
     private:
+        std::string getUserDataDirectory();
+
+    private:
         bool isParsed = false;
         std::string fileName;
+
+        /// OS-dependent location where user configurations are stored.
+        std::string userConfigPath;
     };
 }

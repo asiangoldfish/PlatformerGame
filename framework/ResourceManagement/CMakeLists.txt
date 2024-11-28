@@ -19,3 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
     FRAMEWORK_RENDERING
 )
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    CONFIG_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config/"
+)

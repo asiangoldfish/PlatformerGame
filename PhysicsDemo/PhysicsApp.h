@@ -88,15 +88,6 @@ public:
         return viewportFramebuffer;
     }
 
-private:
-    /**
-     * Configure default settings for the editor if the file does not exist.
-     *
-     * TODO:
-     * Verify the file's content for missing fields.
-     */
-    void configureDefaultEditorSettings();
-
 public:
     bool isRightButtonMousePressed = false;
     bool isLeftButtonMousePressed = false;
