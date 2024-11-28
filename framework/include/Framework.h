@@ -37,6 +37,8 @@
 // ECS
 #include "Entity.h"
 #include "Scene.h"
+#include "Component.h"
+#include "Shape.h"
 
 // Physics
 #include "Physics.h"

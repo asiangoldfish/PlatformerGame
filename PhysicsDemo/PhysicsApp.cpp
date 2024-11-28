@@ -8,10 +8,7 @@
 #include "Framework.h"
 
 // App Components
-#include "Cube.h"
-#include "Floor.h"
 #include "WorldGrid.h"
-#include "PhysicsScene.h"
 
 bool PhysicsApp::init() {
     // ------
@@ -48,8 +45,8 @@ bool PhysicsApp::init() {
 
     // We only have one shader in the application, so we only bind it here.
     shader->bind();
-    getShader()->setInt("u_material.diffuse", 0);
-    getShader()->setInt("u_material.specular", 1);
+    shader->setInt("u_material.diffuse", 0);
+    shader->setInt("u_material.specular", 1);
 
     // -------------
     // Entities
@@ -58,14 +55,6 @@ bool PhysicsApp::init() {
       "metal_plate_diff",
       RESOURCES_DIR +
         std::string("textures/polyhaven/metal_plate/metal_plate_diff_1k.jpg"));
-
-    playerCube = FW::createRef<Cube>();
-    playerCube->setScale({ 1.0f, 1.0f, 1.0f });
-    playerCube->setPosition({ 0, playerCube->getScale().y / 2.0f, 0 });
-    playerCube->getMaterial().getProperties().setDiffuseTextureID(
-      "metal_plate_diff");
-    playerCube->setMaterial(FW::MaterialPreset::CHROME);
-    playerController = FW::createScope<FW::PlayerController>(playerCube);
 
     // ---------
     // Rendering
@@ -81,30 +70,10 @@ bool PhysicsApp::init() {
     // Screen
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
 
-    testCube = FW::createRef<Cube>();
-    testCube->setPosition({ 0.0f, 0.0f, -3.0f });
-    testCube->setScale(1.0f);
-
-    // Grid
-    int gridSize = 100;
-    grid = FW::createScope<Floor>(gridSize);
-    grid->setRotation({ 90.0f, 0.0f, 0.0f });
-    grid->setPosition({ -gridSize / 2, 0, -gridSize / 2 });
-
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
     shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
 
     worldGrid = FW::createRef<WorldGrid>();
-
-    // Physics
-    emitter = FW::createScope<FW::Emitter>();
-    emitter->setMaxLifetime(1.0f, 3.0f);
-    float spread = 0.075f;
-    emitter->setInitialVelocityX(-spread, spread);
-    emitter->setInitialVelocityY(0.3f, 0.5f);
-    emitter->setInitialVelocityZ(-spread, spread);
-    emitter->setGravity(0.0098f);
-    emitter->setMaxParticles(100);
 
     // Init Dear ImGui
     appWidget.init(getWindow());
@@ -115,6 +84,7 @@ bool PhysicsApp::init() {
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();
 
     scene = FW::createRef<PhysicsScene>();
+    scene->setShader(shader);
     scene->init();
 
     INFO("Client application successfully initialized");
@@ -145,21 +115,7 @@ void PhysicsApp::run() {
         // Below line must happen after drawing the world grid because of depth
         RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
 
-        cameraController->update(shader);
-
-        //        playerCube->update();
-        //        playerCube->draw(shader);
-
-        cameraController->update(emitter->getShader());
-        // emitter->update(timer.getDeltaTime());
-
-        // if (emitterTimer.getElapsedTime() > FW::rng(0.15f, 0.5f)) {
-        //     emitter->addParticle(FW::rng(5, 15));
-        //     emitterTimer.resetTimer();
-        // }
-
-        // emitter->draw();
-        // playerCube->draw(shader);
+        cameraController->update(scene->getShader());
 
         // Viewport
         glm::vec2 oldCamSize =
@@ -171,8 +127,6 @@ void PhysicsApp::run() {
             getCameraController()->getPerspectiveCamera()->updateViewportSize(
               newCamSize);
         }
-
-        viewportFramebuffer->unbind();
 
         // Because the GLFW application does not register mouse events in ImGui
         // widgets by default, we should handle it ourselves.
@@ -188,6 +142,8 @@ void PhysicsApp::run() {
         appWidget.drawSceneTree(scene);
 
         appWidget.drawWidgets();
+        
+        viewportFramebuffer->unbind();
         appWidget.endDraw();
 
         glfwSwapBuffers(getWindow());

@@ -36,8 +36,8 @@ namespace RenderCommand {
                                                vertices.size() * sizeof(float));
 
         quadContext->vertexBuffer->setLayout(entityAttribLayout);
-        quadContext->vertexArray->setIndexBuffer(quadContext->indexBuffer.get());
-        quadContext->vertexArray->addVertexBuffer(quadContext->vertexBuffer.get());
+        quadContext->vertexArray->setIndexBuffer(quadContext->indexBuffer);
+        quadContext->vertexArray->addVertexBuffer(quadContext->vertexBuffer);
     }
 
     void destroy()

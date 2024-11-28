@@ -9,6 +9,7 @@
 // Framework
 #include "Material.h"
 #include "Physics.h"
+#include "Component.h"
 
 namespace FW {
 
@@ -24,16 +25,13 @@ namespace FW {
      * placeable in the world either as a drawble object or as an invisible
      * entity. Such entity can be used for
      */
-    class Entity
-    {
+    class Entity {
     public: // Constructors and destructors
         /**
          * Default constructor.
          *
          * Construct an empty entity. If the entity is drawable, it must
          * first be iniitialized.
-         *
-         * @see initDrawable()
          */
         Entity() = default;
 
@@ -65,8 +63,7 @@ namespace FW {
          * Please be cautious that removing a child will not delete it. It must
          * manually be deleted by the user.
          */
-        Entity* removeChildAt(int i)
-        {
+        Entity* removeChildAt(int i) {
             if (i < children.size()) {
                 return *children.erase(children.begin() + i);
             }
@@ -88,11 +85,6 @@ namespace FW {
         [[nodiscard]] int getId() const { return id; }
 
         /**
-         * Draw itself and all child entities.
-         */
-        virtual void draw(const ref<Shader>& shader);
-
-        /**
          * Update itself and all child entities.
          *
          * This funuction should ideally be called at least once per frame.
@@ -107,104 +99,13 @@ namespace FW {
          */
         virtual void update(float delta);
 
-        void setRotation(glm::vec3 rotation);
-        void setRotation(float yaw, float pitch, float roll);
-
-        inline void setScale(const float s)
-        {
-            this->scale.x = s;
-            this->scale.y = s;
-            this->scale.z = s;
-            recalculateModelMatrix();
+        void addComponent(ref<Component> component) {
+            components.push_back(component);
         }
-        inline void setScale(const glm::vec3& s)
-        {
-            scale = s;
-            boundingBox.setScale(s);
-        }
-
-        inline const glm::vec3& getScale() const { return scale; }
-
-        inline void setPosition(glm::vec3 position)
-        {
-            this->position = position;
-            boundingBox.setPosition(position);
-            recalculateModelMatrix();
-        }
-        const glm::vec3& getPosition() const { return position; }
-
-        const glm::vec4& getColor() const { return color; }
-
-        /**
-         * Get the entity's material
-         */
-        Material& getMaterial() { return material; }
-
-        /**
-         * Set the entity's material.
-         *
-         * The material is set to MaterialPreset::CUSTOM by default.
-         * Change the material's properties for a desired result.
-         * @param mat Material to set
-         */
-        void setMaterial(const Material& mat) { material = mat; }
-
-        /**
-         * Set the entity's colour.
-         *
-         * If the entity has a texture, then these will be mixed before
-         * rendering.
-         */
-        void setColor(const glm::vec4& color);
-
-        /**
-         * Set the entity's colour. The alpha channel is set to 1.0.
-         *
-         * If the entity has a texture, then these will be mixed before
-         * rendering.
-         */
-        void setColor(const glm::vec3& color);
-
-        /**
-         * Set the entity's colour. The alpha channel is set to 1.0.
-         *
-         * The colour will be on a gray scale.
-         * If the entity has a texture, then these will be mixed before
-         * rendering.
-         */
-        void setColor(const float color);
-
-        const std::vector<glm::vec3> getVertices();
-
-        void setTextureName(const std::string& name) { textureName = name; }
-
-        /**
-         *  Recalculate the entity's model matrix.
-         *
-         * This needs to be called before every draw if the entity has changed
-         * its transformation.
-         */
-        void recalculateModelMatrix();
-
-        BoundingBox_Quad& getBoundingBox() { return boundingBox; }
-
-        bool getIsDrawable() { return isDrawable; }
 
     public:
         /// The node's unique name. It is display name and identifier.
         std::string name;
-
-    protected:
-        /**
-         * Initialize required parameters and data to draw the entity on screen.
-         *
-         * @param shader The shader to bind to before drawing the entity
-         * @param vertices Vertices with attributes. These are used when drawing
-         * @param indices All indices. Used for the index buffer
-         * @param drawType (default: GL_DYNAMIC_DRAW) Either static or dynamic
-         */
-        void initDrawable(std::vector<float> vertices,
-                          std::vector<uint32_t> indices);
 
     private:
         Entity* parent = nullptr;
@@ -213,41 +114,6 @@ namespace FW {
         /** Unique identifier. No other entity should have this id */
         int id = -1;
 
-        /** If this is set, then bind a texture by name before drawing. */
-        std::string textureName;
-
-        /** Prevents drawing itself if this isn't configured yet */
-        bool isDrawable = false;
-
-    protected:
-        VertexArray* vertexArray = nullptr;
-        VertexBuffer* vertexBuffer = nullptr;
-        IndexBuffer* indexBuffer = nullptr;
-
-        // Physics
-        BoundingBox_Quad boundingBox;
-
-        // Transformation
-        glm::mat4 modelMatrix;
-        glm::vec3 position;
-        float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
-
-        // This color is multiplied by texture color
-        glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
-
-        std::vector<float> vertices;
-        std::vector<uint32_t> indices;
-
-        glm::vec3 scale = glm::vec3{ 1.0f };
-
-        GLenum drawType;
-
-        // Disable per-entity-basis
-        bool enableDepthTesting = true;
-
-        // ----------
-        // Materials and textures
-        // ----------
-        Material material;
+        std::vector<ref<Component>> components;
     };
 } // FW

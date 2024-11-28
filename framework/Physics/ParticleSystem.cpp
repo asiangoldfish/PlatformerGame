@@ -184,7 +184,8 @@ namespace FW {
           createRef<VertexBuffer>(&vertices.front(), vertices.size() * sizeof(float));
 
         vertexBuffer->setLayout(entityAttribLayout);
-        vertexArray->setIndexBuffer(indexBuffer.get());
-        vertexArray->addVertexBuffer(vertexBuffer.get());
+        // TODO readd these
+        // vertexArray->setIndexBuffer(indexBuffer.get());
+        // vertexArray->addVertexBuffer(vertexBuffer.get());
     }
 }

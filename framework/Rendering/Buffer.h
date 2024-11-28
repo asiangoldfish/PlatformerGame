@@ -185,22 +185,20 @@ namespace FW {
          * Add a new Vertex Buffer Object
          * @param vertexBuffer Shared pointer to the Vertex Buffer Object
          */
-        void addVertexBuffer(VertexBuffer* vertexBuffer);
+        void addVertexBuffer(ref<VertexBuffer> vertexBuffer);
 
         /**
          * Set the Element Buffer Object-
          * @param indexBuffer Element Buffer Object to set for this Vertex
          * Array Object.
          */
-        void setIndexBuffer(IndexBuffer* indexBuffer);
+        void setIndexBuffer(ref<IndexBuffer> indexBuffer);
 
         /**
          * Get a reference to the Element Buffer Object.
          * @return Shared pointer to the Element Buffer Object
          */
-        const IndexBuffer* getIndexBuffer() const {
-            return indexBuffer;
-        }
+        const ref<IndexBuffer> getIndexBuffer() const { return indexBuffer; }
 
         /**
          * Shortcut to create a new shared pointer to Vertex Array Object.
@@ -213,10 +211,10 @@ namespace FW {
         uint32_t vertexArrayID = 0;
 
         /** Container with VBOs associated with this VAO */
-        std::vector<VertexBuffer*> vertexBuffers;
+        std::vector<ref<VertexBuffer>> vertexBuffers;
 
         /** This VAO's associated EBO. */
-        IndexBuffer* indexBuffer = nullptr;
+        ref<IndexBuffer> indexBuffer = nullptr;
     };
 #pragma endregion
 
@@ -276,7 +274,7 @@ namespace FW {
          * IndexBuffer* indexBuffer =
          *      new IndexBuffer(indices.data(), indices.size());
          */
-        IndexBuffer(GLuint *indices, GLsizei count);
+        IndexBuffer(const void* indices, int64_t count);
         virtual ~IndexBuffer();
 
         /** Bind this index buffer */
@@ -296,8 +294,8 @@ namespace FW {
          * // Put the correct arguments for ::create()
          * auto indexBuffer = IndexBuffer::create();
          */
-        static std::shared_ptr <IndexBuffer> create(
-          GLuint* indices, GLsizei count);
+        static std::shared_ptr<IndexBuffer> create(const void* indices,
+                                                   int64_t count);
 
     private:
         /** This index buffer's ID */
