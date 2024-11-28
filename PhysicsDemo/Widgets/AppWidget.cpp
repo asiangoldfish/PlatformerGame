@@ -238,7 +238,7 @@ void AppWidget::windowSettings() {
         int v_min = 4, v_max = 64;
         int imguiType = ImGuiDataType_S32;
         ImGui::SetNextItemWidth(-FLT_MIN);
-        ImGui::SliderInt("##Editor", &fontSize, v_min, v_max);
+        ImGui::SliderInt("##fontsize", &fontSize, v_min, v_max);
 
         ImGui::PopID();
     }
@@ -273,10 +273,6 @@ void AppWidget::init(GLFWwindow* window) {
         style.WindowRounding = 0.0f;
         // style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
-
-    // Scale
-    // ImGuiStyle::ScaleAllSizes(2.0);
-
 
     // Source: https://fonts.google.com/specimen/Open+Sans
     std::string fontPath =
