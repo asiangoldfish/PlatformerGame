@@ -105,7 +105,7 @@ namespace FW {
          *    Entity::update();
          * }
          */
-        virtual void update();
+        virtual void update(float delta);
 
         void setRotation(glm::vec3 rotation);
         void setRotation(float yaw, float pitch, float roll);
@@ -189,6 +189,10 @@ namespace FW {
         BoundingBox_Quad& getBoundingBox() { return boundingBox; }
 
         bool getIsDrawable() { return isDrawable; }
+
+    public:
+        /// The node's unique name. It is display name and identifier.
+        std::string name;
 
     protected:
         /**

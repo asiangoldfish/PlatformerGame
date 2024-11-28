@@ -132,6 +132,8 @@ private:
     FW::ref<FW::JSONParser> editorConfig;
 
     AppWidget appWidget;
+
+    FW::ref<FW::Scene> scene;
 };
 
 FW::GLFWApplication* FW::createApplication() {

@@ -2,6 +2,7 @@ project(PhysicsDemo)
 
 add_executable(${PROJECT_NAME}
     PhysicsApp.cpp
+    PhysicsScene.cpp
     Widgets/AppWidget.cpp
 )
 
