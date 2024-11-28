@@ -184,10 +184,11 @@ void PhysicsApp::run() {
                 appWidget.mouseState.mousePosition.y);
         }
 
+        scene->update(timer.getDeltaTime());
+        appWidget.drawSceneTree(scene);
+
         appWidget.drawWidgets();
         appWidget.endDraw();
-
-        scene->update(timer.getDeltaTime());
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();

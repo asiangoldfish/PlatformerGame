@@ -1,11 +1,10 @@
 #include "Scene.h"
 
 FW::Scene::~Scene() {
-    delete root;
 }
 
 void FW::Scene::init() {
-    root = new Entity();
+    root = createRef<Entity>();
     root->name = "root";
 }
 

@@ -17,7 +17,9 @@ public:
     virtual void init();
     virtual void cleanUp() = 0;
     virtual void update(float delta);
+
+    ref<Entity> getRoot() { return root; }
 protected:
-    Entity* root;
+    ref<Entity> root;
 };
 } // namespace FW
