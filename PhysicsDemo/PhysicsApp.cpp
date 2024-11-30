@@ -193,11 +193,21 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     // CONTROL
     FW::Input::updateModKeyState(key, action);
 
-    if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
-        // Saved current mouse cursor
-        double xpos, ypos;
-        glfwGetCursorPos(getWindow(), &xpos, &ypos);
-        savedCursorPosition = glm::vec2(xpos, ypos);
+    // if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
+    //     // Saved current mouse cursor
+    //     double xpos, ypos;
+    //     glfwGetCursorPos(getWindow(), &xpos, &ypos);
+    //     savedCursorPosition = glm::vec2(xpos, ypos);
+    // } 
+    // else 
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+        double x, y;
+        glfwGetCursorPos(getWindow(), &x, &y);
+        savedCursorPosition = glm::vec2(x, y);
+        cameraCurrentYaw =
+            getCameraController()->getPerspectiveCamera()->getYaw();
+        cameraCurrentPitch =
+            getCameraController()->getPerspectiveCamera()->getPitch();
     }
 
     static bool altBtnJustPressed = false;
@@ -313,6 +323,7 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
              */
             float cameraRotationSpeed = 0.05f;
             glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
+
             auto cam = getCameraController()->getPerspectiveCamera();
             difference.y *= -1;
             glm::vec2 newRotation =
