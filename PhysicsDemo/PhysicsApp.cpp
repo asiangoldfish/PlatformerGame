@@ -10,6 +10,12 @@
 // App Components
 #include "WorldGrid.h"
 
+void setCameraPositionAndYaw(GLFWwindow* window,
+                             glm::vec2& savedCursorPosition,
+                             FW::PerspectiveCamera& camera,
+                             float& pitch,
+                             float& yaw);
+
 bool PhysicsApp::init() {
     // ------
     // Configure application
@@ -201,13 +207,12 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     // } 
     // else 
     if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-        double x, y;
-        glfwGetCursorPos(getWindow(), &x, &y);
-        savedCursorPosition = glm::vec2(x, y);
-        cameraCurrentYaw =
-            getCameraController()->getPerspectiveCamera()->getYaw();
-        cameraCurrentPitch =
-            getCameraController()->getPerspectiveCamera()->getPitch();
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
     }
 
     static bool altBtnJustPressed = false;
@@ -349,15 +354,13 @@ void PhysicsApp::mouseButtonCallback(int button, int action, int mods) {
     if (glfwGetMouseButton(getWindow(), FW_MOUSE_BUTTON_RIGHT)) {
         isRightButtonMousePressed = true;
 
-        double x, y;
-
         if (!mbtn.right) {
-            glfwGetCursorPos(getWindow(), &x, &y);
-            savedCursorPosition = glm::vec2(x, y);
-            cameraCurrentYaw =
-              getCameraController()->getPerspectiveCamera()->getYaw();
-            cameraCurrentPitch =
-              getCameraController()->getPerspectiveCamera()->getPitch();
+            setCameraPositionAndYaw(
+              getWindow(),
+              savedCursorPosition,
+              *getCameraController()->getPerspectiveCamera(),
+              cameraCurrentPitch,
+              cameraCurrentYaw);
         }
     } else {
         isRightButtonMousePressed = false;
@@ -384,4 +387,23 @@ void PhysicsApp::framebufferSizeCallback(int width, int height) {
     // setWindowSize({ width, height });
     // getCameraController()->getPerspectiveCamera()->updateViewportSize(
     //   { width, height });
+}
+
+/**
+ * We use this function whenever we want to move the camera. It should be used
+ * at the beginning of moving the mouse, and at the end.
+ *
+ * This is a helper function.
+ */
+void setCameraPositionAndYaw(GLFWwindow* window,
+                             glm::vec2& savedCursorPosition,
+                             FW::PerspectiveCamera& camera,
+                             float& pitch,
+                             float& yaw) {
+
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    savedCursorPosition = glm::vec2(x, y);
+    yaw = camera.getYaw();
+    pitch = camera.getPitch();
 }
