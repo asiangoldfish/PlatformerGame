@@ -22,6 +22,7 @@
 #include "spdlog/spdlog.h"
 #include "assertions.h"
 #include <iostream>
+#include "glm/glm.hpp"
 
 /**
  * Trace code flow.
@@ -38,6 +39,23 @@
  * is used to inform the user about a process that has started or finished.
  */
 #define INFO(...) spdlog::info(__VA_ARGS__)
+
+
+inline std::string glmToString(const glm::vec2& v) {
+    return fmt::format("({}, {})", v.x, v.y);
+}
+inline std::string glmToString(const glm::vec3& v) {
+    return fmt::format("({}, {}, {})", v.x, v.y, v.z);
+}
+inline std::string glmToString(const glm::vec4& v) {
+    return fmt::format("({}, {}, {}, {})", v.x, v.y, v.z, v.w);
+}
+#define INFO_VEC(v) spdlog::info(glmToString(v))
+
+// Keep these for legacy reasons
+#define INFO_GLM_VEC2(value) INFO("X: {} | Y: {}", value.x, value.y)
+#define INFO_GLM_VEC3(value) INFO("X: {} | Y: {} | Z: {}", value.x, value.y, value.z);
+#define INFO_GLM_VEC4(value) INFO("X: {} | Y: {} | Z: {} | W: {}", value.x, value.y, value.z, value.w);
 
 /**
  * Print information for debugging.
@@ -83,7 +101,3 @@
  * must be fixed quickly as possible.
  */
 #define FATAL(...) spdlog::critical(__VA_ARGS__); __breakpoint()
-
-#define INFO_GLM_VEC2(value) INFO("X: {} | Y: {}", value.x, value.y)
-#define INFO_GLM_VEC3(value) INFO("X: {} | Y: {} | Z: {}", value.x, value.y, value.z);
-#define INFO_GLM_VEC4(value) INFO("X: {} | Y: {} | Z: {} | W: {}", value.x, value.y, value.z, value.w);
