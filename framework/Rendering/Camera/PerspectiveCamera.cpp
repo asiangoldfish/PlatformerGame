@@ -49,11 +49,16 @@ namespace FW {
     void PerspectiveCamera::computeProjectionMatrix() {
         // Prevent objects from changing size:
         // https://stackoverflow.com/a/3270733
-        projectionMatrix =
-          glm::perspective(glm::radians(frustum.angle),
-                           (float)frustum.width / (float)frustum.height,
-                           frustum.nearClip,
-                           frustum.farClip);
+        // if the aspect ratio is too tiny, then we will crash. This happens
+        // If we for example dock a window onto the viewport. Therefore we
+        // don't recalculate the projection matrix if it indeed is too small.
+        if (frustum.width / frustum.height > 0.1 && frustum.height > 0.0) {
+            projectionMatrix =
+            glm::perspective(glm::radians(frustum.angle),
+                            (float)frustum.width / (float)frustum.height,
+                            frustum.nearClip,
+                            frustum.farClip);
+        }
     }
 
     void PerspectiveCamera::update(const ref<Shader>& shader) {
