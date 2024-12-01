@@ -293,9 +293,11 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             // vector.
             // TODO: Fix panning so the direction is dependent on camera front
             controller->setPosition(
-              { savedCameraPosition.x + difference.x * 0.1f * dt,
-                savedCameraPosition.y - difference.y * 0.1f * dt,
+              { camera->getPosition().x + difference.x * 0.1f * dt,
+                camera->getPosition().y - difference.y * 0.1f * dt,
                 controller->getPosition().z });
+
+            glfwSetCursorPos(getWindow(), savedCursorPosition.x, savedCursorPosition.y);
 
         } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
             // Alt: Orbit around a point.
