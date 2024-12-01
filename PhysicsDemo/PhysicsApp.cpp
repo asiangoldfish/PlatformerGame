@@ -237,6 +237,13 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         altBtnJustPressed = false;
         isLeftAltPressed = false;
         getCameraController()->getPerspectiveCamera()->setEnablePanning(true);
+        
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
     }
 
     // Camera panning
@@ -260,9 +267,9 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     }
 }
 void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
-    glm::vec2 diff = glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
     auto controller = getCameraController();
-
+    auto camera = controller->getPerspectiveCamera();
+    glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
     float dt = getTimer().getDeltaTime();
 
     /*
@@ -286,8 +293,8 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             // vector.
             // TODO: Fix panning so the direction is dependent on camera front
             controller->setPosition(
-              { savedCameraPosition.x + diff.x * 0.1f * dt,
-                savedCameraPosition.y - diff.y * 0.1f * dt,
+              { savedCameraPosition.x + difference.x * 0.1f * dt,
+                savedCameraPosition.y - difference.y * 0.1f * dt,
                 controller->getPosition().z });
 
         } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
@@ -299,7 +306,7 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             // in screen space.
 
             // Assume that the distance is in degrees
-            glm::vec2 distance = diff * cameraRotationSpeed * 0.01f;
+            glm::vec2 distance = difference * cameraRotationSpeed * 0.01f;
 
             cameraDistance =
               glm::distance(glm::vec3(0.0f),
@@ -307,18 +314,30 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
                                       0.0f,
                                       controller->getPosition().z));
 
-            controller->getPerspectiveCamera()->setEnablePanning(false);
-
+            camera->setEnablePanning(false);
+                
             controller->setPositionX(std::cos(glm::radians(distance.x)) *
-                                     cameraDistance);
+                                        cameraDistance);
             controller->setPositionY(std::sin(glm::radians(distance.y)) *
-                                     cameraDistance);
+                                        cameraDistance);
             controller->setPositionZ(std::sin(glm::radians(distance.x)) *
-                                     cameraDistance);
+                                        cameraDistance);
+                                        
+            // ---------------------
+            // Current development
 
-            // Centralize mouse cursor on screen
-            //            centralizeCursorInWindow();
-            //            controller->getPerspectiveCamera()->setEnablePanning(true);
+            float x = -getCameraController()->getPosition().x;
+            float y = -getCameraController()->getPosition().y;
+            float z = -getCameraController()->getPosition().z;
+
+            // https://stackoverflow.com/a/33790309
+            glm::vec3 d = glm::normalize(glm::vec3(x, y, z));
+            float pitch = glm::degrees(asin(d.y));
+            float yaw = glm::degrees(atan2(d.z, d.x));
+            // camera->setRotation({ yaw, pitch });
+
+            getCameraController()->getPerspectiveCamera()->setRotation({yaw, pitch});
+            
         } else {
             // None: Panning and tilting.
             /*
@@ -327,15 +346,13 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
              * determine how much to rotate the camera by.
              */
             float cameraRotationSpeed = 0.05f;
-            glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
 
-            auto cam = getCameraController()->getPerspectiveCamera();
             difference.y *= -1;
             glm::vec2 newRotation =
               glm::vec2(cameraCurrentYaw, cameraCurrentPitch) +
               difference * cameraRotationSpeed;
 
-            cam->setRotation(newRotation);
+            camera->setRotation(newRotation);
         }
     }
 }
