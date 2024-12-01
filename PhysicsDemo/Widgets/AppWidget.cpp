@@ -74,6 +74,7 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
         return glm::vec2{ viewportSize.x, viewportSize.y };
     }
 
+    ImGui::End();
     return glm::vec2{};
 }
 
