@@ -88,10 +88,6 @@ void sceneTreeEntry(FW::Entity* entity) {
     ImGui::PushID(entity->name.c_str());
     if (ImGui::TreeNode(entity->name.c_str()))
     {
-        // ImGui::Text("blah blah");
-        // ImGui::SameLine();
-        // if (ImGui::SmallButton("button")) {}
-
         for (auto child: entity->getChildren()) {
             sceneTreeEntry(child);
         }

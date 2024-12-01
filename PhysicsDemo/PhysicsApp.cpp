@@ -10,6 +10,12 @@
 // App Components
 #include "WorldGrid.h"
 
+void setCameraPositionAndYaw(GLFWwindow* window,
+                             glm::vec2& savedCursorPosition,
+                             FW::PerspectiveCamera& camera,
+                             float& pitch,
+                             float& yaw);
+
 bool PhysicsApp::init() {
     // ------
     // Configure application
@@ -193,11 +199,20 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     // CONTROL
     FW::Input::updateModKeyState(key, action);
 
-    if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
-        // Saved current mouse cursor
-        double xpos, ypos;
-        glfwGetCursorPos(getWindow(), &xpos, &ypos);
-        savedCursorPosition = glm::vec2(xpos, ypos);
+    // if (FW::Input::isKeyJustPressed(FW_KEY_LEFT_SHIFT)) {
+    //     // Saved current mouse cursor
+    //     double xpos, ypos;
+    //     glfwGetCursorPos(getWindow(), &xpos, &ypos);
+    //     savedCursorPosition = glm::vec2(xpos, ypos);
+    // } 
+    // else 
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
     }
 
     static bool altBtnJustPressed = false;
@@ -222,6 +237,13 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         altBtnJustPressed = false;
         isLeftAltPressed = false;
         getCameraController()->getPerspectiveCamera()->setEnablePanning(true);
+        
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
     }
 
     // Camera panning
@@ -229,14 +251,26 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         !ctrlBtnJustPressed) {
         ctrlBtnJustPressed = true;
         isLeftCtrlPressed = true;
-        savedCursorPosition = glm::vec2(savedX, savedY);
+
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
+            
         savedCameraPosition = getCameraController()->getPosition();
     }
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE) {
         ctrlBtnJustPressed = false;
         isLeftCtrlPressed = false;
-        savedCursorPosition = glm::vec2(savedX, savedY);
-        savedCameraPosition = getCameraController()->getPosition();
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
+        // savedCameraPosition = getCameraController()->getPosition();
     }
 
     // Window shortcuts
@@ -245,9 +279,9 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     }
 }
 void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
-    glm::vec2 diff = glm::vec2((float)xpos, (float)ypos) - savedCursorPosition;
     auto controller = getCameraController();
-
+    auto camera = controller->getPerspectiveCamera();
+    glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
     float dt = getTimer().getDeltaTime();
 
     /*
@@ -267,13 +301,27 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             centralizeCursorInWindow();
         } else if (FW::Input::isModKeyCombinationPressed(
                      FW_KEY_LEFT_CONTROL_BIT)) {
-            // Control: Two-dimensional movement based on the currently front
-            // vector.
-            // TODO: Fix panning so the direction is dependent on camera front
-            controller->setPosition(
-              { savedCameraPosition.x + diff.x * 0.1f * dt,
-                savedCameraPosition.y - diff.y * 0.1f * dt,
-                controller->getPosition().z });
+            /* Pan the camera */
+
+            // We have to go through a few steps, because we must decompose the
+            // camera's forward vector to retrieve the right and up vectors.
+            // By doing this, we can walk in a crab-like motion.
+
+            glm::vec3 cameraFront = camera->getCameraFront(); // Forward vector
+            glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))); // Right vector
+            glm::vec3 cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront)); // Up vector
+
+            float panSpeed = 0.1f * dt;
+
+            glm::vec3 newPosition = camera->getPosition()
+                                    + cameraRight * (difference.x * panSpeed)
+                                    - cameraUp * (difference.y * panSpeed);
+
+            controller->setPosition(newPosition);
+
+            // We should save the new mouse position, because we compare
+            // the next frame's new mouse position to the saved cursor position.
+            glfwSetCursorPos(getWindow(), savedCursorPosition.x, savedCursorPosition.y);
 
         } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
             // Alt: Orbit around a point.
@@ -284,7 +332,7 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             // in screen space.
 
             // Assume that the distance is in degrees
-            glm::vec2 distance = diff * cameraRotationSpeed * 0.01f;
+            glm::vec2 distance = difference * cameraRotationSpeed * 0.01f;
 
             cameraDistance =
               glm::distance(glm::vec3(0.0f),
@@ -292,18 +340,30 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
                                       0.0f,
                                       controller->getPosition().z));
 
-            controller->getPerspectiveCamera()->setEnablePanning(false);
-
+            camera->setEnablePanning(false);
+                
             controller->setPositionX(std::cos(glm::radians(distance.x)) *
-                                     cameraDistance);
+                                        cameraDistance);
             controller->setPositionY(std::sin(glm::radians(distance.y)) *
-                                     cameraDistance);
+                                        cameraDistance);
             controller->setPositionZ(std::sin(glm::radians(distance.x)) *
-                                     cameraDistance);
+                                        cameraDistance);
+                                        
+            // ---------------------
+            // Current development
 
-            // Centralize mouse cursor on screen
-            //            centralizeCursorInWindow();
-            //            controller->getPerspectiveCamera()->setEnablePanning(true);
+            float x = -getCameraController()->getPosition().x;
+            float y = -getCameraController()->getPosition().y;
+            float z = -getCameraController()->getPosition().z;
+
+            // https://stackoverflow.com/a/33790309
+            glm::vec3 d = glm::normalize(glm::vec3(x, y, z));
+            float pitch = glm::degrees(asin(d.y));
+            float yaw = glm::degrees(atan2(d.z, d.x));
+            // camera->setRotation({ yaw, pitch });
+
+            getCameraController()->getPerspectiveCamera()->setRotation({yaw, pitch});
+            
         } else {
             // None: Panning and tilting.
             /*
@@ -312,14 +372,13 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
              * determine how much to rotate the camera by.
              */
             float cameraRotationSpeed = 0.05f;
-            glm::vec2 difference = glm::vec2(xpos, ypos) - savedCursorPosition;
-            auto cam = getCameraController()->getPerspectiveCamera();
+
             difference.y *= -1;
             glm::vec2 newRotation =
               glm::vec2(cameraCurrentYaw, cameraCurrentPitch) +
               difference * cameraRotationSpeed;
 
-            cam->setRotation(newRotation);
+            camera->setRotation(newRotation);
         }
     }
 }
@@ -338,15 +397,13 @@ void PhysicsApp::mouseButtonCallback(int button, int action, int mods) {
     if (glfwGetMouseButton(getWindow(), FW_MOUSE_BUTTON_RIGHT)) {
         isRightButtonMousePressed = true;
 
-        double x, y;
-
         if (!mbtn.right) {
-            glfwGetCursorPos(getWindow(), &x, &y);
-            savedCursorPosition = glm::vec2(x, y);
-            cameraCurrentYaw =
-              getCameraController()->getPerspectiveCamera()->getYaw();
-            cameraCurrentPitch =
-              getCameraController()->getPerspectiveCamera()->getPitch();
+            setCameraPositionAndYaw(
+              getWindow(),
+              savedCursorPosition,
+              *getCameraController()->getPerspectiveCamera(),
+              cameraCurrentPitch,
+              cameraCurrentYaw);
         }
     } else {
         isRightButtonMousePressed = false;
@@ -373,4 +430,23 @@ void PhysicsApp::framebufferSizeCallback(int width, int height) {
     // setWindowSize({ width, height });
     // getCameraController()->getPerspectiveCamera()->updateViewportSize(
     //   { width, height });
+}
+
+/**
+ * We use this function whenever we want to move the camera. It should be used
+ * at the beginning of moving the mouse, and at the end.
+ *
+ * This is a helper function.
+ */
+void setCameraPositionAndYaw(GLFWwindow* window,
+                             glm::vec2& savedCursorPosition,
+                             FW::PerspectiveCamera& camera,
+                             float& pitch,
+                             float& yaw) {
+
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    savedCursorPosition = glm::vec2(x, y);
+    yaw = camera.getYaw();
+    pitch = camera.getPitch();
 }

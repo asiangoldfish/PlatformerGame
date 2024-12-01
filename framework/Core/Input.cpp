@@ -159,7 +159,7 @@ namespace FW {
             return;
         }
 
-        if (action == GLFW_PRESS) {
+        if (action == GLFW_REPEAT || action == GLFW_PRESS) {
             currentKeyState |= FW_KEY_BIT(bitkey);
         } else {
             currentKeyState &= ~FW_KEY_BIT(bitkey);
