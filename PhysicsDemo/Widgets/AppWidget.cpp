@@ -283,6 +283,17 @@ void AppWidget::init(GLFWwindow* window) {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
 
+    // Because imgui stores the imgui.ini config in CWD by default, we want to
+    // store it in the user's local storage which is OS-dependent.
+    // TODO: Add support in the Engine to retrieve the user's local storage.
+    std::string userDataPath;
+    char* appdata = std::getenv("APPDATA");
+    if (appdata) {
+        userDataPath = std::string(appdata) + "\\PhysicsDemo\\imgui.ini";
+        io.IniFilename = NULL;
+        ImGui::LoadIniSettingsFromDisk(userDataPath.c_str());
+    }
+
     // -----
     // Configure ImGui
     // -----
@@ -426,6 +437,17 @@ void AppWidget::setFontSize(float size) {
 }
 
 AppWidget::~AppWidget() {
+    // We handle managing imgui.ini ourselves, because we have a custom
+    // location. Therefore we should save the config file before we shut down.
+    std::string userDataPath;
+    char* appdata = std::getenv("APPDATA");
+    if (appdata) {
+        ImGuiIO& io = ImGui::GetIO();
+        userDataPath = std::string(appdata) + "\\PhysicsDemo\\imgui.ini";
+        io.IniFilename = NULL;
+        ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
+    }
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
