@@ -251,14 +251,26 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         !ctrlBtnJustPressed) {
         ctrlBtnJustPressed = true;
         isLeftCtrlPressed = true;
-        savedCursorPosition = glm::vec2(savedX, savedY);
+
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
+            
         savedCameraPosition = getCameraController()->getPosition();
     }
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE) {
         ctrlBtnJustPressed = false;
         isLeftCtrlPressed = false;
-        savedCursorPosition = glm::vec2(savedX, savedY);
-        savedCameraPosition = getCameraController()->getPosition();
+        setCameraPositionAndYaw(
+            getWindow(),
+            savedCursorPosition,
+            *getCameraController()->getPerspectiveCamera(),
+            cameraCurrentPitch,
+            cameraCurrentYaw);
+        // savedCameraPosition = getCameraController()->getPosition();
     }
 
     // Window shortcuts
@@ -289,14 +301,26 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             centralizeCursorInWindow();
         } else if (FW::Input::isModKeyCombinationPressed(
                      FW_KEY_LEFT_CONTROL_BIT)) {
-            // Control: Two-dimensional movement based on the currently front
-            // vector.
-            // TODO: Fix panning so the direction is dependent on camera front
-            controller->setPosition(
-              { camera->getPosition().x + difference.x * 0.1f * dt,
-                camera->getPosition().y - difference.y * 0.1f * dt,
-                controller->getPosition().z });
+            /* Pan the camera */
 
+            // We have to go through a few steps, because we must decompose the
+            // camera's forward vector to retrieve the right and up vectors.
+            // By doing this, we can walk in a crab-like motion.
+
+            glm::vec3 cameraFront = camera->getCameraFront(); // Forward vector
+            glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))); // Right vector
+            glm::vec3 cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront)); // Up vector
+
+            float panSpeed = 0.1f * dt;
+
+            glm::vec3 newPosition = camera->getPosition()
+                                    + cameraRight * (difference.x * panSpeed)
+                                    - cameraUp * (difference.y * panSpeed);
+
+            controller->setPosition(newPosition);
+
+            // We should save the new mouse position, because we compare
+            // the next frame's new mouse position to the saved cursor position.
             glfwSetCursorPos(getWindow(), savedCursorPosition.x, savedCursorPosition.y);
 
         } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
