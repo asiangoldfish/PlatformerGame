@@ -101,16 +101,10 @@ public:
     glm::vec2 savedCursorPosition{ 0.0f };
     glm::vec2 savedCameraPosition{ 0.0f };
 
-    glm::vec2 cameraCenter{ 0.0f };
-    float cameraDegreesX = 0.0f;
-    float cameraDegreesY = 0.0f;
     float cameraDistance = 0.0f;
     float cameraRotationSpeed = 1.0f;
     float cameraCurrentYaw = 0.0f;
     float cameraCurrentPitch = 0.0f;
-
-    float savedCameraYaw = 0.0f;
-    float savedCameraPitch = 0.0f;
 
 private:
     FW::ref<FW::Shader> shader;
