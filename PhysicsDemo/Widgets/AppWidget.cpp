@@ -6,7 +6,7 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
-void sceneTreeEntry(FW::Entity* entity);
+void sceneTreeEntry(FW::ref<FW::Entity> entity);
 
 void AppWidget::beginDraw() {
     // Because some things must be set or defined before NewFrame is called, we
@@ -80,11 +80,11 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
 
 void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
     ImGui::Begin("SceneTree");
-    sceneTreeEntry(scene->getRoot().get());
+    sceneTreeEntry(scene->getRoot());
     ImGui::End();
 }
 
-void sceneTreeEntry(FW::Entity* entity) {
+void sceneTreeEntry(FW::ref<FW::Entity> entity) {
     ImGui::SetNextItemOpen(entity->getChildren().size(), ImGuiCond_Once);
     ImGui::PushID(entity->name.c_str());
     if (ImGui::TreeNode(entity->name.c_str()))

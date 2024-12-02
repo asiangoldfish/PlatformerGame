@@ -22,7 +22,7 @@ void PhysicsScene::init() {
     xformComponent->setShader(shader);
     xformComponent->init();
 
-    drawableEntity = new FW::Entity();
+    drawableEntity = FW::createRef<FW::Entity>();
     drawableEntity->addComponent(drawableComponent);
     drawableEntity->addComponent(xformComponent);
     drawableEntity->name = "Drawable Entity";

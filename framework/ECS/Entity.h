@@ -37,7 +37,7 @@ namespace FW {
 
         virtual ~Entity();
 
-        std::vector<Entity*>& getChildren() { return children; }
+        std::vector<ref<Entity>>& getChildren() { return children; }
 
         /**
          * Add a new parent.
@@ -55,7 +55,7 @@ namespace FW {
          * The entity is a node in a tree structure. By adding a child, we are
          * expanding the tree structure.
          */
-        void addChild(Entity* entity) { children.push_back(entity); }
+        void addChild(ref<Entity> entity) { children.push_back(entity); }
 
         /**
          * Remove a child at the i'th index.
@@ -63,9 +63,11 @@ namespace FW {
          * Please be cautious that removing a child will not delete it. It must
          * manually be deleted by the user.
          */
-        Entity* removeChildAt(int i) {
+        ref<Entity> removeChildAt(int i) {
             if (i < children.size()) {
-                return *children.erase(children.begin() + i);
+                ref<Entity> removedChild = children[i];
+                children.erase(children.begin() + i);
+                return removedChild;
             }
         }
 
@@ -75,7 +77,7 @@ namespace FW {
          * Please be cautious that removing a child will not delete it. It must
          * manually be deleted by the user.
          */
-        Entity* removeChildById(int id);
+        ref<Entity> removeChildById(int id);
 
         /**
          * Return the entity's unique identifier.
@@ -109,7 +111,7 @@ namespace FW {
 
     private:
         Entity* parent = nullptr;
-        std::vector<Entity*> children;
+        std::vector<ref<Entity>> children;
 
         /** Unique identifier. No other entity should have this id */
         int id = -1;

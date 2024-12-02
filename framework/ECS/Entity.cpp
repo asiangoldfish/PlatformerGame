@@ -31,13 +31,13 @@ namespace FW {
         }
     }
 
-    Entity* Entity::removeChildById(int id) {
+    ref<Entity> Entity::removeChildById(int id) {
         auto found = std::find_if(children.begin(),
                                   children.end(),
-                                  [id](Entity* e) { return e->getId() == id; });
+                                  [id](ref<Entity> e) { return e->getId() == id; });
 
         if (found != children.end()) {
-            Entity* e = *found;
+            ref<Entity> e = *found;
             children.erase(found);
             return e;
         } else {
@@ -46,8 +46,5 @@ namespace FW {
     }
 
     Entity::~Entity() {
-        for (auto& child : children) {
-            delete child;
-        }
     }
 } // Framework

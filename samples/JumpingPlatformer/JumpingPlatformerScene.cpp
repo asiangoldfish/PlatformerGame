@@ -8,4 +8,6 @@ void JumpingPlatformerScene::init() {}
 
 void JumpingPlatformerScene::cleanUp() {}
 
-void JumpingPlatformerScene::update(float delta) {}
+void JumpingPlatformerScene::update(float delta) {
+    
+}

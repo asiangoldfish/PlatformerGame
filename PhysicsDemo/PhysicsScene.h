@@ -15,6 +15,6 @@ public:
     FW::ref<FW::Shader> getShader() { return shader; }
     
 private:
-    FW::Entity* drawableEntity;
+    FW::ref<FW::Entity> drawableEntity;
     FW::ref<FW::Shader> shader;
 };
