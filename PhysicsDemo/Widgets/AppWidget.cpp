@@ -78,7 +78,7 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
     return glm::vec2{};
 }
 
-void AppWidget::drawSceneTree(FW::ref<FW::Scene> scene) {
+void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
     ImGui::Begin("SceneTree");
     sceneTreeEntry(scene->getRoot().get());
     ImGui::End();

@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "Framework.h"
 
-class PhysicsScene : public FW::Scene {
+class PhysicsScene : public FW::BaseScene {
 public:
     PhysicsScene();
     virtual ~PhysicsScene();

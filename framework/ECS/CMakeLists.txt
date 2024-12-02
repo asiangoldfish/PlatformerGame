@@ -3,7 +3,7 @@ project(FRAMEWORK_ECS)
 add_library(${PROJECT_NAME} STATIC
     Entity.cpp
     Shape.cpp
-    Scene.cpp
+    BaseScene.cpp
     Component.cpp
 )
 

@@ -53,7 +53,7 @@ public:
     glm::vec2 drawViewport(uint32_t framebufferID);
 
     /** Draw a tree hierarchy with scenes and its entities */
-    void drawSceneTree(FW::ref<FW::Scene> scene);
+    void drawSceneTree(FW::ref<FW::BaseScene> scene);
 
     /** Set the base font size across all widgets */
     void setFontSize(float size);

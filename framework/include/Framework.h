@@ -36,7 +36,7 @@
 
 // ECS
 #include "Entity.h"
-#include "Scene.h"
+#include "BaseScene.h"
 #include "Component.h"
 #include "Shape.h"
 

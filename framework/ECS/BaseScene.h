@@ -10,10 +10,10 @@ namespace FW {
  * A scene can only have one direct child node. To build out the scene, users
  * must add child nodes to the scene root node.
  */
-class Scene {
+class BaseScene {
 public:
-    Scene() = default;
-    virtual ~Scene();
+    BaseScene() = default;
+    virtual ~BaseScene();
     virtual void init();
     virtual void cleanUp() = 0;
     virtual void update(float delta);

@@ -1,12 +1,12 @@
 #include "PhysicsScene.h"
-#include "Scene.h"
+#include "BaseScene.h"
 
 PhysicsScene::PhysicsScene() {}
 
 PhysicsScene::~PhysicsScene() {}
 
 void PhysicsScene::init() {
-    FW::Scene::init();
+    FW::BaseScene::init();
 
     FW::ref<FW::PrimitiveCube> shape = FW::createRef<FW::PrimitiveCube>();
     shape->init();
@@ -32,5 +32,5 @@ void PhysicsScene::init() {
 void PhysicsScene::cleanUp() {}
 
 void PhysicsScene::update(float delta) {
-    FW::Scene::update(delta);
+    FW::BaseScene::update(delta);
 }

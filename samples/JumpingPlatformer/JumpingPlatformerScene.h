@@ -2,7 +2,7 @@
 
 #include "Framework.h"
 
-class JumpingPlatformerScene : public FW::Scene {
+class JumpingPlatformerScene : public FW::BaseScene {
 public:
     JumpingPlatformerScene();
     virtual ~JumpingPlatformerScene();
