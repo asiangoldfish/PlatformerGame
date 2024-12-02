@@ -1,0 +1,3 @@
+project(sample_projects)
+
+add_subdirectory(JumpingPlatformer)

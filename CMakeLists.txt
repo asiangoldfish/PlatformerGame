@@ -48,3 +48,6 @@ add_subdirectory(PhysicsDemo)
 
 # External framework that I contributed to
 add_subdirectory(framework)
+
+# Sample projects
+add_subdirectory(samples)
