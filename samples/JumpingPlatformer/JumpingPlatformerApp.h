@@ -25,7 +25,6 @@ public:
 
 private:
     FW::Timer timer;
-
     FW::ref<JumpingPlatformerScene> scene;
 };
 

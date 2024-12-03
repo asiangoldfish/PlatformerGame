@@ -4,7 +4,9 @@ JumpingPlatformerScene::JumpingPlatformerScene() {}
 
 JumpingPlatformerScene::~JumpingPlatformerScene() {}
 
-void JumpingPlatformerScene::init() {}
+void JumpingPlatformerScene::init() {
+    // shader->create()
+}
 
 void JumpingPlatformerScene::cleanUp() {}
 
