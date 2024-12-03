@@ -71,7 +71,7 @@ namespace FW {
             this->upVector = vec;
         }
 
-        void computeProjectionMatrix();
+        void computeProjectionMatrix() override;
         void update(const ref<Shader>& shader) override;
 
         void updateViewportSize(const glm::vec2& size) override;

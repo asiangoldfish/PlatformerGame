@@ -8,6 +8,8 @@
 class Sprite : public FW::Entity {
 public:
     Sprite();
+    
+    FW::ref<FW::Shader> getShader() { return spriteShader; }
 
 private:
     FW::ref<FW::TransformationComponent> transformationComponent;

@@ -7,9 +7,9 @@ layout(location = 2) in vec2 a_texCoord;
 layout(location = 3) in vec3 a_normal;
 
 // Model - view - projection
-uniform mat4 u_view;
-uniform mat4 u_projection;
-uniform mat4 u_model;
+uniform mat4 u_view = mat4(1.0f);
+uniform mat4 u_projection = mat4(1.0f);
+uniform mat4 u_model = mat4(1.0f);
 
 // Output variables down the OpenGL pipeline...
 out vec3 o_position;
@@ -27,5 +27,5 @@ void main() {
     // We fetch the rotation matrix from normal. This way, we prevent changing its direction.
     o_normal = mat3(transpose(inverse(u_model))) * a_normal;
 
-    gl_Position = vec4(a_position, 1.0); // u_projection * u_view * u_model * vec4(a_position, 1.0);
+    gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 }

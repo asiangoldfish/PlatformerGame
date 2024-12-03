@@ -5,8 +5,8 @@
 
 class JumpingPlatformerScene : public FW::BaseScene {
 public:
-    JumpingPlatformerScene();
-    virtual ~JumpingPlatformerScene();
+    JumpingPlatformerScene() = default;
+    virtual ~JumpingPlatformerScene() = default;
     virtual void init();
     virtual void cleanUp();
     virtual void update(float delta) override;
@@ -15,6 +15,7 @@ public:
     FW::ref<FW::Shader> getShader() { return shader; }
     
 private:
-    FW::ref<Sprite> drawableEntity;
+    FW::ref<Sprite> playerSprite;
     FW::ref<FW::Shader> shader;
+    FW::ref<FW::OrthographicCamera> camera;
 };

@@ -74,6 +74,11 @@ namespace FW {
 
         const glm::vec3& getCameraFront() { return cameraFront; }
 
+        /**
+         * Computes the camera's projection matrix.
+         */
+        virtual void computeProjectionMatrix() = 0;
+
     private:
         /**
          * @brief Computes the camera's front vector and view matrix
