@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Entity.h"
+#include "Viewport.h"
 
 namespace FW {
 /** A scene is a game state. It is the overall supervisor of all things that
@@ -19,7 +20,11 @@ public:
     virtual void update(float delta);
 
     ref<Entity> getRoot() { return root; }
+    ref<Viewport> getViewport() { return viewport; }
 protected:
     ref<Entity> root;
+
+private:
+    ref<Viewport> viewport;
 };
 } // namespace FW
