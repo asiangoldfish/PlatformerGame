@@ -1,14 +1,19 @@
 #pragma once
 
+#include "pch.h"
+
 #include "Shape.h"
 #include "Shader.h"
 #include "Material.h"
+
 
 namespace FW {
 
     class Component {
     public:
         Component() = default;
+        Component(std::string componentName)
+          : name(componentName) {}
         virtual ~Component() = default;
 
         /** Initialise the component. */
@@ -16,6 +21,9 @@ namespace FW {
 
         /** Update the component. Should be called once per frame. */
         virtual void update(float delta) = 0;
+
+    public:
+        std::string name;
     };
 
     /**
@@ -28,6 +36,10 @@ namespace FW {
      */
     class DrawableComponent : public Component {
     public:
+        DrawableComponent() = default;
+        DrawableComponent(std::string componentName)
+          : Component(componentName) {}
+
         virtual void init() override;
         virtual void update(float delta) override;
 
@@ -45,6 +57,10 @@ namespace FW {
 
     class TransformationComponent : public Component {
     public:
+        TransformationComponent() = default;
+        TransformationComponent(std::string componentName)
+          : Component(componentName) {}
+
         virtual void init() override;
         virtual void update(float delta) override;
         void setShader(ref<Shader> shader) { this->shader = shader; }

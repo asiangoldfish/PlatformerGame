@@ -105,6 +105,9 @@ namespace FW {
             components.push_back(component);
         }
 
+        /** Get the firstly found component by type `T`. */
+        ref<Component> getComponent(std::string componentName);
+
     public:
         /// The node's unique name. It is display name and identifier.
         std::string name;
