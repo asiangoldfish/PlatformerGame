@@ -16,10 +16,7 @@ Sprite::Sprite() {
     drawableComponent->setShader(spriteShader);
 
     FW::ref<FW::PrimitiveQuad> quadShape = FW::createRef<FW::PrimitiveQuad>();
-    quadShape->init();
     drawableComponent->setShape(quadShape);
-    drawableComponent->init();
 
     transformationComponent->setShader(spriteShader);
-    transformationComponent->init();
 }

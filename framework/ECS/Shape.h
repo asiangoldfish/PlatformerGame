@@ -58,7 +58,7 @@ namespace FW {
 
     class PrimitiveQuad : public Shape {
     public:
-        PrimitiveQuad() = default;
+        PrimitiveQuad();
         virtual void init();
 
     private:
