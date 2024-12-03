@@ -14,5 +14,5 @@ private:
     FW::ref<FW::DrawableComponent> drawableComponent;
 
     // TODO add physics component
-    FW::ref<Shader> spriteShader;
+    FW::ref<FW::Shader> spriteShader;
 };

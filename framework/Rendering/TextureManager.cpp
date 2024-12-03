@@ -4,7 +4,8 @@
 
 namespace FW {
     std::vector<ref<Texture>> TextureManager::textures;
-    uint32_t TextureManager::invalidTextureID = std::numeric_limits<uint32_t>::max();
+    uint32_t TextureManager::invalidTextureID =
+      std::numeric_limits<uint32_t>::max();
 
     void TextureManager::bind(const std::string& name,
                               int textureSlot)
@@ -34,7 +35,15 @@ namespace FW {
             index++;
         }
 
-        textures[0]->bind(textureSlot);
+        // The shader might expect a texture, and the first one should be a
+        // white texture
+        if (!textures.empty()) {
+            textures[0]->bind(textureSlot);
+        } 
+        // else {
+        //     WARN("TextureManager::bind(): The first texture should be white, "
+        //          "but no texture was found");
+        // }
     }
 
     uint32_t TextureManager::loadTexture2D(const std::string& name,

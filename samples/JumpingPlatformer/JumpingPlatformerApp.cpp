@@ -9,6 +9,9 @@ bool JumpingPlatformerApp::init() {
         return false;
     }
 
+    scene = FW::createRef<JumpingPlatformerScene>();
+    scene->init();
+
     return true;
 }
 
@@ -22,7 +25,7 @@ void JumpingPlatformerApp::run() {
 
         RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
         
-        // scene->update(timer.getDeltaTime());
+        scene->update(timer.getDeltaTime());
 
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();

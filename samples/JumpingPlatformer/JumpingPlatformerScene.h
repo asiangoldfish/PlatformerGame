@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Framework.h"
+#include "Sprite.h"
 
 class JumpingPlatformerScene : public FW::BaseScene {
 public:
@@ -14,6 +15,6 @@ public:
     FW::ref<FW::Shader> getShader() { return shader; }
     
 private:
-    FW::ref<FW::Entity> drawableEntity;
+    FW::ref<Sprite> drawableEntity;
     FW::ref<FW::Shader> shader;
 };

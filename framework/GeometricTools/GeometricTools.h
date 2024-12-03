@@ -47,6 +47,16 @@ namespace FW {
         -1.0f, 1.0f,  -1.0f, // D
     };
 
+    inline std::vector<float> UnitSpriteVertices = {
+        // Triangle 1       // Corners:
+        // Position            Colour                TexCoord        Normal
+        // X    Y     Z     R      G     B    A      U    V       X    Y    Z
+        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // A
+        0.5f,  -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // B
+        0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // C
+        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // D
+    };
+
     inline std::vector<uint32_t> UnitGridIndices2D = {
         0, 1, 2, 2, 3, 0,
     };

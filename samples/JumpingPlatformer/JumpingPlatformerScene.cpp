@@ -5,11 +5,13 @@ JumpingPlatformerScene::JumpingPlatformerScene() {}
 JumpingPlatformerScene::~JumpingPlatformerScene() {}
 
 void JumpingPlatformerScene::init() {
-    // shader->create()
+    FW::BaseScene::init();
+    drawableEntity = FW::createRef<Sprite>();
+    root->addChild(drawableEntity);
 }
 
 void JumpingPlatformerScene::cleanUp() {}
 
 void JumpingPlatformerScene::update(float delta) {
-    
+    FW::BaseScene::update(delta);
 }

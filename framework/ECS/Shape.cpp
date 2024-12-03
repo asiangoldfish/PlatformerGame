@@ -35,4 +35,12 @@ namespace FW {
 
         createBuffers();
     }
+
+    void PrimitiveQuad::init() {
+        // vertices = UnitGridGeometry2D();
+        vertices = UnitSpriteVertices;
+        indices = UnitGridIndices2D;
+
+        createBuffers();
+    }
 }

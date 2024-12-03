@@ -9,6 +9,7 @@ out/
 
 # CMake
 .cache/
+CMakeFiles/
 
 # Debugging
 dump

@@ -27,5 +27,5 @@ void main() {
     // We fetch the rotation matrix from normal. This way, we prevent changing its direction.
     o_normal = mat3(transpose(inverse(u_model))) * a_normal;
 
-    gl_Position =  u_projection * u_view * u_model * vec4(a_position, 1.0);
+    gl_Position = vec4(a_position, 1.0); // u_projection * u_view * u_model * vec4(a_position, 1.0);
 }

@@ -12,8 +12,10 @@ out vec4 FragColor;
 uniform vec4 u_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 void main() {
-    vec4 tex = vec4(1.0f);
+    // vec4 tex = vec4(1.0f);
 
-    tex = texture(u_material.diffuse, o_texCoord).rgba;
-    FragColor = mix(tex, o_color * u_color, 0.4);
+    // tex = texture(u_material.diffuse, o_texCoord).rgba;
+    // FragColor = mix(tex, o_color * u_color, 0.4);
+
+    FragColor = vec4(1.0f, 0.5f, 1.0f, 1.0f);
 }

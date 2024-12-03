@@ -88,9 +88,11 @@ namespace FW {
                     break;
             }
 
-            std::cout << "ERROR::SHADER::" << typeName
-                      << "::COMPILATION_FAILED\n"
-                      << infoLog << std::endl;
+            FATAL(
+              "ERROR::SHADER::{0}::COMPILATION_FAILED\n{1}", typeName, infoLog);
+            // std::cout << "ERROR::SHADER::" << typeName
+                    //   << "::COMPILATION_FAILED\n"
+                    //   << infoLog << std::endl;
 
             framework_assert();
         }
