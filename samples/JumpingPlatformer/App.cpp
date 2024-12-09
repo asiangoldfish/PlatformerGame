@@ -1,4 +1,4 @@
-#include "JumpingPlatformerApp.h"
+#include "App.h"
 
 JumpingPlatformerApp::~JumpingPlatformerApp() {
     FW::TextureManager::clearTextures();

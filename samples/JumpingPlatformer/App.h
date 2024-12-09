@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Framework.h"
-#include "JumpingPlatformerScene.h"
+#include "Scene.h"
 
 class JumpingPlatformerApp : public FW::GLFWApplication {
 public:

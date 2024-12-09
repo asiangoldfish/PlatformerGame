@@ -1,8 +1,8 @@
 project(SamplesJumpingPlatformer)
 
 add_executable(${PROJECT_NAME}
-    JumpingPlatformerApp.cpp
-    JumpingPlatformerScene.cpp
+    App.cpp
+    Scene.cpp
     Sprite.cpp
 )
 

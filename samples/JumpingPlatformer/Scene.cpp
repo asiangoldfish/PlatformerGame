@@ -1,4 +1,4 @@
-#include "JumpingPlatformerScene.h"
+#include "Scene.h"
 
 void JumpingPlatformerScene::init() {
     FW::BaseScene::init();
