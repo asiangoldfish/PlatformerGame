@@ -9,6 +9,8 @@ void JumpingPlatformerScene::init() {
 
     camera = FW::createRef<FW::OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
+    // Uncomment below to centralise the screen coordinates.
+    // camera->setCentraliseScreenCoordinates(true);
 }
 
 void JumpingPlatformerScene::cleanUp() {}

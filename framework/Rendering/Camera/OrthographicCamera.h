@@ -51,8 +51,20 @@ namespace FW {
         void setCameraSize(float x, float y);
 
         void computeProjectionMatrix() override;
+
+        /**
+         * Centralise the screen coordinates.
+         * 
+         * By default, (0, 0) is at the bottom left of the screen. If `true`,
+         * then (0, 0) is in the middle of the screen.
+         * 
+         * This function should be changed to
+         */
+        void setCentraliseScreenCoordinates(bool b);
+
     private:
         void computeViewMatrix() override;
+        bool centraliseScreenCoordinates = false;
 
     private:
         Frustum frustum;

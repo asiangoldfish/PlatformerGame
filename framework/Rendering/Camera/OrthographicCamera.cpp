@@ -30,8 +30,12 @@ namespace FW {
         shader->setFloat("u_farClip", frustum.far);
     }
 
-    void OrthographicCamera::computeViewMatrix()
-    {
+    void OrthographicCamera::setCentraliseScreenCoordinates(bool b) {
+        centraliseScreenCoordinates = b;
+        computeProjectionMatrix();
+    }
+
+    void OrthographicCamera::computeViewMatrix() {
         viewMatrix = glm::lookAt(position, { 0, 0, 1 }, { 0, 1, 0 });
     }
 
@@ -51,7 +55,17 @@ namespace FW {
     }
 
     void OrthographicCamera::computeProjectionMatrix() {
+        float left = centraliseScreenCoordinates ? -frustum.right : 0.0f;
+        float bottom = centraliseScreenCoordinates ? -frustum.top : 0.0f;
+
         projectionMatrix =
-          glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);
+          glm::ortho(
+            left,
+            frustum.right,
+            bottom,
+            frustum.top,
+            frustum.near,
+            frustum.far
+        );
     }
 }
