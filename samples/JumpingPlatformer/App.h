@@ -29,5 +29,5 @@ private:
 };
 
 FW::GLFWApplication* FW::createApplication() {
-    return new JumpingPlatformerApp("Game", "1.0.0", { 1280, 720 });
+    return new JumpingPlatformerApp("Jumping Platformer", "1.0.0", { 1280, 720 });
 }

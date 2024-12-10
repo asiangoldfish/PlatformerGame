@@ -1,9 +1,5 @@
 #include "App.h"
 
-JumpingPlatformerApp::~JumpingPlatformerApp() {
-    FW::TextureManager::clearTextures();
-}
-
 bool JumpingPlatformerApp::init() {
     if (!GLFWApplication::init()) {
         return false;
@@ -32,3 +28,6 @@ void JumpingPlatformerApp::run() {
     }
 }
 
+JumpingPlatformerApp::~JumpingPlatformerApp() {
+    FW::TextureManager::clearTextures();
+}
