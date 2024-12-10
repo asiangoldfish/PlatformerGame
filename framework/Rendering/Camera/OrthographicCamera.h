@@ -21,7 +21,7 @@ namespace FW {
         OrthographicCamera(const OrthographicCamera& other);
         OrthographicCamera(
             const Frustum& frustum = {
-                    0.0f, 1.0f, 0.0f, 1.0f, 0.1f, 10.0f
+                    0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 10.0f
             },
             // Because all entities in 2d are positioned by default at Z=0.0,
             // we should move the camera a little backward
