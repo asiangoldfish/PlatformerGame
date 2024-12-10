@@ -54,6 +54,18 @@ void FW::TransformationComponent::update(float delta) {
     shader->setMat4("u_model", modelMatrix);
 }
 
+void FW::TransformationComponent::setPosition(glm::vec3 position) {
+    this->position = position;
+    recalculateModelMatrix();
+}
+
+void FW::TransformationComponent::setScale(float x, float y, float z) {
+    scale.x = x;
+    scale.y = y;
+    scale.z = z;
+    recalculateModelMatrix();
+}
+
 void FW::TransformationComponent::recalculateModelMatrix() {
     modelMatrix = glm::mat4(1.0f);
         // Translation

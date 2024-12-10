@@ -23,7 +23,7 @@ void JumpingPlatformerApp::run() {
         
         glfwPollEvents();
 
-        RenderCommand::clear(GL_DEPTH_BUFFER_BIT);
+        RenderCommand::clear();
         
         scene->update(timer.getDeltaTime());
 

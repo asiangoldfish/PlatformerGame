@@ -64,7 +64,7 @@ namespace FW {
          *     glfwSetKeyCallback(window, keyCallback);
          *
          *     // To find if 'Q' was just pressed
-         *     if (FW::Input::isKeyJustPressed(FW::KEY_Q) {
+         *     if (FW::Input::isKeyJustPressed(FW_KEY_Q) {
          *         INFO("Key 'Q' just pressed!");
          * }
          * @endcode

@@ -65,7 +65,14 @@ namespace FW {
         virtual void update(float delta) override;
         void setShader(ref<Shader> shader) { this->shader = shader; }
 
+        void setPosition(glm::vec3 position);
+        glm::vec3 getPosition() { return position; }
+
+        void setScale(float x, float y, float z);
+        glm::vec3 getScale() { return scale; }
+
     private:
+        // TODO find some way to only recalculate model matrix once per frame.
         void recalculateModelMatrix();
 
     private:
