@@ -6,6 +6,7 @@ namespace FW {
       : Camera(other)
     {
         frustum = other.frustum;
+        computeProjectionMatrix();
     }
 
     OrthographicCamera::OrthographicCamera(
@@ -16,6 +17,8 @@ namespace FW {
         // Use the frustrum to construct the projection matrix
         projectionMatrix =
           glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);
+        
+        computeProjectionMatrix();
     }
 
     void OrthographicCamera::update(const ref<Shader>& shader) {
@@ -31,6 +34,22 @@ namespace FW {
     {
         viewMatrix = glm::lookAt(position, { 0, 0, 1 }, { 0, 1, 0 });
     }
+
+    void OrthographicCamera::updateViewportSize(const glm::vec2& size) {
+        frustum.right = size.x;
+        frustum.top = size.y;
+        glViewport(0, 0, size.x, size.y);
+
+        // We must compute the projection matrix again for the change to take
+        // effect.
+        computeProjectionMatrix();
+    }
+
+    void OrthographicCamera::setCameraSize(float x, float y) {
+        glm::vec2 newSize{x, y};
+        updateViewportSize(newSize);
+    }
+
     void OrthographicCamera::computeProjectionMatrix() {
         projectionMatrix =
           glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);

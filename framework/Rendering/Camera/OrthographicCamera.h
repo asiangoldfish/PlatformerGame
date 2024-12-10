@@ -32,10 +32,23 @@ namespace FW {
 
         void setFrustum(const Frustum& frust) {
             this->frustum = frust;
+            computeProjectionMatrix();
         }
+        
         [[nodiscard]] Frustum& getFrustum() { return frustum; }
 
-        void updateViewportSize(const glm::vec2& size) override {}
+        void updateViewportSize(const glm::vec2& size) override;
+
+        /**
+         * Set the camera sensor size to be `x` and `y`.
+         * 
+         * This value in pixels is usually the client window's size. It should
+         * reflect the render's output's size.
+         * 
+         * This method does not change the camera coordinates; it only impacts
+         * what screen coordinate is visible.
+         */
+        void setCameraSize(float x, float y);
 
         void computeProjectionMatrix() override;
     private:

@@ -2,11 +2,13 @@
 
 void JumpingPlatformerScene::init() {
     FW::BaseScene::init();
+
     playerSprite = FW::createRef<Sprite>();
+    playerSprite->setSize(300.f, 300.f);
     root->addChild(playerSprite);
+
     camera = FW::createRef<FW::OrthographicCamera>();
-    camera->computeProjectionMatrix();
-    getViewport()->setSize({ 720.0f, 720.0f });
+    camera->setCameraSize(1280.0f, 720.0f);
 }
 
 void JumpingPlatformerScene::cleanUp() {}
