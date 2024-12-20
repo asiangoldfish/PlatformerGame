@@ -23,6 +23,8 @@ public: // Transformations
 
     void setSize(float x, float y);
 
+    glm::vec2 getPosition();
+    void setPosition(float x, float y);
 
 private:
     FW::ref<FW::TransformationComponent> transformationComponent;

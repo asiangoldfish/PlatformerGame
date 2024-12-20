@@ -45,6 +45,9 @@
 // Physics
 #include "Physics.h"
 #include "ParticleSystem.h"
+#include "Force.h"
+#include "Solver.h"
+#include "PhysicsBody.h"
 
 // Resource Management
 //#include "Model.h"

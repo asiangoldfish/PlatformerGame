@@ -85,3 +85,5 @@ void FW::TransformationComponent::recalculateModelMatrix() {
         modelMatrix = glm::translate(modelMatrix, position) * newRotation *
                       glm::scale(modelMatrix, scale);
 }
+
+void FW::PhysicsComponent::update(float delta) {}

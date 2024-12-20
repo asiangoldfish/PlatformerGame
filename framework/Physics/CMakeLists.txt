@@ -1,8 +1,13 @@
 project(FRAMEWORK_PHYSICS)
 
 add_library(${PROJECT_NAME}
-    Physics.h           Physics.cpp
-    ParticleSystem.h    ParticleSystem.cpp
+    Physics.cpp
+    ParticleSystem.cpp
+
+    PhysicsServer.cpp
+    Solver.cpp
+    Force.cpp
+    PhysicsBody.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

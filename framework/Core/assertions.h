@@ -20,6 +20,15 @@
 #define __breakpoint() raise(SIGTRAP)
 #endif
 
+
+#include <cassert>
+
+// Production build should have #define NDEBUG
+
+// Use (void) to silence unused warnings.
+// https://en.cppreference.com/w/cpp/error/assert
+#define ASSERT(exp, msg) assert((void(msg), exp))
+
 /**
  * Raise a breakpoint whenever called.
  * @param msg Debug message to print on console.

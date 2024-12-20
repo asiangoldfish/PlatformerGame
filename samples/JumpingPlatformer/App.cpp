@@ -12,14 +12,14 @@ bool JumpingPlatformerApp::init() {
 }
 
 void JumpingPlatformerApp::run() {
-    timer.updateDeltaTime();
-
     while (!glfwWindowShouldClose(getWindow())) {
         timer.updateDeltaTime();
         
         glfwPollEvents();
 
         RenderCommand::clear();
+
+        physicsServer->update(timer.getDeltaTime());
         
         scene->update(timer.getDeltaTime());
 

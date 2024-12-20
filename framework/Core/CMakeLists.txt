@@ -27,6 +27,7 @@ PRIVATE
     glm
 
     FRAMEWORK_RENDERING
+    FRAMEWORK_PHYSICS
 
 PUBLIC
     spdlog

@@ -18,4 +18,8 @@ private:
     FW::ref<Sprite> playerSprite;
     FW::ref<FW::Shader> shader;
     FW::ref<FW::OrthographicCamera> camera;
+
+private: // Physics
+    FW::Physics::Solver mySolver;
+    FW::ref<FW::Physics::GravityForce> gravityForce;
 };

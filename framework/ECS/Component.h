@@ -84,10 +84,19 @@ namespace FW {
         glm::vec3 scale = glm::vec3{ 1.0f };
     };
 
+    /**
+     * The physics component brings physics capability to an `Entity`.
+     * 
+     * This class is tightly coupled with the Framework's Physics module. It
+     * acts as an adapter and enables entities to have physics properties.
+     */
     class PhysicsComponent : public Component {
     public:
         virtual void init() override;
         virtual void update(float delta) override;
+
+    private:
+        float gravity = 9.8067f;
     };
 
 } // namespace FW

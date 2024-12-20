@@ -34,3 +34,15 @@ void Sprite::moveBy(float x, float y) {
 void Sprite::setSize(float x, float y) {
     transformationComponent->setScale(x, y, 1.0f);
 }
+
+glm::vec2 Sprite::getPosition() {
+    return glm::vec2(
+        transformationComponent->getPosition().x,
+        transformationComponent->getPosition().y
+    );
+}
+
+void Sprite::setPosition(float x, float y) {
+    transformationComponent->setPosition(
+        { x, y, transformationComponent->getPosition().z });
+}
