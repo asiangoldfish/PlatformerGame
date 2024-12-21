@@ -20,30 +20,32 @@ void JumpingPlatformerScene::init() {
 void JumpingPlatformerScene::update(float delta) {
     camera->update(playerSprite->getShader());
 
-    // gravitational acceleration
-    float acc = -980.f;
-
     glm::vec2 moveBy(0.0f);
-    float speed = 3000.0f;
+    float speed = 10.0f;
+    float jump = 400.0f;
+    static bool isJumping = false;
 
-    if (FW::Input::isKeyPressed(FW_KEY_D)) {
-        moveBy.x += speed;
-    }
     
-    if (FW::Input::isKeyPressed(FW_KEY_A)) {
-        moveBy.x -= speed;
-    }
-    
-    if (FW::Input::isKeyPressed(FW_KEY_W)) {
-        moveBy.y += speed;
-    }
-    
-    moveBy.y += acc;
-
-    playerSprite->moveBy(moveBy * delta);
 
     if (playerSprite->getPosition().y < 100.0f) {
         playerSprite->setPosition(playerSprite->getPosition().x, 100.0f);
+        playerSprite->getPhysicsComponent()->getVelocity().y = 0.0f;
+        isJumping = false;
+    } else {
+        playerSprite->getPhysicsComponent()->getVelocity().y += -9.8f * delta;
+    }
+
+    if (FW::Input::isKeyPressed(FW_KEY_D) || FW::Input::isKeyPressed(FW_KEY_RIGHT)) {
+        playerSprite->addVelocity(speed * delta, 0.0f);
+    }
+
+    if (FW::Input::isKeyPressed(FW_KEY_A) || FW::Input::isKeyPressed(FW_KEY_LEFT)) {
+        playerSprite->addVelocity(-speed * delta, 0.0f);
+    }
+    
+    if (FW::Input::isKeyPressed(FW_KEY_W) && !isJumping) {
+        playerSprite->addVelocity(0.0f, jump * delta);
+        isJumping = true;
     }
 
     FW::BaseScene::update(delta);

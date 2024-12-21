@@ -13,6 +13,7 @@ public:
 
     void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
     FW::ref<FW::Shader> getShader() { return shader; }
+
     
 private:
     FW::ref<Sprite> playerSprite;
