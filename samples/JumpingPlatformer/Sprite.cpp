@@ -23,14 +23,10 @@ Sprite::Sprite() {
     physicsComponent = FW::createRef<FW::PhysicsComponent>();
 }
 
-void Sprite::moveBy(glm::vec2 moveBy) {
+void Sprite::moveBy(float x, float y) {
     glm::vec2 current = transformationComponent->getPosition();
     transformationComponent->setPosition(
-      { current.x + moveBy.x, current.y + moveBy.y, 0.0f });
-}
-
-void Sprite::moveBy(float x, float y) {
-    moveBy(glm::vec2(x, y));
+      { current.x + x, current.y + y, 0.0f });
 }
 
 void Sprite::setSize(float x, float y) {
@@ -54,7 +50,7 @@ void Sprite::update(float delta) {
     // ourselves.
 
     auto velocity = physicsComponent->getVelocity();
-    moveBy(glm::vec2{ velocity.x, velocity.y });
+    moveBy(velocity.x, velocity.y);
 }
 
 void Sprite::addVelocity(float x, float y) {
