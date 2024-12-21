@@ -6,7 +6,6 @@
 #include "Shader.h"
 #include "Material.h"
 
-
 namespace FW {
 
     class Component {
@@ -45,6 +44,7 @@ namespace FW {
 
         void setShape(ref<Shape> shape) { this->shape = shape; }
         void setShader(ref<Shader> shader) { this->shader = shader; }
+
     private:
         void draw();
 
@@ -84,10 +84,31 @@ namespace FW {
         glm::vec3 scale = glm::vec3{ 1.0f };
     };
 
+    /**
+     * The physics component brings physics capability to an `Entity`.
+     *
+     * This class is tightly coupled with the Framework's Physics module. It
+     * acts as an adapter and enables entities to have physics properties.
+     */
     class PhysicsComponent : public Component {
     public:
-        virtual void init() override;
+        virtual void init() override {};
         virtual void update(float delta) override;
+        
+        /**
+         * Update the current velocity with new values. To add velocity, see
+         * PhysicsComponent::addVelocity(...).
+         */
+        void setVelocity(float x, float y, float z);
+        glm::vec3& getVelocity() {
+            return velocity;
+        }
+        void addVelocity(float x, float y, float z);
+        void addVelocity(float x, float y);
+
+    private:
+        float gravity = 9.8067f;
+        glm::vec3 velocity{ 0.0f };
     };
 
 } // namespace FW

@@ -24,7 +24,6 @@ public:
     virtual void framebufferSizeCallback(int width, int height) {}
 
 private:
-    FW::Timer timer;
     FW::ref<JumpingPlatformerScene> scene;
 };
 

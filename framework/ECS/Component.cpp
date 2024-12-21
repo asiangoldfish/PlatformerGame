@@ -85,3 +85,25 @@ void FW::TransformationComponent::recalculateModelMatrix() {
         modelMatrix = glm::translate(modelMatrix, position) * newRotation *
                       glm::scale(modelMatrix, scale);
 }
+
+void FW::PhysicsComponent::update(float delta) {
+    // Gravity
+    // velocity.y -= gravity;
+}
+
+void FW::PhysicsComponent::setVelocity(float x, float y, float z) {
+    velocity.x = x;
+    velocity.y = y;
+    velocity.z = z;
+}
+
+void FW::PhysicsComponent::addVelocity(float x, float y, float z) {
+    velocity.x += x;
+    velocity.y += y;
+    velocity.z += z;
+}
+
+void FW::PhysicsComponent::addVelocity(float x, float y) {
+    velocity.x += x;
+    velocity.y += y;
+}

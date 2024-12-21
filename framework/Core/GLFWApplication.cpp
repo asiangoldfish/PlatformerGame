@@ -107,6 +107,13 @@ namespace FW {
             INFO("Created game directories");
         }
 
+        /* Physics */
+        physicsServer = createScope<Physics::PhysicsServer>();
+        physicsServer->stepSize = 1;
+
+        /* Time */
+        timer.updateDeltaTime();
+
         INFO("GLFWApplication \'{}\' successfully initiated", appName);
 
         return true;

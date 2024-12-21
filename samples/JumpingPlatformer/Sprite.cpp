@@ -19,18 +19,40 @@ Sprite::Sprite() {
     drawableComponent->setShape(quadShape);
 
     transformationComponent->setShader(spriteShader);
-}
 
-void Sprite::moveBy(glm::vec2 moveBy) {
-    glm::vec2 current = transformationComponent->getPosition();
-    transformationComponent->setPosition({ 
-        current.x + moveBy.x, current.y + moveBy.y, 0.0f });
+    physicsComponent = FW::createRef<FW::PhysicsComponent>();
 }
 
 void Sprite::moveBy(float x, float y) {
-    moveBy(glm::vec2(x, y));
+    glm::vec2 current = transformationComponent->getPosition();
+    transformationComponent->setPosition(
+      { current.x + x, current.y + y, 0.0f });
 }
 
 void Sprite::setSize(float x, float y) {
     transformationComponent->setScale(x, y, 1.0f);
+}
+
+glm::vec2 Sprite::getPosition() {
+    return glm::vec2(transformationComponent->getPosition().x,
+                     transformationComponent->getPosition().y);
+}
+
+void Sprite::setPosition(float x, float y) {
+    transformationComponent->setPosition(
+      { x, y, transformationComponent->getPosition().z });
+}
+
+void Sprite::update(float delta) {
+    Entity::update(delta);
+    // Because the PhysicsComponent and TransformationComponent are independent
+    // and know nothing about each other, we must handle position update
+    // ourselves.
+
+    auto velocity = physicsComponent->getVelocity();
+    moveBy(velocity.x, velocity.y);
+}
+
+void Sprite::addVelocity(float x, float y) {
+    physicsComponent->addVelocity(x, y);
 }
