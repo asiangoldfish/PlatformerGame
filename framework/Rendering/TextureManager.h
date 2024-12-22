@@ -50,16 +50,12 @@ namespace FW {
      * TextureManager::bind(foo2ID, 0);
      * @endcode
      */
-    class TextureManager
-    {
+    class TextureManager {
     public:
-        struct TexturePath
-        {
+        struct TexturePath {
             TexturePath(std::string name, std::string filePath)
               : name(name)
-              , filePath(filePath)
-            {
-            }
+              , filePath(filePath) {}
 
             std::string name;
             std::string filePath;
@@ -142,7 +138,8 @@ namespace FW {
         /**
          * Get the texture's ID by name.
          * @param name The texture's name
-         * @return If the texture exists, then its ID is returned. Otherwise <u>invalidTextureID</u> is returned.
+         * @return If the texture exists, then its ID is returned. Otherwise
+         * <u>invalidTextureID</u> is returned.
          */
         static uint32_t getTextureID(const std::string& name);
 

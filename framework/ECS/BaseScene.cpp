@@ -1,7 +1,6 @@
 #include "BaseScene.h"
 
-FW::BaseScene::~BaseScene() {
-}
+FW::BaseScene::~BaseScene() {}
 
 void FW::BaseScene::init() {
     root = createRef<Entity>();

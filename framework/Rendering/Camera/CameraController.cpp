@@ -10,8 +10,7 @@ namespace FW {
     }
 
     CameraController::CameraController(CameraType type)
-      : cameraType(type)
-    {
+      : cameraType(type) {
         /*
          * Based on the selected camera, instantiate the correct type.
          */
@@ -29,33 +28,27 @@ namespace FW {
         }
     }
 
-    void CameraController::addRotation(glm::vec2 value)
-    {
+    void CameraController::addRotation(glm::vec2 value) {
         selectedCamera->rotate(value);
     }
 
-    void CameraController::setRotation(glm::vec2 value)
-    {
+    void CameraController::setRotation(glm::vec2 value) {
         selectedCamera->setRotation(value);
     }
 
-    void CameraController::moveSideway(float value)
-    {
+    void CameraController::moveSideway(float value) {
         selectedCamera->moveSideway(value * movementSpeed);
     }
 
-    void CameraController::moveForward(float value)
-    {
+    void CameraController::moveForward(float value) {
         selectedCamera->moveForward(value * movementSpeed);
     }
 
-    void CameraController::moveUp(float value)
-    {
+    void CameraController::moveUp(float value) {
         selectedCamera->moveUp(value * movementSpeed);
     }
 
-    const glm::vec3 CameraController::getPosition() const
-    {
+    const glm::vec3 CameraController::getPosition() const {
         if (selectedCamera) {
             return selectedCamera->getPosition();
         }
@@ -63,31 +56,26 @@ namespace FW {
         return glm::vec3{ 0.0f };
     }
 
-    void CameraController::setPosition(glm::vec3 newPosition)
-    {
+    void CameraController::setPosition(glm::vec3 newPosition) {
         if (selectedCamera) {
             selectedCamera->setPosition(newPosition);
         }
     }
 
-    void CameraController::setPositionX(const float value)
-    {
+    void CameraController::setPositionX(const float value) {
         auto pos = selectedCamera->getPosition();
         setPosition(glm::vec3{ value, pos.y, pos.z });
     }
-    void CameraController::setPositionY(const float value)
-    {
+    void CameraController::setPositionY(const float value) {
         auto pos = selectedCamera->getPosition();
         setPosition(glm::vec3{ pos.x, value, pos.z });
     }
-    void CameraController::setPositionZ(const float value)
-    {
+    void CameraController::setPositionZ(const float value) {
         auto pos = selectedCamera->getPosition();
         setPosition(glm::vec3{ pos.x, pos.y, value });
     }
 
-    float CameraController::getNearClip()
-    {
+    float CameraController::getNearClip() {
         if (selectedCamera == (Camera*)perspectiveCamera.get()) {
             return perspectiveCamera->getFrustum().nearClip;
         } else {
@@ -95,8 +83,7 @@ namespace FW {
         }
     }
 
-    void CameraController::setNearClip(const float near)
-    {
+    void CameraController::setNearClip(const float near) {
         if (selectedCamera == (Camera*)perspectiveCamera.get()) {
             perspectiveCamera->getFrustum().nearClip = near;
         } else {
@@ -104,8 +91,7 @@ namespace FW {
         }
     }
 
-    float CameraController::getFarClip()
-    {
+    float CameraController::getFarClip() {
         if (selectedCamera == (Camera*)perspectiveCamera.get()) {
             return perspectiveCamera->getFrustum().farClip;
         } else {
@@ -113,16 +99,14 @@ namespace FW {
         }
     }
 
-    void CameraController::setFarClip(const float far)
-    {
+    void CameraController::setFarClip(const float far) {
         if (selectedCamera == (Camera*)perspectiveCamera.get()) {
             perspectiveCamera->getFrustum().farClip = far;
         } else {
             orthographicCamera->getFrustum().far = far;
         }
     }
-    void CameraController::addMovement(glm::vec3 moveBy)
-    {
+    void CameraController::addMovement(glm::vec3 moveBy) {
         selectedCamera->setPosition(selectedCamera->getPosition() +
                                     glm::vec3(moveBy));
     }

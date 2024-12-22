@@ -4,8 +4,8 @@
 
 namespace FW {
 
-    class SpotLight : public Light
-    {
+    class SpotLight : public Light {
+    public:
         void draw(const ref<Shader>& shader) override;
 
     private:

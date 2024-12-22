@@ -3,9 +3,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest/doctest.h"
 
-int
-main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     // Configure doctest
     int res = 0;
 
@@ -15,9 +13,9 @@ main(int argc, char* argv[])
 
     context.applyCommandLine(argc, argv);
 
-    if(context.shouldExit()) // important - query flags (and --exit) rely on the
-                             // user doing this propagate the result of the 
-                             // tests
+    if (context.shouldExit()) // important - query flags (and --exit) rely on
+                              // the user doing this propagate the result of the
+                              // tests
         return res;
 #endif
 

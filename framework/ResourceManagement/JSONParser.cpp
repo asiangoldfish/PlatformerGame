@@ -21,19 +21,19 @@ namespace FW {
         // the data.
         userConfigPath = configHome + "/editor.json";
 
-        // We should convert / to \\ if we are on Windows, because Windows file
-        // paths require \\.
-        #if _WIN32
-        std::replace(userConfigPath.begin(), userConfigPath.end(), '/', '\\'); 
-        #endif
-
+// We should convert / to \\ if we are on Windows, because Windows file
+// paths require \\.
+#if _WIN32
+        std::replace(userConfigPath.begin(), userConfigPath.end(), '/', '\\');
+#endif
 
         std::ifstream file(userConfigPath);
         if (!file) {
             INFO("Copying configuration files");
             // https://stackoverflow.com/a/10195497
-            std::ifstream  src(std::string(CONFIG_DIR) + "editor.json", std::ios::binary);
-            std::ofstream  dst(userConfigPath,   std::ios::binary);
+            std::ifstream src(std::string(CONFIG_DIR) + "editor.json",
+                              std::ios::binary);
+            std::ofstream dst(userConfigPath, std::ios::binary);
 
             dst << src.rdbuf();
             file.open(userConfigPath);
@@ -88,26 +88,26 @@ namespace FW {
 
         std::string appName = "PhysicsDemo";
 
-        #ifdef _WIN32
-            // TODO error handling when APPDATA doesnt exist
-            char* appdata = std::getenv("APPDATA");
-            if (appdata) {
-                userDataPath = std::string(appdata) + "\\" + appName;
-            }
-        #elif __linux__
-            // TODO needs testing
-            // TODO needs error handling
-            char* configHome = std::getenv("XDG_CONFIG_HOME");
-            char* userHome = std::getenv("HOME");
-            char overrideXdgHome[9] = "/.config";
-            if (!configHome) {
-                configHome = strcat(userHome, overrideXdgHome);
-            }
-            
-            userDataPath = std::string(configHome) + "/" + appName;
-        #elif __APPLE__
-            FATAL("We do not support Apple devices");
-        #endif
+#ifdef _WIN32
+        // TODO error handling when APPDATA doesnt exist
+        char* appdata = std::getenv("APPDATA");
+        if (appdata) {
+            userDataPath = std::string(appdata) + "\\" + appName;
+        }
+#elif __linux__
+        // TODO needs testing
+        // TODO needs error handling
+        char* configHome = std::getenv("XDG_CONFIG_HOME");
+        char* userHome = std::getenv("HOME");
+        char overrideXdgHome[9] = "/.config";
+        if (!configHome) {
+            configHome = strcat(userHome, overrideXdgHome);
+        }
+
+        userDataPath = std::string(configHome) + "/" + appName;
+#elif __APPLE__
+        FATAL("We do not support Apple devices");
+#endif
 
         return userDataPath;
     }

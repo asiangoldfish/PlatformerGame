@@ -6,30 +6,21 @@
 #include "Buffer.h"
 #include "Memory.h"
 
-
 namespace RenderCommand {
     /**
      * List of supported modes in the fragment shader to render in.
      */
-    enum class VisualizeMode
-    {
+    enum class VisualizeMode {
         NORMAL = 0,    // All rendering effects are applied
         DEPTH_TESTING, // Visualize depth testing with a gray scale.
     };
 
     /** Render mode */
-    enum class PolygonMode
-    {
-        SOLID = 0,
-        WIREFRAME,
-        POINT
-    };
+    enum class PolygonMode { SOLID = 0, WIREFRAME, POINT };
 
-    struct QuadProperties
-    {};
+    struct QuadProperties {};
 
-    struct RenderingContext
-    {
+    struct RenderingContext {
         FW::ref<FW::VertexArray> vertexArray;
         FW::ref<FW::VertexBuffer> vertexBuffer;
         FW::ref<FW::IndexBuffer> indexBuffer;
@@ -53,8 +44,7 @@ namespace RenderCommand {
      * Tell OpenGL what color to put on the screen after clearing it.
      * @param color Background color to render.
      */
-    inline void setClearColor(glm::vec3 color)
-    {
+    inline void setClearColor(glm::vec3 color) {
         glClearColor(color.r, color.g, color.b, 1.0f);
     }
 
@@ -65,8 +55,7 @@ namespace RenderCommand {
      * OpenGL background.
      */
     inline void clear(GLuint mode = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-                                    GL_STENCIL_BUFFER_BIT)
-    {
+                                    GL_STENCIL_BUFFER_BIT) {
         glClear(mode);
     }
 
@@ -86,8 +75,7 @@ namespace RenderCommand {
                    GLenum primitive = GL_TRIANGLES);
 
     inline void drawIndex(const std::shared_ptr<FW::VertexArray>& vao,
-                          GLenum primitive = GL_TRIANGLES)
-    {
+                          GLenum primitive = GL_TRIANGLES) {
         drawIndex(*vao, primitive);
     }
 
@@ -101,8 +89,7 @@ namespace RenderCommand {
      * Note that depth testing must be enabled with glEnable(GL_DEPTH_TEST).
      * @param flag Enabled if set to GL_TRUE. Disabled if set to GL_FALSE
      */
-    inline void setDepthMask(GLboolean flag)
-    {
+    inline void setDepthMask(GLboolean flag) {
         glDepthMask(flag);
     }
 
@@ -124,8 +111,7 @@ namespace RenderCommand {
      * </ul>
      * @return The currently used function
      */
-    inline GLenum getCurrentDepthFunc()
-    {
+    inline GLenum getCurrentDepthFunc() {
         return currentlyUsedDepthFunc;
     }
 
@@ -144,8 +130,7 @@ namespace RenderCommand {
      * <li>GL_GEQUAL</li>
      * </ul>
      */
-    inline void setCurrentDepthFunc(GLenum func)
-    {
+    inline void setCurrentDepthFunc(GLenum func) {
         currentlyUsedDepthFunc = func;
     }
 }

@@ -32,16 +32,19 @@ namespace FW {
     }
 
     ref<Component> Entity::getComponent(std::string componentName) {
-        auto foundIterator = std::find_if(components.begin(), components.end(), [&](ref<Component> c) {
-            return c->name == componentName; });
+        auto foundIterator = std::find_if(
+          components.begin(), components.end(), [&](ref<Component> c) {
+              return c->name == componentName;
+          });
 
         return *foundIterator;
     }
 
     ref<Entity> Entity::removeChildById(int id) {
-        auto found = std::find_if(children.begin(),
-                                  children.end(),
-                                  [id](ref<Entity> e) { return e->getId() == id; });
+        auto found =
+          std::find_if(children.begin(), children.end(), [id](ref<Entity> e) {
+              return e->getId() == id;
+          });
 
         if (found != children.end()) {
             ref<Entity> e = *found;
@@ -52,6 +55,5 @@ namespace FW {
         }
     }
 
-    Entity::~Entity() {
-    }
+    Entity::~Entity() {}
 } // Framework

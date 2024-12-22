@@ -3,21 +3,19 @@
 
 namespace FW {
     OrthographicCamera::OrthographicCamera(const OrthographicCamera& other)
-      : Camera(other)
-    {
+      : Camera(other) {
         frustum = other.frustum;
         computeProjectionMatrix();
     }
 
     OrthographicCamera::OrthographicCamera(
       const OrthographicCamera::Frustum& frustum,
-      const glm::vec3& position)
-    {
+      const glm::vec3& position) {
         this->frustum = frustum;
         // Use the frustrum to construct the projection matrix
         projectionMatrix =
           glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);
-        
+
         computeProjectionMatrix();
     }
 
@@ -50,7 +48,7 @@ namespace FW {
     }
 
     void OrthographicCamera::setCameraSize(float x, float y) {
-        glm::vec2 newSize{x, y};
+        glm::vec2 newSize{ x, y };
         updateViewportSize(newSize);
     }
 
@@ -58,14 +56,7 @@ namespace FW {
         float left = centraliseScreenCoordinates ? -frustum.right : 0.0f;
         float bottom = centraliseScreenCoordinates ? -frustum.top : 0.0f;
 
-        projectionMatrix =
-          glm::ortho(
-            left,
-            frustum.right,
-            bottom,
-            frustum.top,
-            frustum.near,
-            frustum.far
-        );
+        projectionMatrix = glm::ortho(
+          left, frustum.right, bottom, frustum.top, frustum.near, frustum.far);
     }
 }

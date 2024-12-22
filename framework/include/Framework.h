@@ -28,12 +28,10 @@
 #include "TextureManager.h"
 #include "Viewport.h"
 
-
 #include "Light/DirectionalLight.h"
 #include "Light/PointLight.h"
 #include "Light/SpotLight.h"
 #include "Light/Skybox.h"
-
 
 // ECS
 #include "Entity.h"
@@ -49,5 +47,5 @@
 #include "PhysicsBody.h"
 
 // Resource Management
-//#include "Model.h"
+// #include "Model.h"
 #include "JSONParser.h"

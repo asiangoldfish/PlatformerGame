@@ -27,8 +27,7 @@
 #include "Skybox.h"
 
 namespace FW {
-    Skybox::Skybox(int textureId)
-    {
+    Skybox::Skybox(int textureId) {
         this->textureId = textureId;
 
         auto entityAttribLayout =
@@ -56,8 +55,7 @@ namespace FW {
     }
 
     // Draw itself and all child nodes.
-    void Skybox::draw(const ref<Shader>& shader)
-    {
+    void Skybox::draw(const ref<Shader>& shader) {
         shader->bind();
 
         // We want to change the depth testing before rendering the skybox. By
@@ -80,14 +78,12 @@ namespace FW {
         RenderCommand::setCurrentDepthFunc(oldDepthTestingFunc);
     }
 
-    void Skybox::recalculateModelMatrix()
-    {
+    void Skybox::recalculateModelMatrix() {
         modelMatrix = glm::translate(glm::mat4(1.0f), position) *
                       glm::scale(glm::mat4(1.0f), scale);
     }
 
-    Skybox::~Skybox()
-    {
+    Skybox::~Skybox() {
         delete vertexArray;
         vertexArray = nullptr;
     }

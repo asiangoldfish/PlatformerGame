@@ -21,15 +21,13 @@ static uint32_t rgbToHex(const glm::vec3& color) {
 }
 
 namespace FW {
-    Texture::~Texture()
-    {
+    Texture::~Texture() {
         glDeleteTextures(1, &textureID);
     }
 
     uint32_t Texture::createTexture(const std::string& name_,
                                     uint32_t hexColor,
-                                    glm::vec2 size)
-    {
+                                    glm::vec2 size) {
         // Set member variables
         type = TextureType::WhiteTexture;
         this->name = name_;
@@ -82,14 +80,12 @@ namespace FW {
 
     uint32_t Texture::createTexture(const std::string& name_,
                                     glm::vec3 color,
-                                    glm::vec2 size)
-    {
+                                    glm::vec2 size) {
         return createTexture(name_, rgbToHex(color), size);
     }
 
     uint32_t Texture::loadTexture2D(const std::string& name_,
-                                    const std::string& filepath_)
-    {
+                                    const std::string& filepath_) {
         // Set member variables
         filepath = filepath_;
         name = name_;
@@ -153,8 +149,7 @@ namespace FW {
     }
 
     uint32_t Texture::loadCubeMap(const std::string& name_,
-                                  const std::string& filepath_)
-    {
+                                  const std::string& filepath_) {
         std::vector<std::string> filePaths = {
             filepath_, filepath_, filepath_, filepath_, filepath_, filepath_
         };
@@ -162,8 +157,7 @@ namespace FW {
     };
 
     uint32_t Texture::loadCubeMap(const std::string& name_,
-                                  const std::vector<std::string>& filePaths)
-    {
+                                  const std::vector<std::string>& filePaths) {
         // Set member variables
         type = TextureType::CubeMap;
         textureTarget = GL_TEXTURE_CUBE_MAP;
@@ -211,8 +205,7 @@ namespace FW {
         return textureID;
     }
 
-    void Texture::bind(int textureSlot) const
-    {
+    void Texture::bind(int textureSlot) const {
         if (textureSlot < 0) {
             WARN("Texture::bind: textureSlot < 0. It must be >= 1.");
             return;

@@ -55,10 +55,10 @@ namespace FW {
         // don't recalculate the projection matrix if it indeed is too small.
         if (frustum.width / frustum.height > 0.1 && frustum.height > 0.0) {
             projectionMatrix =
-            glm::perspective(glm::radians(frustum.angle),
-                            (float)frustum.width / (float)frustum.height,
-                            frustum.nearClip,
-                            frustum.farClip);
+              glm::perspective(glm::radians(frustum.angle),
+                               (float)frustum.width / (float)frustum.height,
+                               frustum.nearClip,
+                               frustum.farClip);
         }
     }
 

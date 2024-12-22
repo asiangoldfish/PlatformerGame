@@ -15,10 +15,10 @@ namespace FW {
      *
      * // Read a variable
      * int width = jsonParser->get()["width"];
-     * 
+     *
      * // Set new width to 2.0f;
      * jsonParser->get()["width"] = 2.0f;
-     * 
+     *
      * // Write to the file
      * bool success = jsonParser->write();
      */
@@ -59,7 +59,7 @@ namespace FW {
          *
          * If the operation fails, then the function returns false. In DEBUG
          * mode, a traceback is additionally called and the program halts.
-         * 
+         *
          * @param prettified if true, then write to file with prettified format.
          */
         bool write(bool prettified = true);

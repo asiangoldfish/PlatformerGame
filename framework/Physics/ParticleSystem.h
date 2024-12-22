@@ -13,8 +13,7 @@
 namespace FW {
     class ParticleShape;
 
-    class Particle
-    {
+    class Particle {
     public:
         /**
          * Construct particle with default parameters.
@@ -75,8 +74,7 @@ namespace FW {
         glm::vec4 color{ 1.0f };
     };
 
-    class Emitter
-    {
+    class Emitter {
     public:
         Emitter();
         virtual ~Emitter() = default;
@@ -118,8 +116,7 @@ namespace FW {
          * @param min Minimum particle lifetime.
          * @param max Maximum particle lifetime.
          */
-        void setMaxLifetime(float min, float max)
-        {
+        void setMaxLifetime(float min, float max) {
             maxLifetime = glm::vec2(min, max);
         }
 
@@ -140,8 +137,7 @@ namespace FW {
          * @param min The minimum velocity
          * @param max The maximum velocity
          */
-        void setInitialVelocityX(float min, float max)
-        {
+        void setInitialVelocityX(float min, float max) {
             initialVelocityX = glm::vec2(min, max);
         }
 
@@ -151,8 +147,7 @@ namespace FW {
          * @param min The minimum velocity
          * @param max The maximum velocity
          */
-        void setInitialVelocityY(float min, float max)
-        {
+        void setInitialVelocityY(float min, float max) {
             initialVelocityY = glm::vec2(min, max);
         }
 
@@ -162,8 +157,7 @@ namespace FW {
          * @param min The minimum velocity
          * @param max The maximum velocity
          */
-        void setInitialVelocityZ(float min, float max)
-        {
+        void setInitialVelocityZ(float min, float max) {
             initialVelocityZ = glm::vec2(min, max);
         }
 
@@ -234,8 +228,7 @@ namespace FW {
         glm::mat4 modelMatrix;
     };
 
-    class ParticleShape
-    {
+    class ParticleShape {
     public:
         ParticleShape();
         virtual ~ParticleShape() = default;

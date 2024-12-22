@@ -22,7 +22,7 @@ namespace FW {
      */
     class Shape {
     public:
-        Shape() =  default;
+        Shape() = default;
         virtual void init() = 0;
 
         ref<VertexArray> getVertexArray() const { return vertexArray; }

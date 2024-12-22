@@ -19,25 +19,20 @@ namespace FW {
     class VertexBuffer;
     class IndexBuffer;
 
-
 #pragma region Buffer Layout
     /** An attribute for a Vertex Buffer Object. */
     struct BufferAttribute {
-        BufferAttribute(
-          ShaderDataType type,
-          const std::string& name,
-          GLboolean normalized = false
-          )
+        BufferAttribute(ShaderDataType type,
+                        const std::string& name,
+                        GLboolean normalized = false)
           : name(name)
           , type(type)
           , size(ShaderDataTypeSize(type))
           , offset(0)
-          , normalized(normalized)
-        {}
+          , normalized(normalized) {}
 
         /** Get the number of components that a type has */
-        uint32_t getComponentCount() const
-        {
+        uint32_t getComponentCount() const {
             switch (type) {
                 case ShaderDataType::Float:
                     return 1;
@@ -97,8 +92,7 @@ namespace FW {
     public:
         BufferLayout() = default;
         BufferLayout(const std::initializer_list<BufferAttribute>& attributes)
-          : attributes(attributes)
-        {
+          : attributes(attributes) {
             this->calculateOffsetAndStride();
         }
 
@@ -129,7 +123,7 @@ namespace FW {
         void calculateOffsetAndStride() {
             GLuint offset = 0;
             stride = 0;
-            for (auto& attribute: attributes) {
+            for (auto& attribute : attributes) {
                 attribute.offset = offset;
                 offset += attribute.size;
                 stride += attribute.size;
@@ -228,11 +222,9 @@ namespace FW {
     class VertexBuffer {
     public:
         // Data buffer is bound upon construction
-        VertexBuffer(
-          const void *vertices,
-          GLsizei size,
-          GLenum drawMethod = GL_STATIC_DRAW
-        );
+        VertexBuffer(const void* vertices,
+                     GLsizei size,
+                     GLenum drawMethod = GL_STATIC_DRAW);
         virtual ~VertexBuffer();
 
         void bind() const;
@@ -240,8 +232,9 @@ namespace FW {
 
         // Fill a specific segment of the buffer specified by an offset and size
         // with data
-        void bufferSubData(
-          GLintptr offset, GLsizeiptr size, const void *data) const;
+        void bufferSubData(GLintptr offset,
+                           GLsizeiptr size,
+                           const void* data) const;
 
         const BufferLayout& getLayout() const { return layout; }
         void setLayout(const BufferLayout& layout) { this->layout = layout; }
@@ -284,9 +277,7 @@ namespace FW {
         void unbind() const;
 
         /** Get the count of how many indices there are in this buffer */
-        inline GLuint getCount() const {
-            return count;
-        }
+        inline GLuint getCount() const { return count; }
 
         /**
          * Shorthand for creating a new IndexBuffer shared pointer.
@@ -307,8 +298,7 @@ namespace FW {
 #pragma endregion
 
 #pragma region Framebuffer
-    class Framebuffer
-    {
+    class Framebuffer {
     public:
         Framebuffer();
         virtual ~Framebuffer();
@@ -317,13 +307,15 @@ namespace FW {
         void unbind() const;
 
         void bindTexture() const;
-        [[nodiscard]] uint32_t getColorAttachment() const { return colorAttachment; }
+        [[nodiscard]] uint32_t getColorAttachment() const {
+            return colorAttachment;
+        }
 
         uint32_t getTexture() { return colorAttachment; }
 
         /**
          * Destroy the old framebuffer and create a new one.
-         * 
+         *
          * This is an expensive operation. Use only when actually required.
          */
         void resize(const glm::vec2& new_size);
@@ -334,7 +326,7 @@ namespace FW {
          * Create a new framebuffer
          * @param size set the frame buffer's size.
          */
-        void createFramebuffer(glm::vec2 size = glm::vec2{720, 480});
+        void createFramebuffer(glm::vec2 size = glm::vec2{ 720, 480 });
 
     private:
         /** The framebuffer's size */
