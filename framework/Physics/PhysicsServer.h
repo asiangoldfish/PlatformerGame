@@ -30,7 +30,9 @@ public:
      */
     void update(float delta);
 
-public:
+    void setStepSize(int stepSize);
+
+private:
     /**
      * Global step size.
      * 
@@ -41,7 +43,6 @@ public:
      */
     int stepSize = 1;
 
-private:
     std::vector<Solver> solvers;
 
 };
