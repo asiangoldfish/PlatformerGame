@@ -1,4 +1,5 @@
 #include "Buffer.h"
+#include "Log.h"
 
 namespace FW {
 #pragma region Vertex Array

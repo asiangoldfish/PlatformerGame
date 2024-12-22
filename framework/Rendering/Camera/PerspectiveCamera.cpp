@@ -7,6 +7,7 @@
 
 // Framework
 #include "PerspectiveCamera.h"
+#include "Log.h"
 
 namespace FW {
     PerspectiveCamera::PerspectiveCamera(

@@ -12,8 +12,5 @@
 #include <map>
 #include <vector>
 #include <iterator>
-
 #include <cstdlib>
-
-#include "Memory.h"
-#include "Core/Log.h"
+#include <cassert>

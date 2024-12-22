@@ -6,11 +6,12 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
 PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
+${CMAKE_CURRENT_SOURCE_DIR}
+PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PRIVATE
     glm
     glfw
     stb
@@ -18,6 +19,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json
 
     FRAMEWORK_RENDERING
+    FRAMEWORK_CORE
+    FRAMEWORK_UTIL
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

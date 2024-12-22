@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pch.h"
-
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace FW {

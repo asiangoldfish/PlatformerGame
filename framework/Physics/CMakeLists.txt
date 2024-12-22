@@ -1,6 +1,6 @@
 project(FRAMEWORK_PHYSICS)
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} STATIC
     Physics.cpp
     ParticleSystem.cpp
 
@@ -20,8 +20,8 @@ PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     glm
+    spdlog
 
-    FRAMEWORK_ECS
     FRAMEWORK_RENDERING
     FRAMEWORK_GEOMETRICTOOLS
     FRAMEWORK_UTIL

@@ -34,6 +34,9 @@ if(CMAKE_BUILD_TYPE MATCHES Release)
     set(CMAKE_CXX_FLAGS "-Wall -Wextra")
     set(CMAKE_CXX_FLAGS_DEBUG "-g")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+    # Disable asserts
+    add_compile_definitions(NDEBUG)
 endif(CMAKE_BUILD_TYPE MATCHES Release)
 
 if(DISABLE_TEST MATCHES true)
@@ -41,6 +44,9 @@ if(DISABLE_TEST MATCHES true)
     message("-- Disabling doctest")
     add_compile_definitions(DOCTEST_CONFIG_DISABLE)
 endif()
+
+# Doctest uses some macros we already use, like INFO and WARN
+add_compile_definitions(DOCTEST_CONFIG_NO_SHORT_MACRO_NAMES)
 
 
 

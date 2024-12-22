@@ -4,6 +4,8 @@
 
 // Framework
 #include "Buffer.h"
+#include "Memory.h"
+
 
 namespace RenderCommand {
     /**

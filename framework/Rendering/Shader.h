@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
+#include "Memory.h"
 #include "RenderCommands.h"
 
 //#define SHADER_LOCATION_OUTPUT

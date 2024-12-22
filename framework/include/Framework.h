@@ -11,7 +11,6 @@
 #include "Input.h"
 #include "Log.h"
 #include "Timer.h"
-#include "assertions.h"
 #include "EntryPoint.h"
 
 // Geometric Tools
@@ -52,6 +51,3 @@
 // Resource Management
 //#include "Model.h"
 #include "JSONParser.h"
-
-// Gameplay
-#include "PlayerController.h"

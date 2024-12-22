@@ -10,7 +10,6 @@
 
 // Framework
 #include "Shader.h"
-#include "assertions.h"
 #include "Log.h"
 
 static void outputShaderLocationLog(const int location, const std::string& name) {
@@ -93,8 +92,6 @@ namespace FW {
             // std::cout << "ERROR::SHADER::" << typeName
                     //   << "::COMPILATION_FAILED\n"
                     //   << infoLog << std::endl;
-
-            framework_assert();
         }
 
         return shader;
@@ -112,7 +109,7 @@ namespace FW {
             infile.read(&result[0], result.size());
             infile.close();
         } else {
-            framework_assert("Unable to read file " + filepath);
+            FATAL("Unable to read file {0}", filepath);
         }
 
         return result;

@@ -2,6 +2,7 @@
 
 #include "GeometricTools.h"
 #include "FW_Math.h"
+#include "RenderCommands.h"
 
 namespace FW {
 #pragma region Particle

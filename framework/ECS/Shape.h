@@ -1,8 +1,8 @@
 #pragma once
 
 #include "pch.h"
-
 #include <glad/glad.h>
+#include "Memory.h"
 
 namespace FW {
     class VertexArray;

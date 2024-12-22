@@ -1,8 +1,6 @@
 #pragma once
 
-// C++ libraries
-#include <string>
-#include <vector>
+#include "pch.h"
 
 // External
 #include <glad/glad.h>

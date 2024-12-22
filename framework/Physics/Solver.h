@@ -20,6 +20,7 @@
 
 #include "pch.h"
 #include "Force.h"
+#include "Memory.h"
 
 namespace FW::Physics {
 class Solver {

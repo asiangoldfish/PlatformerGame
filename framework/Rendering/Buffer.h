@@ -12,6 +12,7 @@
 
 // Framework
 #include "ShaderDataTypes.h"
+#include "Memory.h"
 
 namespace FW {
     class VertexArray;

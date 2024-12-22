@@ -5,6 +5,7 @@
 // Framework
 #include "RenderCommands.h"
 #include "GeometricTools.h"
+#include "Log.h"
 
 namespace RenderCommand {
     void init()

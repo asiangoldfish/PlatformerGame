@@ -6,7 +6,9 @@
 #include <glm/glm.hpp>
 
 // Framework
-#include "Entity.h"
+#include "Memory.h"
+#include "Buffer.h"
+#include "Shader.h"
 
 namespace FW {
     class ParticleShape;
@@ -169,7 +171,8 @@ namespace FW {
          * Set gravitational acceleration applied to particles over time.
          *
          * @details Gravitational acceleration is applied to the particles'
-         * velocity each step (default: per frame). Please note that although
+         * velocity each step (default: per
+ frame). Please note that although
          * the real-world value is close to 9.8m/s², this does not necessarily
          * apply to computer graphics. Thus, value is not physically accurate.
          *

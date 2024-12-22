@@ -11,7 +11,6 @@
 //----------
 // Framework
 //----------
-#include "assertions.h"
 #include "Log.h"
 
 // OpenGL

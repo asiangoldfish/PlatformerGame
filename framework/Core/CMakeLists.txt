@@ -1,15 +1,10 @@
 project(FRAMEWORK_CORE)
 
 add_library(${PROJECT_NAME} STATIC
-    Memory.h
-    GLFWApplication.h
     GLFWApplication.cpp
-    assertions.h            assertions.cpp
-    Timer.h                 Timer.cpp
-    EntryPoint.h            EntryPoint.cpp
-    MouseButtonCodes.h
-    KeyCodes.h
-    Input.h                 Input.cpp
+    Timer.cpp
+    EntryPoint.cpp
+    Input.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -20,16 +15,14 @@ PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${PROJECT_NAME}
-PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     glfw
     glad
     glm
+    spdlog
     doctest
 
     FRAMEWORK_RENDERING
     FRAMEWORK_PHYSICS
-
-PUBLIC
-    spdlog
+    FRAMEWORK_UTIL
 )

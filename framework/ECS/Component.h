@@ -5,6 +5,7 @@
 #include "Shape.h"
 #include "Shader.h"
 #include "Material.h"
+#include "Memory.h"
 
 namespace FW {
 
