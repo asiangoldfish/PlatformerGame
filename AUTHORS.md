@@ -1,0 +1,3 @@
+# PlatformerGame authors
+
+The PlatformerGame project was developed as a student project. The project was developed by [William Wilhelmsen](https://www.linkedin.com/in/william-wilhelmsen-a301b0258/?originalSubdomain=no) and [Khai Duong](https://github.com/asiangoldfish) up until [a203fa719d294861486e7513b1d5e64f0a096c25](https://github.com/asiangoldfish/PlatformerGame/commit/a203fa719d294861486e7513b1d5e64f0a096c25). Git history before this commit is private.  
