@@ -5,10 +5,10 @@
 // Framework
 #include "RenderCommands.h"
 #include "GeometricTools.h"
+#include "Log.h"
 
 namespace RenderCommand {
-    void init()
-    {
+    void init() {
         // RenderCommand must only be initialized once
         if (quadContext) {
             FATAL("RenderCommand::init: QuadContext not NULL. RenderCommand "
@@ -30,23 +30,22 @@ namespace RenderCommand {
         quadContext->vertexArray = FW::createRef<FW::VertexArray>();
         quadContext->vertexArray->bind();
 
-        quadContext->indexBuffer = FW::createRef<FW::IndexBuffer>(&indices.front(), indices.size());
+        quadContext->indexBuffer =
+          FW::createRef<FW::IndexBuffer>(&indices.front(), indices.size());
 
-        quadContext->vertexBuffer = FW::createRef<FW::VertexBuffer>(&vertices.front(),
-                                               vertices.size() * sizeof(float));
+        quadContext->vertexBuffer = FW::createRef<FW::VertexBuffer>(
+          &vertices.front(), vertices.size() * sizeof(float));
 
         quadContext->vertexBuffer->setLayout(entityAttribLayout);
         quadContext->vertexArray->setIndexBuffer(quadContext->indexBuffer);
         quadContext->vertexArray->addVertexBuffer(quadContext->vertexBuffer);
     }
 
-    void destroy()
-    {
+    void destroy() {
         quadContext = nullptr;
     }
 
-    void setPolygonMode(PolygonMode mode)
-    {
+    void setPolygonMode(PolygonMode mode) {
         GLuint polyMode;
         switch (mode) {
             case PolygonMode::SOLID:
@@ -66,8 +65,7 @@ namespace RenderCommand {
         glPolygonMode(GL_FRONT_AND_BACK, polyMode);
     }
 
-    void drawIndex(const FW::VertexArray& vertexArrayObject, GLenum primitive)
-    {
+    void drawIndex(const FW::VertexArray& vertexArrayObject, GLenum primitive) {
         uint32_t count = vertexArrayObject.getIndexBuffer()->getCount();
 
         vertexArrayObject.bind();

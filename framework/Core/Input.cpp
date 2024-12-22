@@ -8,14 +8,12 @@ namespace FW {
     GLFWwindow* Input::window = nullptr;
     uint32_t Input::currentKeyState = 0;
 
-    bool Input::isKeyPressed(int keycode)
-    {
+    bool Input::isKeyPressed(int keycode) {
         auto state = glfwGetKey(window, keycode);
         return state == GLFW_PRESS || state == GLFW_REPEAT;
     }
 
-    bool Input::isKeyJustPressed(int keycode)
-    {
+    bool Input::isKeyJustPressed(int keycode) {
         switch (keycode) {
             case FW_KEY_LEFT_ALT:
                 return registerKeyJustPressed.leftAlt;
@@ -28,37 +26,31 @@ namespace FW {
         }
     }
 
-    bool Input::isMouseButtonPressed(int mouseButton)
-    {
+    bool Input::isMouseButtonPressed(int mouseButton) {
         auto state = glfwGetMouseButton(window, mouseButton);
         return state == GLFW_PRESS;
     }
 
-    bool Input::isModKeyCombinationPressed(FW_KEY_BIT keys)
-    {
+    bool Input::isModKeyCombinationPressed(FW_KEY_BIT keys) {
         return currentKeyState == keys;
     }
 
-    float Input::getMouseX()
-    {
+    float Input::getMouseX() {
         return getMousePosition().x;
     }
 
-    float Input::getMouseY()
-    {
+    float Input::getMouseY() {
         return getMousePosition().y;
     }
 
-    glm::vec2 Input::getMousePosition()
-    {
+    glm::vec2 Input::getMousePosition() {
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
 
         return { xpos, ypos };
     }
 
-    void Input::updateJustPressed(int key, int action)
-    {
+    void Input::updateJustPressed(int key, int action) {
         // ----------
         // Mouse
         // ----------
@@ -90,8 +82,7 @@ namespace FW {
         // -----------
     }
 
-    void Input::clearJustPressed()
-    {
+    void Input::clearJustPressed() {
         // Mouse buttons
         registerMouseJustPressed.middleButton = false;
         registerMouseJustPressed.rightButton = false;
@@ -112,8 +103,7 @@ namespace FW {
         return true;
     }
 
-    void Input::updateModKeyState(int key, int action)
-    {
+    void Input::updateModKeyState(int key, int action) {
         /*
          * Only register the following left or right keys:
          * - Control

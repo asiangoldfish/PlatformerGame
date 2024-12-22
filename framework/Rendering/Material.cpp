@@ -3,13 +3,11 @@
 
 namespace FW {
     Material::Material(const MaterialPreset& preset)
-      : materialPreset(preset)
-    {
+      : materialPreset(preset) {
         updateBasedOnPreset();
     }
 
-    void Material::updateBasedOnPreset()
-    {
+    void Material::updateBasedOnPreset() {
         // Only set attributes if not set to custom
         if (materialPreset != MaterialPreset::CUSTOM) {
             switch (materialPreset) {
@@ -187,14 +185,12 @@ namespace FW {
         }
     }
 
-    void Material::setMaterialPreset(const MaterialPreset& preset)
-    {
+    void Material::setMaterialPreset(const MaterialPreset& preset) {
         materialPreset = preset;
         updateBasedOnPreset();
     }
 
-    void Material::draw(const Shader& shader)
-    {
+    void Material::draw(const Shader& shader) {
         shader.setFloat3("u_material.ambient", properties.ambient);
         shader.setFloat3("u_material.diffuse", properties.diffuse);
         shader.setFloat3("u_material.specular", properties.specular);

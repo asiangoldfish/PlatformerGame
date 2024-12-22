@@ -1,19 +1,12 @@
-// C++ libraries
-#include <cstdint>
-
 // External
 #include <stb_image.h>
 
 // Framework
 #include "Texture.h"
-#include "assertions.h"
-#include "Shader.h"
 #include "Log.h"
 
 /** Convert RGB values to hexadecimals */
-static uint32_t
-rgbToHex(const glm::vec3& color)
-{
+static uint32_t rgbToHex(const glm::vec3& color) {
     // Clamp color values to the range [0.0, 1.0]
     glm::vec3 clampedColor = glm::clamp(color, 0.0f, 1.0f);
 
@@ -28,15 +21,13 @@ rgbToHex(const glm::vec3& color)
 }
 
 namespace FW {
-    Texture::~Texture()
-    {
+    Texture::~Texture() {
         glDeleteTextures(1, &textureID);
     }
 
     uint32_t Texture::createTexture(const std::string& name_,
                                     uint32_t hexColor,
-                                    glm::vec2 size)
-    {
+                                    glm::vec2 size) {
         // Set member variables
         type = TextureType::WhiteTexture;
         this->name = name_;
@@ -89,14 +80,12 @@ namespace FW {
 
     uint32_t Texture::createTexture(const std::string& name_,
                                     glm::vec3 color,
-                                    glm::vec2 size)
-    {
+                                    glm::vec2 size) {
         return createTexture(name_, rgbToHex(color), size);
     }
 
     uint32_t Texture::loadTexture2D(const std::string& name_,
-                                    const std::string& filepath_)
-    {
+                                    const std::string& filepath_) {
         // Set member variables
         filepath = filepath_;
         name = name_;
@@ -112,7 +101,7 @@ namespace FW {
 
         // Failed to load the image. The program will crash.
         if (!pixels) {
-            framework_assert("Failed to load texture: " + filepath);
+            WARN("Failed to load texture: {0}", filepath);
         }
 
         // We only support image formats with RGB or RGBA channels
@@ -124,11 +113,11 @@ namespace FW {
             internalFormat = GL_RGB8;
             dataFormat = GL_RGB;
         } else {
-            std::string msg = "Failed to load texture \'" + name +
-                              "\', at path \'" + filepath + "\'. It contains " +
-                              std::to_string(channels) +
-                              " channels. We only supports 3 and 4 channels.";
-            framework_assert(msg);
+            WARN("Failed to load texture \'{0}\', at path \'{1}\'. It contains "
+                 "{2} channels. We only supports 3 and 4 channels.",
+                 name,
+                 filepath,
+                 std::to_string(channels));
         }
 
         // Allocate space to the texture
@@ -160,8 +149,7 @@ namespace FW {
     }
 
     uint32_t Texture::loadCubeMap(const std::string& name_,
-                                  const std::string& filepath_)
-    {
+                                  const std::string& filepath_) {
         std::vector<std::string> filePaths = {
             filepath_, filepath_, filepath_, filepath_, filepath_, filepath_
         };
@@ -169,8 +157,7 @@ namespace FW {
     };
 
     uint32_t Texture::loadCubeMap(const std::string& name_,
-                                  const std::vector<std::string>& filePaths)
-    {
+                                  const std::vector<std::string>& filePaths) {
         // Set member variables
         type = TextureType::CubeMap;
         textureTarget = GL_TEXTURE_CUBE_MAP;
@@ -200,9 +187,7 @@ namespace FW {
                              GL_UNSIGNED_BYTE,
                              data);
             } else {
-                framework_assert(
-                  std::string("CubeMap failed ton load at path \'") +
-                  filePaths[i] + "\'");
+                WARN("CubeMap failed ton load at path \'{0}\'", filePaths[i]);
             }
             stbi_image_free(data);
         }
@@ -220,8 +205,7 @@ namespace FW {
         return textureID;
     }
 
-    void Texture::bind(int textureSlot) const
-    {
+    void Texture::bind(int textureSlot) const {
         if (textureSlot < 0) {
             WARN("Texture::bind: textureSlot < 0. It must be >= 1.");
             return;

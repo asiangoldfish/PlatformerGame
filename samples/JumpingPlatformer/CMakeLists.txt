@@ -8,6 +8,8 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Framework
+    # Uncomment below to link to doctest and test the project.
+    # doctest
 )
 
 # Copy assets directory to binary destination

@@ -17,16 +17,14 @@
 #endif
 
 namespace FW {
-    enum class VERTEX_ATTRIBUTE : uint32_t
-    {
+    enum class VERTEX_ATTRIBUTE : uint32_t {
         POSITION = KEY_BIT(0),
         COLOR = KEY_BIT(1),
         TEXTURE_COORD = KEY_BIT(2),
         VERTEX_NORMAL = KEY_BIT(3)
     };
 
-    inline bool operator&(VERTEX_ATTRIBUTE lhs, VERTEX_ATTRIBUTE rhs)
-    {
+    inline bool operator&(VERTEX_ATTRIBUTE lhs, VERTEX_ATTRIBUTE rhs) {
         return (static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs)) != 0;
     }
 
@@ -51,10 +49,14 @@ namespace FW {
         // Triangle 1       // Corners:
         // Position            Colour                TexCoord        Normal
         // X    Y     Z     R      G     B    A      U    V       X    Y    Z
-        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // A
-        0.5f,  -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // B
-        0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // C
-        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // D
+        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, // A
+        0.5f,  -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, // B
+        0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, // C
+        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 1.0f,
+        1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 1.0f, // D
     };
 
     inline std::vector<uint32_t> UnitGridIndices2D = {
@@ -62,8 +64,7 @@ namespace FW {
     };
 
     inline std::vector<float> UnitGridGeometry2D(
-      VERTEX_ATTRIBUTE flags = VERTEX_ATTRIBUTE::POSITION)
-    {
+      VERTEX_ATTRIBUTE flags = VERTEX_ATTRIBUTE::POSITION) {
         float baseColor = 1.0f;
         std::array<float, 8> texCoords = {
             0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
@@ -116,17 +117,15 @@ namespace FW {
      * @param tilingY Tiling in y-direction
      * @return
      */
-    inline std::vector<float> UnitCheckerboard2D(int tilingX, int tilingY)
-    {
+    inline std::vector<float> UnitCheckerboard2D(int tilingX, int tilingY) {
         float baseColor = 1.0f;
 
         // Tiling cannot be less than 0
         tilingX = tilingX < 0 ? 0 : tilingX;
         tilingY = tilingY < 0 ? 0 : tilingY;
 
-        std::vector<float>
-          baseGrid = {
-              // clang-format off
+        std::vector<float> baseGrid = {
+            // clang-format off
             /*
              * Note: Normal is negative Z, as the grid is created in 2D space.
              * This means it's facing
@@ -136,8 +135,8 @@ namespace FW {
             0.5f,  -0.5f, 0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 0,           0, 0, 1,
             0.5f,  0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    1, 1,           0, 0, 1,
             -0.5f, 0.5f,  0.0f,     baseColor, baseColor, baseColor, 1.0f,    0, 1,           0, 0, 1
-              // clang-format on
-          };
+            // clang-format on
+        };
 
         // Grid to return from this function. Because the vector's elements
         // are stored in heap, we can return a reference to the vector.
@@ -182,8 +181,7 @@ namespace FW {
      * @example If a grid has 3x3 cells, it has a total of 9 cells. This means
      * numOfQuads is also 9.
      */
-    inline std::vector<uint32_t> UnitCheckerboardIndices2D(int numOfQuads)
-    {
+    inline std::vector<uint32_t> UnitCheckerboardIndices2D(int numOfQuads) {
         // Base indices for one quad.
         std::vector<uint32_t> baseIndices = { 0, 1, 2, 2, 3, 0 };
 
@@ -209,8 +207,7 @@ namespace FW {
      *
      * @return Vertex attributes for a unit cube.
      */
-    inline std::vector<float> UnitCubeGeometry3D()
-    {
+    inline std::vector<float> UnitCubeGeometry3D() {
         float baseColor = 1.0f, alpha = 1.0f;
         std::vector<float> container = {
             // clang-format off
@@ -259,8 +256,7 @@ namespace FW {
      * Generate the indices for a unit cube.
      * @return Indices for a unit cube.
      */
-    inline std::vector<unsigned int> UnitCubeGeometry3DIndices()
-    {
+    inline std::vector<unsigned int> UnitCubeGeometry3DIndices() {
         std::vector<unsigned int> container;
 
         // To support culling, we must invert the order every other iteration
@@ -297,8 +293,7 @@ namespace FW {
      *
      * @return Position attributes
      */
-    inline std::vector<float> SkyboxGeometryVertices()
-    {
+    inline std::vector<float> SkyboxGeometryVertices() {
         return {
             // clang-format off
             // Front
@@ -340,8 +335,7 @@ namespace FW {
         };
     }
 
-    inline std::vector<unsigned int> SkyboxGeometryIndices()
-    {
+    inline std::vector<unsigned int> SkyboxGeometryIndices() {
         return UnitCubeGeometry3DIndices();
     }
 } // FW

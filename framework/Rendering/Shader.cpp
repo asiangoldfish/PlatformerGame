@@ -10,18 +10,18 @@
 
 // Framework
 #include "Shader.h"
-#include "assertions.h"
 #include "Log.h"
 
-static void outputShaderLocationLog(const int location, const std::string& name) {
+static void outputShaderLocationLog(const int location,
+                                    const std::string& name) {
     if (location < 0) {
         WARN("Unable to upload uniform {}", name);
     }
 }
 
 namespace FW {
-    Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
-    {
+    Shader::Shader(const std::string& vertexSrc,
+                   const std::string& fragmentSrc) {
         vertexShader = compileShader(GL_VERTEX_SHADER, readFile(vertexSrc));
         fragmentShader =
           compileShader(GL_FRAGMENT_SHADER, readFile(fragmentSrc));
@@ -45,24 +45,20 @@ namespace FW {
         }
     }
 
-    Shader::~Shader()
-    {
+    Shader::~Shader() {
         glDeleteProgram(shaderProgram);
     }
 
-    void Shader::bind() const
-    {
+    void Shader::bind() const {
         glUseProgram(shaderProgram);
     }
 
-    void Shader::unbind() const
-    {
+    void Shader::unbind() const {
         glUseProgram(0);
     }
 
     GLuint Shader::compileShader(GLenum shaderType,
-                                 const std::string& shaderSrc)
-    {
+                                 const std::string& shaderSrc) {
         GLuint shader = glCreateShader(shaderType);
         const GLchar* shaderCSrc = shaderSrc.c_str();
         glShaderSource(shader, 1, &shaderCSrc, nullptr);
@@ -91,17 +87,14 @@ namespace FW {
             FATAL(
               "ERROR::SHADER::{0}::COMPILATION_FAILED\n{1}", typeName, infoLog);
             // std::cout << "ERROR::SHADER::" << typeName
-                    //   << "::COMPILATION_FAILED\n"
-                    //   << infoLog << std::endl;
-
-            framework_assert();
+            //   << "::COMPILATION_FAILED\n"
+            //   << infoLog << std::endl;
         }
 
         return shader;
     }
 
-    std::string Shader::readFile(const std::string& filepath)
-    {
+    std::string Shader::readFile(const std::string& filepath) {
         std::string result;
         std::ifstream infile(filepath, std::ios::in | std::ios::binary);
 
@@ -112,59 +105,53 @@ namespace FW {
             infile.read(&result[0], result.size());
             infile.close();
         } else {
-            framework_assert("Unable to read file " + filepath);
+            FATAL("Unable to read file {0}", filepath);
         }
 
         return result;
     }
 
-    void Shader::setInt(const std::string& name, const int value) const
-    {
+    void Shader::setInt(const std::string& name, const int value) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform1i(location, value);
     }
 
-    void Shader::setFloat(const std::string& name, const float value) const
-    {
+    void Shader::setFloat(const std::string& name, const float value) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform1f(location, value);
     }
 
     void Shader::setFloat2(const std::string& name,
-                           const glm::vec2& vector) const
-    {
+                           const glm::vec2& vector) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform2f(location, vector.x, vector.y);
     }
 
     void Shader::setFloat3(const std::string& name,
-                           const glm::vec3& vector) const
-    {
+                           const glm::vec3& vector) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform3f(location, vector.x, vector.y, vector.z);
     }
 
     void Shader::setFloat4(const std::string& name,
-                           const glm::vec4& vector) const
-    {
+                           const glm::vec4& vector) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
-    void Shader::setMat4(const std::string& name, const glm::mat4& matrix) const
-    {
+    void Shader::setMat4(const std::string& name,
+                         const glm::mat4& matrix) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    void Shader::setVisualizeMode(RenderCommand::VisualizeMode mode) const
-    {
+    void Shader::setVisualizeMode(RenderCommand::VisualizeMode mode) const {
         int location = glGetUniformLocation(shaderProgram, "u_visualizeMode");
         glUniform1i(location, (int)mode);
     }

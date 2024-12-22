@@ -4,8 +4,7 @@
 
 namespace FW {
 
-    class PointLight : public Light
-    {
+    class PointLight : public Light {
     public:
         PointLight() { numOfPointLights++; }
         virtual ~PointLight() { numOfPointLights--; }

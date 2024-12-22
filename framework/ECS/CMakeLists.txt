@@ -19,15 +19,19 @@ PRIVATE
 ## Libraries ##
 ###############
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    # External
-    glm
+target_link_libraries(${PROJECT_NAME} 
+PUBLIC
     glad
+
+PRIVATE
+    # External
+    doctest
+    glm
     spdlog
 
     # Internal
     FRAMEWORK_GEOMETRICTOOLS
     FRAMEWORK_RENDERING
-    FRAMEWORK_CORE
     FRAMEWORK_PHYSICS
+    FRAMEWORK_UTIL
 )

@@ -16,8 +16,7 @@ namespace FW {
     /**
      * Bring lighting to the scene
      */
-    class Light
-    {
+    class Light {
     public:
         Light() = default;
         ~Light() = default;
@@ -28,7 +27,8 @@ namespace FW {
         /**
          * Set whether this light should be active.
          *
-         * If this light caster is disabled, then objects affected by it will no longer cast light on objects.
+         * If this light caster is disabled, then objects affected by it will no
+         * longer cast light on objects.
          * @param e True to enable the light caster, or false to disable.
          */
         void setEnable(const bool e) { enable = e; }
@@ -51,7 +51,7 @@ namespace FW {
         // Light attributes
         glm::vec3 ambient{ 1.0f };
         glm::vec3 diffuse{ 1.0f };
-        glm::vec3 specular{ 1.0f};
+        glm::vec3 specular{ 1.0f };
 
     private:
         bool enable = true;

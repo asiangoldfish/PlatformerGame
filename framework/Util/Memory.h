@@ -17,8 +17,7 @@ namespace FW {
      * @param ptr Pointer to delete
      */
     template<typename T>
-    void DELETE(T* ptr)
-    {
+    void DELETE(T* ptr) {
         delete ptr;
         ptr = nullptr;
     }
@@ -35,8 +34,7 @@ namespace FW {
      * @return A shared reference to the new object.
      */
     template<typename T, typename... Args>
-    constexpr ref<T> createRef(Args&&... args)
-    {
+    constexpr ref<T> createRef(Args&&... args) {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
@@ -52,8 +50,7 @@ namespace FW {
      * @return A unique reference to the new object.
      */
     template<typename T, typename... Args>
-    constexpr scope<T> createScope(Args&&... args)
-    {
+    constexpr scope<T> createScope(Args&&... args) {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
 } // FW

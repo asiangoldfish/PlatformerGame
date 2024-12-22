@@ -35,13 +35,16 @@ PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    glfw
+target_link_libraries(${PROJECT_NAME} 
+PUBLIC
     glad
+
+PRIVATE
+    glfw
     glm
     stb
     spdlog
 
-    FRAMEWORK_CORE
     FRAMEWORK_GEOMETRICTOOLS
+    FRAMEWORK_UTIL
 )

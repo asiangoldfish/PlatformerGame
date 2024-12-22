@@ -15,8 +15,7 @@ namespace FW {
      * scene. A perfect example is the sun. Only the angle between the object
      * and the caster will impact the lighting effect.
      */
-    class DirectionalLight : public Light
-    {
+    class DirectionalLight : public Light {
     public:
         DirectionalLight() { numOfDirectionalLights++; }
         virtual ~DirectionalLight() { numOfDirectionalLights--; }

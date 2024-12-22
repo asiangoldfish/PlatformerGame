@@ -1,20 +1,17 @@
 #pragma once
 
-#include "pch.h"
-
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace FW {
-    struct BoundingBox_Quad
-    {
+    struct BoundingBox_Quad {
         void setScale(float x, float y, float z) { scale = glm::vec3(x, y, z); }
 
         void setScale(float s) { scale = glm::vec3(s); }
 
         void setScale(glm::vec3 s) { scale = s; }
 
-        void setPosition(glm::vec3 position)
-        {
+        void setPosition(glm::vec3 position) {
             maxX = position.x + scale.x;
             minX = position.x;
             maxY = position.y + scale.y;

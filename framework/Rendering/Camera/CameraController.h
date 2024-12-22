@@ -8,11 +8,7 @@ namespace FW {
     class PerspectiveCamera;
     class OrthographicCamera;
 
-    enum class CameraType
-    {
-        PERSPECTIVE = 0,
-        ORTHOGRAPHIC
-    };
+    enum class CameraType { PERSPECTIVE = 0, ORTHOGRAPHIC };
 
     /**
      * Controller for the Camera.
@@ -21,19 +17,16 @@ namespace FW {
      * handles user input and moving the camera. It provides functions to
      * manipulate the camera's properties.
      */
-    class CameraController
-    {
+    class CameraController {
     public:
         CameraController() = default;
         explicit CameraController(CameraType type);
         virtual ~CameraController() = default;
 
-        [[nodiscard]] ref<PerspectiveCamera>& getPerspectiveCamera()
-        {
+        [[nodiscard]] ref<PerspectiveCamera>& getPerspectiveCamera() {
             return perspectiveCamera;
         }
-        [[nodiscard]] ref<OrthographicCamera>& getOrthographicCamera()
-        {
+        [[nodiscard]] ref<OrthographicCamera>& getOrthographicCamera() {
             return orthographicCamera;
         }
 

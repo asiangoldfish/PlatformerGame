@@ -3,7 +3,7 @@
 #include "pch.h"
 
 // External
-#include "glad/glad.h"
+#include <glad/glad.h>
 #include "glm/glm.hpp"
 
 // Framework

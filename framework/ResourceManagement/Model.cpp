@@ -16,13 +16,11 @@ namespace FW {
                const std::vector<SimpleTexture>& t)
       : vertices(v)
       , indices(i)
-      , textures(t)
-    {
+      , textures(t) {
         setupMesh();
     }
 
-    void Mesh::draw(Shader& shader)
-    {
+    void Mesh::draw(Shader& shader) {
         uint32_t diffuseNr = 1;
         uint32_t specularNr = 1;
 
@@ -56,8 +54,7 @@ namespace FW {
     /*
      * Allocate memory on the GPU to store the vertex buffer and index buffer.
      */
-    void Mesh::setupMesh()
-    {
+    void Mesh::setupMesh() {
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
         glGenBuffers(1, &ebo);
@@ -115,8 +112,7 @@ namespace FW {
 
 #pragma region Model
     // Draw the model to screen
-    void Model::draw(Shader& shader)
-    {
+    void Model::draw(Shader& shader) {
         glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), this->scale);
 
@@ -130,8 +126,7 @@ namespace FW {
     }
 
     // Helper function to load the model
-    void Model::loadModel(std::string path)
-    {
+    void Model::loadModel(std::string path) {
         Assimp::Importer importer;
         const aiScene* scene =
           importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -148,8 +143,7 @@ namespace FW {
     }
 
     // Process each of the scene tree's nodes. Store them in the meshes vector.
-    void Model::processNode(aiNode* node, const aiScene* scene)
-    {
+    void Model::processNode(aiNode* node, const aiScene* scene) {
         // Process all the node's meshes (if any)
         for (uint32_t i = 0; i < node->mNumMeshes; i++) {
             // Get the mesh from each node
@@ -164,8 +158,7 @@ namespace FW {
         }
     }
 
-    Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
-    {
+    Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         std::vector<SimpleTexture> textures;
@@ -227,10 +220,10 @@ namespace FW {
         return { vertices, indices, textures };
     }
 
-    std::vector<SimpleTexture> Model::loadMaterialTextures(aiMaterial* mat,
-                                                           aiTextureType type,
-                                                           std::string typeName)
-    {
+    std::vector<SimpleTexture> Model::loadMaterialTextures(
+      aiMaterial* mat,
+      aiTextureType type,
+      std::string typeName) {
         std::vector<SimpleTexture> textures;
 
         for (uint32_t i = 0; i < mat->GetTextureCount(type); i++) {
@@ -258,12 +251,12 @@ namespace FW {
                     slot = 1;
                 }
                 // TODO: Fix the below
-//                texture.id = TextureManager::loadTexture(
-//                    shader,
-//                  str.C_Str(),
-//                  directory + '/' + std::string(str.C_Str()),
-//                  TextureManager::Texture2D,
-//                  slot);
+                //                texture.id = TextureManager::loadTexture(
+                //                    shader,
+                //                  str.C_Str(),
+                //                  directory + '/' + std::string(str.C_Str()),
+                //                  TextureManager::Texture2D,
+                //                  slot);
             } else {
                 texture.id = foundTexture->getTextureId();
             }

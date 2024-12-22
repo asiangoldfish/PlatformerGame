@@ -5,11 +5,13 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
+#include "Memory.h"
 #include "RenderCommands.h"
 
-//#define SHADER_LOCATION_OUTPUT
+// #define SHADER_LOCATION_OUTPUT
 #ifdef SHADER_LOCATION_OUTPUT
-#define OUTPUT_SHADER_LOCATION_LOG(location, name) outputShaderLocationLog(location, name)
+#define OUTPUT_SHADER_LOCATION_LOG(location, name)                             \
+    outputShaderLocationLog(location, name)
 #else
 #define OUTPUT_SHADER_LOCATION_LOG(location, name)
 #endif
@@ -33,19 +35,18 @@ namespace FW {
          *
          * @param vertexSrc Source to vertex shader
          * @param fragmentSrc Source to fragment shader
-         * @param isFilepath If true: source are file paths. If false: source are literal strings.
-         * 
+         * @param isFilepath If true: source are file paths. If false: source
+         * are literal strings.
+         *
          * @example vertexSrc = R"(#version core 330 int main(){})"
-        */
-        Shader(
-            const std::string& vertexSrc, 
-            const std::string &fragmentSrc
-        );
+         */
+        Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
         virtual ~Shader();
 
         /**
          * Bind the <u<Shader</u>.
-         * @details Whenever the <u>Shader</u> is bound must be bound whenever it is used, like uploading data to the GPU.
+         * @details Whenever the <u>Shader</u> is bound must be bound whenever
+         * it is used, like uploading data to the GPU.
          */
         void bind() const;
         /** Unbind the shader. */
@@ -53,24 +54,12 @@ namespace FW {
 
         // Uniforms
         void setInt(const std::string& name, const int value) const;
-        void setFloat(const std::string& name,const float value) const;
-        void setFloat2(
-            const std::string& name,
-            const glm::vec2& vector
-        ) const;
-        void setFloat3(
-            const std::string& name,
-            const glm::vec3& vector
-        ) const;
-        void setFloat4(
-            const std::string& name,
-            const glm::vec4& vector
-        ) const;
+        void setFloat(const std::string& name, const float value) const;
+        void setFloat2(const std::string& name, const glm::vec2& vector) const;
+        void setFloat3(const std::string& name, const glm::vec3& vector) const;
+        void setFloat4(const std::string& name, const glm::vec4& vector) const;
 
-        void setMat4(
-            const std::string& name,
-            const glm::mat4& matrix
-        ) const;
+        void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
         /**
          * Shorthand to create a shared pointer to a Shader object.
@@ -84,7 +73,7 @@ namespace FW {
          * auto shader = Framework::Shader::create(vertexSrc, fragSrc);
          */
         static ref<Shader> create(const std::string& vertexSrc,
-            const std::string &fragmentSrc) {
+                                  const std::string& fragmentSrc) {
             return createRef<Shader>(vertexSrc, fragmentSrc);
         }
 

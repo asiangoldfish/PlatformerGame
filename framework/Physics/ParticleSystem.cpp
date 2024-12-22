@@ -2,16 +2,15 @@
 
 #include "GeometricTools.h"
 #include "FW_Math.h"
+#include "RenderCommands.h"
 
 namespace FW {
 #pragma region Particle
-    Particle::Particle(glm::vec3 initialVelocity)
-    {
+    Particle::Particle(glm::vec3 initialVelocity) {
         velocity = initialVelocity;
     }
 
-    void Particle::update(float deltaTime, float gravity)
-    {
+    void Particle::update(float deltaTime, float gravity) {
         // Lifetime
         lifetime += deltaTime;
         if (maxLifetime > 0 && lifetime > maxLifetime) {
@@ -33,16 +32,14 @@ namespace FW {
         }
     }
 
-    void Particle::draw(ref<Shader>& shader)
-    {
+    void Particle::draw(ref<Shader>& shader) {
         shader->setFloat4("u_color", color);
         //        displayEntity->draw(shader);
     }
 #pragma endregion
 
 #pragma region Emitter
-    void Emitter::update(float deltaTime)
-    {
+    void Emitter::update(float deltaTime) {
         for (const auto& particle : particlesPool) {
             particle->update(deltaTime, gravity);
         }
@@ -57,8 +54,7 @@ namespace FW {
         });
     }
 
-    void Emitter::draw()
-    {
+    void Emitter::draw() {
         for (auto& particle : particlesPool) {
             particle->draw(shader);
 
@@ -70,8 +66,7 @@ namespace FW {
         }
     }
 
-    void Emitter::addParticle(int amount)
-    {
+    void Emitter::addParticle(int amount) {
         // TODO: Add mechanism to reserve space and reuse particles
         for (int i = 0; i < amount && numOfParticles < maxParticles; i++) {
             // Determine the particle's initial velocity by randomness
@@ -102,8 +97,7 @@ namespace FW {
         }
     }
 
-    Emitter::Emitter()
-    {
+    Emitter::Emitter() {
         shader = FW::createRef<FW::Shader>(
           FW_PHYSICS_RESOURCES_DIR + std::string("shaders/particleVertex.glsl"),
           FW_PHYSICS_RESOURCES_DIR + std::string("shaders/particleFrag.glsl"));
@@ -112,8 +106,7 @@ namespace FW {
 
     void Emitter::recalculateModelMatrix(glm::vec3 translate,
                                          glm::vec3 rotate,
-                                         glm::vec3 scale)
-    {
+                                         glm::vec3 scale) {
         modelMatrix = glm::mat4(1.0f);
 
         glm::mat4 newRotation, rotx, roty, rotz;
@@ -132,8 +125,7 @@ namespace FW {
                       glm::scale(glm::mat4(1.04), scale);
     }
 
-    int32_t Emitter::findAvailableParticleID()
-    {
+    int32_t Emitter::findAvailableParticleID() {
         // Sort particles pool
         std::sort(particlesPool.begin(),
                   particlesPool.end(),
@@ -160,17 +152,16 @@ namespace FW {
         return static_cast<int32_t>(particlesPool.size());
     }
 #pragma endregion
-    ParticleShape::ParticleShape()
-    {
+    ParticleShape::ParticleShape() {
         auto entityAttribLayout = FW::BufferLayout({
           { FW::ShaderDataType::Float3, "a_position" }
-//          { FW::ShaderDataType::Float4, "a_color" },
-//          { FW::ShaderDataType::Float2, "a_texCoord" },
-//          { FW::ShaderDataType::Float3, "a_normal" },
+          //          { FW::ShaderDataType::Float4, "a_color" },
+          //          { FW::ShaderDataType::Float2, "a_texCoord" },
+          //          { FW::ShaderDataType::Float3, "a_normal" },
         });
 
-//        auto vertices = UnitCubeGeometry3D();
-//        auto indices = UnitCubeGeometry3DIndices();
+        //        auto vertices = UnitCubeGeometry3D();
+        //        auto indices = UnitCubeGeometry3DIndices();
 
         auto vertices = UnitGridGeometry2D(FW::VERTEX_ATTRIBUTE::POSITION);
         auto indices = UnitGridIndices2D;
@@ -180,8 +171,8 @@ namespace FW {
 
         indexBuffer = createRef<IndexBuffer>(&indices.front(), indices.size());
 
-        vertexBuffer =
-          createRef<VertexBuffer>(&vertices.front(), vertices.size() * sizeof(float));
+        vertexBuffer = createRef<VertexBuffer>(&vertices.front(),
+                                               vertices.size() * sizeof(float));
 
         vertexBuffer->setLayout(entityAttribLayout);
         // TODO readd these

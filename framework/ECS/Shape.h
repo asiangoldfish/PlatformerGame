@@ -1,8 +1,8 @@
 #pragma once
 
 #include "pch.h"
-
 #include <glad/glad.h>
+#include "Memory.h"
 
 namespace FW {
     class VertexArray;
@@ -22,7 +22,7 @@ namespace FW {
      */
     class Shape {
     public:
-        Shape() =  default;
+        Shape() = default;
         virtual void init() = 0;
 
         ref<VertexArray> getVertexArray() const { return vertexArray; }

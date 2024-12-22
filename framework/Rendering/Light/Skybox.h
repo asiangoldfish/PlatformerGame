@@ -28,8 +28,7 @@ namespace FW {
      * placeable in the world either as a drawble object or as an invisible
      * entity. Such entity can be used for
      */
-    class Skybox
-    {
+    class Skybox {
     public: // Constructors and destructors
         /**
          * Default constructor.
@@ -48,8 +47,7 @@ namespace FW {
          */
         virtual void draw(const ref<Shader>& shader);
 
-        inline void setScale(const float s)
-        {
+        inline void setScale(const float s) {
             this->scale.x = s;
             this->scale.y = -s;
             this->scale.z = s;
@@ -57,7 +55,10 @@ namespace FW {
         }
         inline void setScale(const glm::vec3& s) { this->scale = s; }
 
-        void setPosition(const glm::vec3& value) { position = value; recalculateModelMatrix(); }
+        void setPosition(const glm::vec3& value) {
+            position = value;
+            recalculateModelMatrix();
+        }
 
         [[nodiscard]] inline const glm::vec3& getScale() const { return scale; }
 
@@ -82,6 +83,6 @@ namespace FW {
         glm::mat4 modelMatrix{ 1.0f };
         glm::vec3 position{ 0.0f };
 
-        glm::vec3 scale { 50.0f };
+        glm::vec3 scale{ 50.0f };
     };
 } // Framework

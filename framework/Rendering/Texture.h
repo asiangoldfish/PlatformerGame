@@ -1,8 +1,6 @@
 #pragma once
 
-// C++ libraries
-#include <string>
-#include <vector>
+#include "pch.h"
 
 // External
 #include <glad/glad.h>
@@ -45,18 +43,12 @@ namespace FW {
      * Currently, the Texture only supports RGB and RGBA 8-bit channels.
      *
      */
-    class Texture
-    {
+    class Texture {
     public:
         /**
          * The texture's format.
          */
-        enum TextureType
-        {
-            Texture2D = 0,
-            CubeMap,
-            WhiteTexture
-        };
+        enum TextureType { Texture2D = 0, CubeMap, WhiteTexture };
 
     public:
         /**
@@ -149,8 +141,7 @@ namespace FW {
         void bind(int textureSlot) const;
 
         /** Get the texture's file path on disk. */
-        [[nodiscard]] const std::string& getFilepath() const
-        {
+        [[nodiscard]] const std::string& getFilepath() const {
             return filepath;
         }
 

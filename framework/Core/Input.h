@@ -10,8 +10,7 @@
 #include "KeyCodes.h"
 
 namespace FW {
-    class Input
-    {
+    class Input {
     public:
         /**
          * Determine what mouse buttons are held or released.
@@ -21,8 +20,7 @@ namespace FW {
          * a mouse button is held down and not permit any other buttons while
          * it's held.
          */
-        struct MouseRegister
-        {
+        struct MouseRegister {
             bool rightButton = false;
             bool leftButton = false;
             bool middleButton = false;
@@ -35,8 +33,7 @@ namespace FW {
          * the struct is used. It can for instance be used to determine whether
          * a key is held down and not permit any other keys while it's held.
          */
-        struct KeyRegister
-        {
+        struct KeyRegister {
             bool leftAlt = false;
             bool leftControl = false;
             bool leftShift = false;
@@ -46,8 +43,8 @@ namespace FW {
         /**
          * Update the registration of keys that are just pressed.
          *
-         * @details For performance, this function should only be called once per frame.
-         * Consider placing it at the top of the game loop.
+         * @details For performance, this function should only be called once
+         * per frame. Consider placing it at the top of the game loop.
          *
          * @example
          * @code
@@ -73,7 +70,8 @@ namespace FW {
         static void updateModKeyState(int key, int action);
 
         /**
-         * Clear all just-pressed variables. This should be called at the end of the game loop.
+         * Clear all just-pressed variables. This should be called at the end of
+         * the game loop.
          */
         static void clearJustPressed();
 

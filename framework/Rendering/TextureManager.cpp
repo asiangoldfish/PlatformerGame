@@ -7,9 +7,7 @@ namespace FW {
     uint32_t TextureManager::invalidTextureID =
       std::numeric_limits<uint32_t>::max();
 
-    void TextureManager::bind(const std::string& name,
-                              int textureSlot)
-    {
+    void TextureManager::bind(const std::string& name, int textureSlot) {
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
@@ -23,8 +21,7 @@ namespace FW {
         textures[0]->bind(textureSlot);
     }
 
-    void TextureManager::bind(uint32_t id, int textureSlot)
-    {
+    void TextureManager::bind(uint32_t id, int textureSlot) {
         // Bind to the first texture with the given name.
         int index = 0;
         for (auto& texture : textures) {
@@ -39,16 +36,16 @@ namespace FW {
         // white texture
         if (!textures.empty()) {
             textures[0]->bind(textureSlot);
-        } 
+        }
         // else {
-        //     WARN("TextureManager::bind(): The first texture should be white, "
+        //     WARN("TextureManager::bind(): The first texture should be white,
+        //     "
         //          "but no texture was found");
         // }
     }
 
     uint32_t TextureManager::loadTexture2D(const std::string& name,
-                                           const std::string& filepath)
-    {
+                                           const std::string& filepath) {
         // If a texture with the same filepath already exists, then don't load
         // it.
 
@@ -58,10 +55,8 @@ namespace FW {
         return t->textureID;
     }
 
-
     void TextureManager::loadTexture2D(
-      const std::initializer_list<TexturePath>& texturePath)
-    {
+      const std::initializer_list<TexturePath>& texturePath) {
         for (const auto& tex : texturePath) {
             loadTexture2D(tex.name, tex.filePath);
         }
@@ -69,8 +64,7 @@ namespace FW {
 
     uint32_t TextureManager::loadCubeMap(
       const std::string& name,
-      const std::vector<std::string>& filePaths)
-    {
+      const std::vector<std::string>& filePaths) {
         // Verify the vector's size == 6
         if (filePaths.size() != 6) {
             WARN("TextureManager::loadCubeMap: Failed to load texture \'{}\'. "
@@ -88,8 +82,7 @@ namespace FW {
 
     uint32_t TextureManager::createTexture(const std::string& name,
                                            uint32_t hexColors,
-                                           glm::vec2 size)
-    {
+                                           glm::vec2 size) {
         ref<Texture> t = createRef<Texture>();
         t->createTexture(name, hexColors, size);
         textures.push_back(t);
@@ -98,17 +91,14 @@ namespace FW {
 
     uint32_t TextureManager::createTexture(const std::string& name,
                                            glm::vec3 rgbColors,
-                                           glm::vec2 size)
-    {
+                                           glm::vec2 size) {
         ref<Texture> t = createRef<Texture>();
         t->createTexture(name, rgbColors, size);
         textures.push_back(t);
         return t->textureID;
     }
 
-
-    uint32_t TextureManager::getTextureID(const std::string& name)
-    {
+    uint32_t TextureManager::getTextureID(const std::string& name) {
         for (const auto& texture : textures) {
             if (texture->name == name) {
                 return texture->getTextureId();
@@ -128,9 +118,7 @@ namespace FW {
         return "";
     }
 
-
-    bool TextureManager::deleteTexture(const std::string& name)
-    {
+    bool TextureManager::deleteTexture(const std::string& name) {
         for (int i = 0; i < textures.size(); i++) {
             if (textures[i]->name == name) {
                 // Name matches and texture was found
@@ -143,8 +131,7 @@ namespace FW {
         return false;
     }
 
-    bool TextureManager::deleteTexture(const int id)
-    {
+    bool TextureManager::deleteTexture(const int id) {
         for (int i = 0; i < textures.size(); i++) {
             if (textures[i]->textureID == id) {
                 // Name matches and texture was found
@@ -157,8 +144,7 @@ namespace FW {
         return false;
     }
 
-    const std::vector<ref<Texture>>& TextureManager::getTextures()
-    {
+    const std::vector<ref<Texture>>& TextureManager::getTextures() {
         return textures;
     }
 } // namespace Framework

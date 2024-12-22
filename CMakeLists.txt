@@ -20,6 +20,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Default to debug type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    # Disable testing
+    message("-- Disabling doctest")
+    add_compile_definitions(DOCTEST_CONFIG_DISABLE)
+
+    # Enable optimisations
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+    # Disable asserts
+    add_compile_definitions(NDEBUG)
+endif(CMAKE_BUILD_TYPE MATCHES Release)
+
+if(DISABLE_TEST MATCHES true)
+    # Testing is disabled with -DDISABLE_TESTING flag
+    message("-- Disabling doctest")
+    add_compile_definitions(DOCTEST_CONFIG_DISABLE)
+endif()
+
+# Doctest uses some macros we already use, like INFO and WARN
+add_compile_definitions(DOCTEST_CONFIG_NO_SHORT_MACRO_NAMES)
+
+
+
 # GLFW options
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -36,6 +66,7 @@ add_subdirectory(external/spdlog)
 #add_subdirectory(external/assimp)
 add_subdirectory(external/imgui)
 add_subdirectory(external/nlohmann_json)
+add_subdirectory(external/doctest)
 
 # stb
 add_library(stb INTERFACE)

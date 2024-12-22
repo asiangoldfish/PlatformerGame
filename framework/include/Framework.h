@@ -11,7 +11,6 @@
 #include "Input.h"
 #include "Log.h"
 #include "Timer.h"
-#include "assertions.h"
 #include "EntryPoint.h"
 
 // Geometric Tools
@@ -29,12 +28,10 @@
 #include "TextureManager.h"
 #include "Viewport.h"
 
-
 #include "Light/DirectionalLight.h"
 #include "Light/PointLight.h"
 #include "Light/SpotLight.h"
 #include "Light/Skybox.h"
-
 
 // ECS
 #include "Entity.h"
@@ -50,8 +47,5 @@
 #include "PhysicsBody.h"
 
 // Resource Management
-//#include "Model.h"
+// #include "Model.h"
 #include "JSONParser.h"
-
-// Gameplay
-#include "PlayerController.h"

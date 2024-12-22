@@ -109,7 +109,7 @@ namespace FW {
 
         /* Physics */
         physicsServer = createScope<Physics::PhysicsServer>();
-        physicsServer->stepSize = 1;
+        physicsServer->setStepSize(1);
 
         /* Time */
         timer.updateDeltaTime();

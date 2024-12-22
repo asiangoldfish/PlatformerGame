@@ -12,8 +12,7 @@
 
 namespace FW {
 
-    class Camera
-    {
+    class Camera {
     public:
         Camera() = default;
         virtual ~Camera() = default;
@@ -27,8 +26,7 @@ namespace FW {
         void initializeCamera() { computeViewMatrix(); }
 
         inline glm::mat4 getViewMatrix() const { return viewMatrix; }
-        inline glm::mat4 getProjectionMatrix() const
-        {
+        inline glm::mat4 getProjectionMatrix() const {
             return projectionMatrix;
         }
 
@@ -57,8 +55,7 @@ namespace FW {
         // Camera Position
         // -------------
         inline const glm::vec3& getPosition() { return position; }
-        inline void setPosition(const glm::vec3& pos)
-        {
+        inline void setPosition(const glm::vec3& pos) {
             position = pos;
             computeViewMatrix();
         }
