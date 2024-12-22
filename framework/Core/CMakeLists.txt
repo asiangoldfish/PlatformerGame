@@ -25,6 +25,7 @@ PRIVATE
     glfw
     glad
     glm
+    doctest
 
     FRAMEWORK_RENDERING
     FRAMEWORK_PHYSICS
