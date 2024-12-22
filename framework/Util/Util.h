@@ -47,6 +47,6 @@ namespace FW {
             pos.y = boundsMax.y;
         }
 
-        return pos.
+        return pos;
     }
 }
