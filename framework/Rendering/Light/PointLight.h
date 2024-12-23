@@ -2,35 +2,31 @@
 
 #include "Light.h"
 
-namespace FW {
+class PointLight : public Light {
+public:
+    PointLight() { numOfPointLights++; }
+    virtual ~PointLight() { numOfPointLights--; }
 
-    class PointLight : public Light {
-    public:
-        PointLight() { numOfPointLights++; }
-        virtual ~PointLight() { numOfPointLights--; }
+    void draw(const ref<Shader>& shader) override;
 
-        void draw(const ref<Shader>& shader) override;
+    void setConstant(const float c) { constant = c; }
+    void setLinear(const float l) { linear = l; }
+    void setQuadratic(const float q) { quadratic = q; }
 
-        void setConstant(const float c) { constant = c; }
-        void setLinear(const float l) { linear = l; }
-        void setQuadratic(const float q) { quadratic = q; }
+    const glm::vec3& getPosition() { return position; }
+    void setPosition(const glm::vec3 pos) { position = pos; }
 
-        const glm::vec3& getPosition() { return position; }
-        void setPosition(const glm::vec3 pos) { position = pos; }
+    float getBrightness() const { return brightness; }
+    void setBrightness(float value) { brightness = value; }
 
-        float getBrightness() const { return brightness; }
-        void setBrightness(float value) { brightness = value; }
+private:
+    glm::vec3 position{ 0.0f };
+    float brightness = 1.0f;
 
-    private:
-        glm::vec3 position{ 0.0f };
-        float brightness = 1.0f;
+    /** Constant should normally be set to 0 */
+    float constant = 1.0f;
+    float linear = 1.0f;
+    float quadratic = 1.0f;
 
-        /** Constant should normally be set to 0 */
-        float constant = 1.0f;
-        float linear = 1.0f;
-        float quadratic = 1.0f;
-
-        static int numOfPointLights;
-    };
-
-} // Rendering
+    static int numOfPointLights;
+};

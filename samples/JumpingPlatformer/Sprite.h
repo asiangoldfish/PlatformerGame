@@ -5,11 +5,11 @@
 /**
  * A sprite is an squaric Entity with transformation.
  */
-class Sprite : public FW::Entity {
+class Sprite : public Entity {
 public:
     Sprite();
 
-    FW::ref<FW::Shader> getShader() { return spriteShader; }
+    ref<Shader> getShader() { return spriteShader; }
 
     /**
      * Move by `x` and `y` units.
@@ -28,7 +28,7 @@ public:
 
     void addVelocity(float x, float y);
 
-    FW::ref<FW::PhysicsComponent> getPhysicsComponent() {
+    ref<PhysicsComponent> getPhysicsComponent() {
         return physicsComponent;
     }
 
@@ -37,13 +37,13 @@ private:
      * The TransformationComponent is responsible for handling the sprite's
      * position, rotation, scale and more.
      */
-    FW::ref<FW::TransformationComponent> transformationComponent;
+    ref<TransformationComponent> transformationComponent;
 
     /**
      * The DrawableComponent is responsible for drawing the sprite to the
      * window.
      */
-    FW::ref<FW::DrawableComponent> drawableComponent;
+    ref<DrawableComponent> drawableComponent;
 
     /**
      * The physics component stores data like velocity, gravity and forces.
@@ -51,11 +51,11 @@ private:
      * user must update other components like TransformationComponent or
      * DrawableComponents.
      */
-    FW::ref<FW::PhysicsComponent> physicsComponent;
+    ref<PhysicsComponent> physicsComponent;
 
     /**
      * The Shader is what draws the sprite on screen. Since it is a shared
      * reference, one shader can support multiple sprites.
      */
-    FW::ref<FW::Shader> spriteShader;
+    ref<Shader> spriteShader;
 };

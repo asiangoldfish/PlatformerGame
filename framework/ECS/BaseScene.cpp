@@ -1,13 +1,13 @@
 #include "BaseScene.h"
 
-FW::BaseScene::~BaseScene() {}
+BaseScene::~BaseScene() {}
 
-void FW::BaseScene::init() {
+void BaseScene::init() {
     root = createRef<Entity>();
     root->name = "root";
-    viewport = FW::createRef<FW::Viewport>();
+    viewport = createRef<Viewport>();
 }
 
-void FW::BaseScene::update(float delta) {
+void BaseScene::update(float delta) {
     root->update(delta);
 }

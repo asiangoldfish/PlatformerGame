@@ -1,13 +1,13 @@
 #include "Sprite.h"
 
 Sprite::Sprite() {
-    drawableComponent = FW::createRef<FW::DrawableComponent>();
+    drawableComponent = createRef<DrawableComponent>();
     addComponent(drawableComponent);
 
-    transformationComponent = FW::createRef<FW::TransformationComponent>();
+    transformationComponent = createRef<TransformationComponent>();
     addComponent(transformationComponent);
 
-    spriteShader = FW::createRef<FW::Shader>(
+    spriteShader = createRef<Shader>(
       RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
       RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
 
@@ -15,12 +15,12 @@ Sprite::Sprite() {
     // via the drawable component.
     drawableComponent->setShader(spriteShader);
 
-    FW::ref<FW::PrimitiveQuad> quadShape = FW::createRef<FW::PrimitiveQuad>();
+    ref<PrimitiveQuad> quadShape = createRef<PrimitiveQuad>();
     drawableComponent->setShape(quadShape);
 
     transformationComponent->setShader(spriteShader);
 
-    physicsComponent = FW::createRef<FW::PhysicsComponent>();
+    physicsComponent = createRef<PhysicsComponent>();
 }
 
 void Sprite::moveBy(float x, float y) {

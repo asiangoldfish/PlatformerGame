@@ -21,12 +21,12 @@ namespace RenderCommand {
     struct QuadProperties {};
 
     struct RenderingContext {
-        FW::ref<FW::VertexArray> vertexArray;
-        FW::ref<FW::VertexBuffer> vertexBuffer;
-        FW::ref<FW::IndexBuffer> indexBuffer;
+        ref<VertexArray> vertexArray;
+        ref<VertexBuffer> vertexBuffer;
+        ref<IndexBuffer> indexBuffer;
     };
 
-    static FW::scope<RenderingContext> quadContext = nullptr;
+    static scope<RenderingContext> quadContext = nullptr;
 
     /**
      * This function must be called before draw calls are performed.
@@ -71,10 +71,10 @@ namespace RenderCommand {
      * @param vertexArrayObject Vertex Array Object to bind
      * @param primitive OpenGL primitive to draw with. Default: GL_TRIANGLES
      */
-    void drawIndex(const FW::VertexArray& vertexArrayObject,
+    void drawIndex(const VertexArray& vertexArrayObject,
                    GLenum primitive = GL_TRIANGLES);
 
-    inline void drawIndex(const std::shared_ptr<FW::VertexArray>& vao,
+    inline void drawIndex(const std::shared_ptr<VertexArray>& vao,
                           GLenum primitive = GL_TRIANGLES) {
         drawIndex(*vao, primitive);
     }

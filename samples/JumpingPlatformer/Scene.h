@@ -3,7 +3,7 @@
 #include "Framework.h"
 #include "Sprite.h"
 
-class JumpingPlatformerScene : public FW::BaseScene {
+class JumpingPlatformerScene : public BaseScene {
 public:
     JumpingPlatformerScene() = default;
     virtual ~JumpingPlatformerScene() = default;
@@ -11,16 +11,16 @@ public:
     virtual void cleanUp();
     virtual void update(float delta) override;
 
-    void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
-    FW::ref<FW::Shader> getShader() { return shader; }
+    void setShader(ref<Shader> shader) { this->shader = shader; }
+    ref<Shader> getShader() { return shader; }
 
     
 private:
-    FW::ref<Sprite> playerSprite;
-    FW::ref<FW::Shader> shader;
-    FW::ref<FW::OrthographicCamera> camera;
+    ref<Sprite> playerSprite;
+    ref<Shader> shader;
+    ref<OrthographicCamera> camera;
 
 private: // Physics
-    FW::Physics::Solver mySolver;
-    FW::ref<FW::Physics::GravityForce> gravityForce;
+    Solver mySolver;
+    ref<GravityForce> gravityForce;
 };

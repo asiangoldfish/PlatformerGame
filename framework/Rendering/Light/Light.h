@@ -9,51 +9,49 @@
 // Framework
 #include "Shader.h"
 
-namespace FW {
-    // Pre-declared classes
-    class Shader;
+// Pre-declared classes
+class Shader;
+
+/**
+ * Bring lighting to the scene
+ */
+class Light {
+public:
+    Light() = default;
+    ~Light() = default;
+
+    /** Draw the light caster. */
+    virtual void draw(const ref<Shader>& shader) = 0;
 
     /**
-     * Bring lighting to the scene
+     * Set whether this light should be active.
+     *
+     * If this light caster is disabled, then objects affected by it will no
+     * longer cast light on objects.
+     * @param e True to enable the light caster, or false to disable.
      */
-    class Light {
-    public:
-        Light() = default;
-        ~Light() = default;
+    void setEnable(const bool e) { enable = e; }
 
-        /** Draw the light caster. */
-        virtual void draw(const ref<Shader>& shader) = 0;
+    /**
+     * Set the shader to upload light properties to.
+     *
+     * Currently, the Framework only supports a single shader.
+     * @param s Address of the shader to upload properties to.
+     */
+    void setShader(ref<Shader> s) { this->shader = s; }
 
-        /**
-         * Set whether this light should be active.
-         *
-         * If this light caster is disabled, then objects affected by it will no
-         * longer cast light on objects.
-         * @param e True to enable the light caster, or false to disable.
-         */
-        void setEnable(const bool e) { enable = e; }
+    void setAmbient(const glm::vec3& a) { ambient = a; }
+    void setDiffuse(const glm::vec3& d) { diffuse = d; }
+    void setSpecular(const glm::vec3& s) { specular = s; }
 
-        /**
-         * Set the shader to upload light properties to.
-         *
-         * Currently, the Framework only supports a single shader.
-         * @param s Address of the shader to upload properties to.
-         */
-        void setShader(ref<Shader> s) { this->shader = s; }
+protected:
+    ref<Shader> shader = nullptr;
 
-        void setAmbient(const glm::vec3& a) { ambient = a; }
-        void setDiffuse(const glm::vec3& d) { diffuse = d; }
-        void setSpecular(const glm::vec3& s) { specular = s; }
+    // Light attributes
+    glm::vec3 ambient{ 1.0f };
+    glm::vec3 diffuse{ 1.0f };
+    glm::vec3 specular{ 1.0f };
 
-    protected:
-        ref<Shader> shader = nullptr;
-
-        // Light attributes
-        glm::vec3 ambient{ 1.0f };
-        glm::vec3 diffuse{ 1.0f };
-        glm::vec3 specular{ 1.0f };
-
-    private:
-        bool enable = true;
-    };
-}
+private:
+    bool enable = true;
+};

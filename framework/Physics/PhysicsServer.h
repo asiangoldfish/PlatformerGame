@@ -18,32 +18,28 @@
 
 #include "Solver.h"
 
-namespace FW::Physics {
+class PhysicsServer {
+public:
+    PhysicsServer() = default;
+    virtual ~PhysicsServer() = default;
 
-    class PhysicsServer {
-    public:
-        PhysicsServer() = default;
-        virtual ~PhysicsServer() = default;
+    /**
+     * Update the underlying physics engines.
+     */
+    void update(float delta);
 
-        /**
-         * Update the underlying physics engines.
-         */
-        void update(float delta);
+    void setStepSize(int stepSize);
 
-        void setStepSize(int stepSize);
+private:
+    /**
+     * Global step size.
+     *
+     * NB! This can have a very big performance impact. If you need to
+     * update an individual component's step size, consider changing that
+     * instead. This global step size will increase the total step size for
+     * each component multiplicatively.
+     */
+    int stepSize = 1;
 
-    private:
-        /**
-         * Global step size.
-         *
-         * NB! This can have a very big performance impact. If you need to
-         * update an individual component's step size, consider changing that
-         * instead. This global step size will increase the total step size for
-         * each component multiplicatively.
-         */
-        int stepSize = 1;
-
-        std::vector<Solver> solvers;
-    };
-
-} // namespace FW::Physics
+    std::vector<Solver> solvers;
+};

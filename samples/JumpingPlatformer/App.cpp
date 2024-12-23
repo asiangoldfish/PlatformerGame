@@ -17,7 +17,7 @@ bool JumpingPlatformerApp::init() {
         return false;
     }
 
-    scene = FW::createRef<JumpingPlatformerScene>();
+    scene = createRef<JumpingPlatformerScene>();
     scene->init();
 
     return true;
@@ -36,10 +36,10 @@ void JumpingPlatformerApp::run() {
         scene->update(timer.getDeltaTime());
 
         glfwSwapBuffers(getWindow());
-        FW::Input::clearJustPressed();
+        Input::clearJustPressed();
     }
 }
 
 JumpingPlatformerApp::~JumpingPlatformerApp() {
-    FW::TextureManager::clearTextures();
+    TextureManager::clearTextures();
 }

@@ -1,19 +1,19 @@
 #include "Scene.h"
 
 void JumpingPlatformerScene::init() {
-    FW::BaseScene::init();
+    BaseScene::init();
 
-    playerSprite = FW::createRef<Sprite>();
+    playerSprite = createRef<Sprite>();
     playerSprite->setSize(50.f, 50.f);
     root->addChild(playerSprite);
 
-    camera = FW::createRef<FW::OrthographicCamera>();
+    camera = createRef<OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
     // Uncomment below to centralise the screen coordinates.
     // camera->setCentraliseScreenCoordinates(true);
 
     /* Physics */
-    gravityForce = FW::createRef<FW::Physics::GravityForce>();
+    gravityForce = createRef<GravityForce>();
     mySolver.addForce(gravityForce);
 }
 
@@ -35,23 +35,23 @@ void JumpingPlatformerScene::update(float delta) {
     }
 
     // Go right
-    if (FW::Input::isKeyPressed(FW_KEY_D) || FW::Input::isKeyPressed(FW_KEY_RIGHT)) {
+    if (Input::isKeyPressed(FW_KEY_D) || Input::isKeyPressed(FW_KEY_RIGHT)) {
         playerSprite->addVelocity(speed * delta, 0.0f);
     }
 
     // Go left
-    if (FW::Input::isKeyPressed(FW_KEY_A) || FW::Input::isKeyPressed(FW_KEY_LEFT)) {
+    if (Input::isKeyPressed(FW_KEY_A) || Input::isKeyPressed(FW_KEY_LEFT)) {
         playerSprite->addVelocity(-speed * delta, 0.0f);
     }
     
     // Jump
-    if (FW::Input::isKeyPressed(FW_KEY_W) && !isJumping) {
+    if (Input::isKeyPressed(FW_KEY_W) && !isJumping) {
         playerSprite->addVelocity(0.0f, jump * delta);
         isJumping = true;
     }
 
     // Update the rest of the scene.
-    FW::BaseScene::update(delta);
+    BaseScene::update(delta);
 }
 
 void JumpingPlatformerScene::cleanUp() {}
