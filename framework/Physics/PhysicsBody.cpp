@@ -1,3 +1,3 @@
 #include "PhysicsBody.h"
 
-void FW::Physics::RigidBody::update(float delta) {}
+void RigidBody::update(float delta) {}

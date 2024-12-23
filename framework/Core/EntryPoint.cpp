@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
         return res;
 #endif
 
-    auto app = FW::createApplication();
+    auto app = createApplication();
 
     if (!app->init()) {
         delete app;

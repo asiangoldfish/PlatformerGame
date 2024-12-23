@@ -14,26 +14,26 @@ namespace RenderCommand {
             FATAL("RenderCommand::init: QuadContext not NULL. RenderCommand "
                   "must only be initialized once");
         } else {
-            quadContext = FW::createScope<RenderingContext>();
+            quadContext = createScope<RenderingContext>();
         }
 
-        auto entityAttribLayout = FW::BufferLayout({
-          { FW::ShaderDataType::Float3, "a_position" },
-          { FW::ShaderDataType::Float4, "a_color" },
-          { FW::ShaderDataType::Float2, "a_texCoord" },
-          { FW::ShaderDataType::Float3, "a_normal" },
+        auto entityAttribLayout = BufferLayout({
+          { ShaderDataType::Float3, "a_position" },
+          { ShaderDataType::Float4, "a_color" },
+          { ShaderDataType::Float2, "a_texCoord" },
+          { ShaderDataType::Float3, "a_normal" },
         });
 
-        auto vertices = FW::UnitGridGeometry2D();
-        auto indices = FW::UnitGridIndices2D;
+        auto vertices = UnitGridGeometry2D();
+        auto indices = UnitGridIndices2D;
 
-        quadContext->vertexArray = FW::createRef<FW::VertexArray>();
+        quadContext->vertexArray = createRef<VertexArray>();
         quadContext->vertexArray->bind();
 
         quadContext->indexBuffer =
-          FW::createRef<FW::IndexBuffer>(&indices.front(), indices.size());
+          createRef<IndexBuffer>(&indices.front(), indices.size());
 
-        quadContext->vertexBuffer = FW::createRef<FW::VertexBuffer>(
+        quadContext->vertexBuffer = createRef<VertexBuffer>(
           &vertices.front(), vertices.size() * sizeof(float));
 
         quadContext->vertexBuffer->setLayout(entityAttribLayout);
@@ -65,7 +65,7 @@ namespace RenderCommand {
         glPolygonMode(GL_FRONT_AND_BACK, polyMode);
     }
 
-    void drawIndex(const FW::VertexArray& vertexArrayObject, GLenum primitive) {
+    void drawIndex(const VertexArray& vertexArrayObject, GLenum primitive) {
         uint32_t count = vertexArrayObject.getIndexBuffer()->getCount();
 
         vertexArrayObject.bind();

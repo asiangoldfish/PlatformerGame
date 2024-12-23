@@ -2,49 +2,47 @@
 #include "Buffer.h"
 #include "GeometricTools.h"
 
-namespace FW {
-    void Shape::createBuffers() {
-        drawType = GL_DYNAMIC_DRAW;
+void Shape::createBuffers() {
+    drawType = GL_DYNAMIC_DRAW;
 
-        auto entityAttribLayout = BufferLayout({
-          { ShaderDataType::Float3, "a_position" },
-          { ShaderDataType::Float4, "a_color" },
-          { ShaderDataType::Float2, "a_texCoord" },
-          { ShaderDataType::Float3, "a_normal" },
-        });
+    auto entityAttribLayout = BufferLayout({
+      { ShaderDataType::Float3, "a_position" },
+      { ShaderDataType::Float4, "a_color" },
+      { ShaderDataType::Float2, "a_texCoord" },
+      { ShaderDataType::Float3, "a_normal" },
+    });
 
-        vertexArray = createRef<VertexArray>();
-        vertexArray->bind();
+    vertexArray = createRef<VertexArray>();
+    vertexArray->bind();
 
-        indexBuffer = createRef<IndexBuffer>(
-          indices.data(), static_cast<int64_t>(indices.size()));
+    indexBuffer = createRef<IndexBuffer>(indices.data(),
+                                         static_cast<int64_t>(indices.size()));
 
-        vertexBuffer = createRef<VertexBuffer>(
-          vertices.data(),
-          static_cast<int>(vertices.size()) * sizeof(float),
-          drawType);
+    vertexBuffer =
+      createRef<VertexBuffer>(vertices.data(),
+                              static_cast<int>(vertices.size()) * sizeof(float),
+                              drawType);
 
-        vertexBuffer->setLayout(entityAttribLayout);
-        vertexArray->setIndexBuffer(indexBuffer);
-        vertexArray->addVertexBuffer(vertexBuffer);
-    }
+    vertexBuffer->setLayout(entityAttribLayout);
+    vertexArray->setIndexBuffer(indexBuffer);
+    vertexArray->addVertexBuffer(vertexBuffer);
+}
 
-    void PrimitiveCube::init() {
-        indices = UnitCubeGeometry3DIndices();
-        vertices = UnitCubeGeometry3D();
+void PrimitiveCube::init() {
+    indices = UnitCubeGeometry3DIndices();
+    vertices = UnitCubeGeometry3D();
 
-        createBuffers();
-    }
+    createBuffers();
+}
 
-    PrimitiveQuad::PrimitiveQuad() {
-        init();
-    }
+PrimitiveQuad::PrimitiveQuad() {
+    init();
+}
 
-    void PrimitiveQuad::init() {
-        // vertices = UnitGridGeometry2D();
-        vertices = UnitSpriteVertices;
-        indices = UnitGridIndices2D;
+void PrimitiveQuad::init() {
+    // vertices = UnitGridGeometry2D();
+    vertices = UnitSpriteVertices;
+    indices = UnitGridIndices2D;
 
-        createBuffers();
-    }
+    createBuffers();
 }

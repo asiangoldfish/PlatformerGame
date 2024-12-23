@@ -3,7 +3,7 @@
 #include "Framework.h"
 #include "Scene.h"
 
-class JumpingPlatformerApp : public FW::GLFWApplication {
+class JumpingPlatformerApp : public GLFWApplication {
 public:
     // The default constructor. Used by the compiler. We don't use this
     // constructor.
@@ -44,11 +44,11 @@ public:
 
 private:
     // Almost everything happens inside scenes.
-    FW::ref<JumpingPlatformerScene> scene;
+    ref<JumpingPlatformerScene> scene;
 };
 
 // This is called by the Framework's main function. This method creates a new
 // instance of our application.
-FW::GLFWApplication* FW::createApplication() {
+GLFWApplication* createApplication() {
     return new JumpingPlatformerApp("Jumping Platformer", "1.0.0", { 1280, 720 });
 }
