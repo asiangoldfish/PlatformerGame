@@ -1,13 +1,10 @@
 project(FRAMEWORK_PHYSICS)
 
 add_library(${PROJECT_NAME} STATIC
-    Physics.cpp
+    BoundingBoxes.cpp
     ParticleSystem.cpp
-
-    PhysicsServer.cpp
-    Solver.cpp
+    PhysicsEngine.cpp
     Force.cpp
-    PhysicsBody.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

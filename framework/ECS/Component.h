@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Material.h"
 #include "Memory.h"
+#include "PhysicsBody.h"
 
 class Component {
 public:
@@ -91,7 +92,7 @@ private:
  */
 class PhysicsComponent : public Component {
 public:
-    virtual void init() override {};
+    virtual void init() override;
     virtual void update(float delta) override;
 
     /**
@@ -99,11 +100,12 @@ public:
      * PhysicsComponent::addVelocity(...).
      */
     void setVelocity(float x, float y, float z);
-    glm::vec3& getVelocity() { return velocity; }
+    Vector2& getVelocity() { return physicsBody->velocity; }
     void addVelocity(float x, float y, float z);
     void addVelocity(float x, float y);
 
+    ref<PhysicsBody2D> getPhysicsBody() { return physicsBody; }
+
 private:
-    float gravity = 9.8067f;
-    glm::vec3 velocity{ 0.0f };
+    ref<PhysicsBody2D> physicsBody;
 };

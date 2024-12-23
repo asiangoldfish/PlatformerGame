@@ -9,7 +9,6 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "PhysicsServer.h"
 #include "Timer.h"
 
 enum class WindowMode { WINDOW = 0, BORDERLESS, FULLSCREEN };
@@ -260,12 +259,6 @@ public:
 protected:
     /** Collection of settings related to a window */
     WindowSettings windowSettings;
-
-    /**
-     * Derived app classes can activate the physics server by calling its
-     * update method in the game loop.
-     */
-    scope<PhysicsServer> physicsServer;
 
     /** Used to get delta time between frames */
     Timer timer;

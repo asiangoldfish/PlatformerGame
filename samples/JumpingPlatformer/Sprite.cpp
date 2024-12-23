@@ -21,6 +21,7 @@ Sprite::Sprite() {
     transformationComponent->setShader(spriteShader);
 
     physicsComponent = createRef<PhysicsComponent>();
+    physicsComponent->init();
 }
 
 void Sprite::moveBy(float x, float y) {

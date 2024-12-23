@@ -31,8 +31,6 @@ void JumpingPlatformerApp::run() {
 
         RenderCommand::clear();
 
-        physicsServer->update(timer.getDeltaTime());
-        
         scene->update(timer.getDeltaTime());
 
         glfwSwapBuffers(getWindow());

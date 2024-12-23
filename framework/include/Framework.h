@@ -40,11 +40,11 @@
 #include "Shape.h"
 
 // Physics
-#include "Physics.h"
+#include "BoundingBoxes.h"
 #include "ParticleSystem.h"
 #include "Force.h"
-#include "Solver.h"
 #include "PhysicsBody.h"
+#include "PhysicsEngine.h"
 
 // Resource Management
 // #include "Model.h"

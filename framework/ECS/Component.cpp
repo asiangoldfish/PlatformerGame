@@ -81,24 +81,16 @@ void TransformationComponent::recalculateModelMatrix() {
                   glm::scale(modelMatrix, scale);
 }
 
+void PhysicsComponent::init() {
+    physicsBody = createRef<PhysicsBody2D>();
+}
+
 void PhysicsComponent::update(float delta) {
     // Gravity
     // velocity.y -= gravity;
 }
 
-void PhysicsComponent::setVelocity(float x, float y, float z) {
-    velocity.x = x;
-    velocity.y = y;
-    velocity.z = z;
-}
-
-void PhysicsComponent::addVelocity(float x, float y, float z) {
-    velocity.x += x;
-    velocity.y += y;
-    velocity.z += z;
-}
-
 void PhysicsComponent::addVelocity(float x, float y) {
-    velocity.x += x;
-    velocity.y += y;
+    physicsBody->velocity.x += x;
+    physicsBody->velocity.y += y;
 }

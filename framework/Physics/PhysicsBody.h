@@ -1,17 +1,19 @@
 #pragma once
 
-class PhysicsBody {
+#include "pch.h"
+#include "Types.h"
+
+/**
+ * The PhysicsBody is an entity is the "physics world". It interacts with
+ * forces and other bodies.
+ */
+class PhysicsBody2D {
 public:
-    PhysicsBody() = default;
-    virtual ~PhysicsBody() = default;
+    PhysicsBody2D() = default;
+    virtual ~PhysicsBody2D() = default;
 
-    virtual void update(float delta) = 0;
-};
-
-class RigidBody : public PhysicsBody {
 public:
-    RigidBody() = default;
-    virtual ~RigidBody() = default;
-
-    virtual void update(float delta);
+    Vector2 position;
+    Vector2 velocity;
+    bool isDynamic = false;
 };

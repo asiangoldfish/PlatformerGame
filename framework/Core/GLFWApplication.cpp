@@ -106,10 +106,6 @@ bool GLFWApplication::init() {
         INFO("Created game directories");
     }
 
-    /* Physics */
-    physicsServer = createScope<PhysicsServer>();
-    physicsServer->setStepSize(1);
-
     /* Time */
     timer.updateDeltaTime();
 

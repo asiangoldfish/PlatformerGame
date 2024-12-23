@@ -8,7 +8,7 @@
 
 // Framework
 #include "Material.h"
-#include "Physics.h"
+#include "BoundingBoxes.h"
 #include "Component.h"
 
 class Shader;

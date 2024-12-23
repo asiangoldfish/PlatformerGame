@@ -16,11 +16,9 @@ public:
 
     
 private:
+    scope<PhysicsEngine> physicsEngine;
+
     ref<Sprite> playerSprite;
     ref<Shader> shader;
     ref<OrthographicCamera> camera;
-
-private: // Physics
-    Solver mySolver;
-    ref<GravityForce> gravityForce;
 };

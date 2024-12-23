@@ -21,8 +21,8 @@
 
 #pragma once
 
+#include "pch.h"
 #include "spdlog/spdlog.h"
-#include <iostream>
 #include "glm/glm.hpp"
 
 /**

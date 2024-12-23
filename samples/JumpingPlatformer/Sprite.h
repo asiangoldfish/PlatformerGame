@@ -32,6 +32,10 @@ public:
         return physicsComponent;
     }
 
+    ref<TransformationComponent> getTransformationComponent() {
+        return transformationComponent;
+    }
+
 private:
     /**
      * The TransformationComponent is responsible for handling the sprite's
