@@ -45,13 +45,20 @@ public:
     void addForce(ref<Force> force) { forces.push_back(force); }
     void addPhysicsBody(ref<PhysicsBody2D> body);
 
+public:
+    /**
+     * Stepsize determines how many times per second the simulation iterates.
+     * A value of 0 leads to undefined behaviour.
+     */
+    float timeStep = 1.0f / 30.0f;
+
+    /**
+     * The accumulator is the overspilled time since the last step.
+     */
+    float accumulator = 0.0f;
+
 protected:
     std::vector<ref<Force>> forces;
-
-    /// Stepsize determines how many times per second the simulation iterates.
-    /// A value of 0 leads to undefined behaviour.
-    int stepSize = 60;
-    float timeSinceLastIteration = 0.0f;
 
     std::vector<ref<PhysicsBody2D>> physicsBodies;
 };

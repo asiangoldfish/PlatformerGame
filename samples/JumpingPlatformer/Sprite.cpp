@@ -7,9 +7,9 @@ Sprite::Sprite() {
     transformationComponent = createRef<TransformationComponent>();
     addComponent(transformationComponent);
 
-    spriteShader = createRef<Shader>(
-      RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
-      RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
+    spriteShader =
+      createRef<Shader>(RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
+                        RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
 
     // A sprite consists of a square and an image. Therefore we should add them
     // via the drawable component.
@@ -50,10 +50,10 @@ void Sprite::update(float delta) {
     // and know nothing about each other, we must handle position update
     // ourselves.
 
-    auto velocity = physicsComponent->getVelocity();
+    auto velocity = physicsComponent->getPhysicsBody()->getVelocity();
     moveBy(velocity.x, velocity.y);
 }
 
 void Sprite::addVelocity(float x, float y) {
-    physicsComponent->addVelocity(x, y);
+    physicsComponent->getPhysicsBody()->addVelocity(Vector2{ x, y });
 }

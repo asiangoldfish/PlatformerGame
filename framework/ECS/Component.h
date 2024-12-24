@@ -93,16 +93,7 @@ private:
 class PhysicsComponent : public Component {
 public:
     virtual void init() override;
-    virtual void update(float delta) override;
-
-    /**
-     * Update the current velocity with new values. To add velocity, see
-     * PhysicsComponent::addVelocity(...).
-     */
-    void setVelocity(float x, float y, float z);
-    Vector2& getVelocity() { return physicsBody->velocity; }
-    void addVelocity(float x, float y, float z);
-    void addVelocity(float x, float y);
+    virtual void update(float delta) override {};
 
     ref<PhysicsBody2D> getPhysicsBody() { return physicsBody; }
 

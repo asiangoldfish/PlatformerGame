@@ -1,5 +1,15 @@
 #include "Scene.h"
 
+Vector2 extrapolatePosition(Vector2 position,
+                            Vector2 velocity,
+                            Vector2 acceleration,
+                            float alpha,
+                            float timeStep) {
+    return position + velocity * (alpha * timeStep) +
+           0.5f * acceleration * (alpha * timeStep) * (alpha * timeStep);
+    ;
+}
+
 void JumpingPlatformerScene::init() {
     BaseScene::init();
 
@@ -12,6 +22,8 @@ void JumpingPlatformerScene::init() {
     // transformation vector.
     playerSprite = createRef<Sprite>();
     playerSprite->setSize(50.f, 50.f);
+    playerSprite->getPhysicsComponent()->getPhysicsBody()->setPosition(
+      Vector2{ 500.0f, 700.0f });
 
     // We must specify whether the
     physicsEngine->addPhysicsBody(
@@ -34,12 +46,25 @@ void JumpingPlatformerScene::update(float delta) {
     physicsEngine->update(delta);
 
     // We must update all entities' positions based on the physics simulation
-    Vector2 pos2d = playerSprite->getPhysicsComponent()->getPhysicsBody()->position;
-    Vector2 newPos = playerSprite->getPhysicsComponent()->getPhysicsBody()->velocity + pos2d; 
-    Vector3 pos3d = Vector3(newPos, 0.0f);
-    playerSprite->getTransformationComponent()->setPosition(pos3d);
-    playerSprite->getPhysicsComponent()->getPhysicsBody()->position = newPos;
-    
+    PhysicsBody2D* body =
+      playerSprite->getPhysicsComponent()->getPhysicsBody().get();
+    float alpha = physicsEngine->accumulator / physicsEngine->timeStep;
+
+    // The physics and rendering loops are not synchronised. We can solve this
+    // issue by extrapolating the position. This means we predict what the
+    // future position is. In our case, the current position is the one
+    // simulated by the physics engine, and the future position is the render
+    // frame.
+    Vector2 nextPosition = extrapolatePosition(body->getPosition(),
+                                               body->getVelocity(),
+                                               body->getAcceleration(),
+                                               alpha,
+                                               physicsEngine->timeStep);
+
+    // Finally, set the position
+    playerSprite->getTransformationComponent()->setPosition(
+      Vector3(nextPosition, 0.0f));
+
     // Step 2: Update the visuals
     BaseScene::update(delta);
 
@@ -72,7 +97,7 @@ void JumpingPlatformerScene::update(float delta) {
     }
 
     // Jump
-    if (Input::isKeyPressed(FW_KEY_W)) {// && !isJumping) {
+    if (Input::isKeyPressed(FW_KEY_W)) { // && !isJumping) {
         playerSprite->addVelocity(0.0f, jump * delta);
         isJumping = true;
     }

@@ -85,12 +85,3 @@ void PhysicsComponent::init() {
     physicsBody = createRef<PhysicsBody2D>();
 }
 
-void PhysicsComponent::update(float delta) {
-    // Gravity
-    // velocity.y -= gravity;
-}
-
-void PhysicsComponent::addVelocity(float x, float y) {
-    physicsBody->velocity.x += x;
-    physicsBody->velocity.y += y;
-}
