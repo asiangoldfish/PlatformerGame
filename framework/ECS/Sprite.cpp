@@ -1,27 +1,13 @@
 #include "Sprite.h"
 
-Sprite::Sprite() {
-    drawableComponent = createRef<DrawableComponent>();
-    addComponent(drawableComponent);
+Sprite::Sprite()
+  : Entity() {
+    init();
+}
 
-    transformationComponent = createRef<TransformationComponent>();
-    addComponent(transformationComponent);
-
-    spriteShader = createRef<Shader>(
-      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
-      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
-
-    // A sprite consists of a square and an image. Therefore we should add them
-    // via the drawable component.
-    drawableComponent->setShader(spriteShader);
-
-    ref<PrimitiveQuad> quadShape = createRef<PrimitiveQuad>();
-    drawableComponent->setShape(quadShape);
-
-    transformationComponent->setShader(spriteShader);
-
-    physicsComponent = createRef<PhysicsComponent>();
-    physicsComponent->init();
+Sprite::Sprite(std::string name)
+  : Entity(name) {
+    init();
 }
 
 void Sprite::moveBy(float x, float y) {
@@ -56,4 +42,28 @@ void Sprite::update(float delta) {
 
 void Sprite::addVelocity(float x, float y) {
     physicsComponent->getPhysicsBody()->addVelocity(Vector2{ x, y });
+}
+
+void Sprite::init() {
+    drawableComponent = createRef<DrawableComponent>();
+    addComponent(drawableComponent);
+
+    transformationComponent = createRef<TransformationComponent>();
+    addComponent(transformationComponent);
+
+    spriteShader = createRef<Shader>(
+      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
+      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
+
+    // A sprite consists of a square and an image. Therefore we should add them
+    // via the drawable component.
+    drawableComponent->setShader(spriteShader);
+
+    ref<PrimitiveQuad> quadShape = createRef<PrimitiveQuad>();
+    drawableComponent->setShape(quadShape);
+
+    transformationComponent->setShader(spriteShader);
+
+    physicsComponent = createRef<PhysicsComponent>();
+    physicsComponent->init();
 }

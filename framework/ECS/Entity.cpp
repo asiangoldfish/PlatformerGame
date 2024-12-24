@@ -53,4 +53,11 @@ ref<Entity> Entity::removeChildById(int id) {
     }
 }
 
+Entity::Entity() {
+}
+
+Entity::Entity(std::string name) {
+    this->name = name;
+}
+
 Entity::~Entity() {}

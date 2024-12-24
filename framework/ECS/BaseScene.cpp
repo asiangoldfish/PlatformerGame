@@ -3,8 +3,7 @@
 BaseScene::~BaseScene() {}
 
 void BaseScene::init() {
-    root = createRef<Entity>();
-    root->name = "root";
+    root = createRef<Entity>("root");
     viewport = createRef<Viewport>();
 }
 

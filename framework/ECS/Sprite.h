@@ -18,6 +18,7 @@
 class Sprite : public Entity {
 public:
     Sprite();
+    Sprite(std::string name);
 
     ref<Shader> getShader() { return spriteShader; }
 
@@ -45,6 +46,9 @@ public:
     ref<TransformationComponent> getTransformationComponent() {
         return transformationComponent;
     }
+
+protected:
+    void init() override;
 
 private:
     /**

@@ -31,7 +31,8 @@ public: // Constructors and destructors
      * Construct an empty entity. If the entity is drawable, it must
      * first be iniitialized.
      */
-    Entity() = default;
+    Entity();
+    Entity(std::string name);
 
     virtual ~Entity();
 
@@ -105,6 +106,17 @@ public: // Constructors and destructors
 
     /** Get the firstly found component by type `T`. */
     ref<Component> getComponent(std::string componentName);
+
+protected:
+    /**
+     * Child classes can optionally implement their own init method. The Entity
+     * base class does not decide how it is use, and it does not call this
+     * method from its constructor.
+     *
+     * See
+     * https://isocpp.org/wiki/faq/strange-inheritance#calling-virtuals-from-ctors.
+     */
+    virtual void init() {};
 
 public:
     /// The node's unique name. It is display name and identifier.

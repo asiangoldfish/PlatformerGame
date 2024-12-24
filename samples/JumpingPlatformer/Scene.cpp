@@ -20,7 +20,7 @@ void JumpingPlatformerScene::init() {
     // with a physics body. The physics engine updates the physics body's
     // positions, which we synchronize with the sprite's position in the
     // transformation vector.
-    playerSprite = createRef<Sprite>();
+    playerSprite = createRef<Sprite>("Player");
     playerSprite->setSize(50.f, 50.f);
     playerSprite->getPhysicsComponent()->getPhysicsBody()->setPosition(
       Vector2{ 500.0f, 700.0f });
