@@ -37,8 +37,16 @@ private:
     /// use it if you want to create physics based animations.
     scope<PhysicsEngine> physicsEngine;
 
+    /// By storing sprites in a collection, we can create a simple interface to
+    /// sync between the physics loop and the render loop. You can optionally
+    /// use std::array.
+    std::vector<ref<Sprite>> sprites;
+
     /// This is the sprite controlled by the player.
     ref<Sprite> playerSprite;
+
+    /// This is the ground plane. The player can walk and jump on it.
+    ref<Sprite> ground;
 
     /// The shader lets us draw things on the screen. You can write or edit the
     /// shader code in the resources/shaders directory.

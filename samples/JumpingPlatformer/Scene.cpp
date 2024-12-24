@@ -25,7 +25,7 @@ void JumpingPlatformerScene::init() {
     playerSprite->getPhysicsComponent()->getPhysicsBody()->setPosition(
       Vector2{ 500.0f, 700.0f });
 
-    // We must specify whether the
+    // Let the physics engine know about the player sprite's physics body.
     physicsEngine->addPhysicsBody(
       playerSprite->getPhysicsComponent()->getPhysicsBody());
 
@@ -33,11 +33,45 @@ void JumpingPlatformerScene::init() {
     // like gravity affects it.
     playerSprite->getPhysicsComponent()->getPhysicsBody()->isDynamic = true;
 
-    root->addChild(playerSprite);
+    // This creates the ground sprite.
+    ground = createRef<Sprite>("Ground");
+    ground->setSize(500.0f, 50.0f);
+    // By default, a physics body is static.
+    ground->getPhysicsComponent()->getPhysicsBody()->isDynamic = false;
+    physicsEngine->addPhysicsBody(
+      ground->getPhysicsComponent()->getPhysicsBody());
 
+    // Add to sprites collection.
+    // The benefit with using heap allocated sprites is they are not recreated
+    // and copied when append them to the collection.
+    sprites.push_back(playerSprite);
+    sprites.push_back(ground);
+
+    // Unless you deterministically append the sprites in order of dynamicity,
+    // we should sort them. This helps the CPU's branch prediction to guess
+    // currectly when we later decide whether we should copy the physics
+    // transformation to the render transformation.
+    std::sort(sprites.begin(), sprites.end(), [](ref<Sprite> a, ref<Sprite> b) {
+        return a->getPhysicsComponent()->getPhysicsBody()->isDynamic >
+               b->getPhysicsComponent()->getPhysicsBody()->isDynamic;
+    });
+
+    // The scene is a tree data structure. It consists of n number of children.
+    // To render an entity, it must be registered to the tree in some way.
+    // Note that a sprite doesn't need to be in the scene to be physics
+    // simulated. These subsystems work independently.
+    root->addChild(playerSprite);
+    root->addChild(ground);
+
+    // Instantiate the camera. For 2d games, the camera size should be the size
+    // of the viewport. This is usually the same as the game window (for
+    // fullscreen games, this is usually the same as the monitor resolution.)
     camera = createRef<OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
-    // Uncomment below to centralise the screen coordinates.
+
+    // By default, the screen coordinate (0, 0) is at the bottom left of the
+    // viewport. This can be centralised, so (0, 0) is in the middle of the
+    // monitor. Uncomment below to centralise the screen coordinates.
     // camera->setCentraliseScreenCoordinates(true);
 }
 
@@ -52,32 +86,39 @@ void JumpingPlatformerScene::update(float delta) {
     // Step 1: Update the physics
     physicsEngine->update(delta);
 
-    // We must update all entities' positions based on the physics simulation
-    PhysicsBody2D* body =
-      playerSprite->getPhysicsComponent()->getPhysicsBody().get();
-    float alpha = physicsEngine->accumulator / physicsEngine->timeStep;
+    for (auto& sprite : sprites) {
+        PhysicsBody2D* body =
+          sprite->getPhysicsComponent()->getPhysicsBody().get();
 
-    // The physics and rendering loops are not synchronised. We can solve this
-    // issue by extrapolating the position. This means we predict what the
-    // future position is. In our case, the current position is the one
-    // simulated by the physics engine, and the future position is the render
-    // frame.
-    Vector2 nextPosition = extrapolatePosition(body->getPosition(),
-                                               body->getVelocity(),
-                                               body->getAcceleration(),
-                                               alpha,
-                                               physicsEngine->timeStep);
+        if (body->isDynamic) {
+            // We must update all entities' positions based on the physics
+            // simulation
+            float alpha = physicsEngine->accumulator / physicsEngine->timeStep;
 
-    // Finally, set the position
-    playerSprite->getTransformationComponent()->setPosition(
-      Vector3(nextPosition, 0.0f));
+            // The physics and rendering loops are not synchronised. We can
+            // solve this issue by extrapolating the position. This means we
+            // predict what the future position is. In our case, the current
+            // position is the one simulated by the physics engine, and the
+            // future position is the render frame.
+            Vector2 nextPosition = extrapolatePosition(body->getPosition(),
+                                                       body->getVelocity(),
+                                                       body->getAcceleration(),
+                                                       alpha,
+                                                       physicsEngine->timeStep);
+
+            // Finally, set the position
+            sprite->getTransformationComponent()->setPosition(
+              Vector3(nextPosition, 0.0f));
+        }
+
+        // Lastly, we update the sprite's shader's view and projection matrices.
+        camera->update(sprite->getShader());
+    }
 
     // Step 2: Update the visuals
     BaseScene::update(delta);
 
     // Step 3: Update the logic
-    camera->update(playerSprite->getShader());
-
     glm::vec2 moveBy(0.0f);
     float speed = 20.0f;
     float jump = 40.0f;
