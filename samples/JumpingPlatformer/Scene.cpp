@@ -41,6 +41,13 @@ void JumpingPlatformerScene::init() {
     // camera->setCentraliseScreenCoordinates(true);
 }
 
+/*
+  If the Scene relies on physics, the Engine uses the following procedure to
+  handle this:
+  - Step 1: Update physics.
+  - Step 2: Update visuals (what is rendered).
+  - Step 3: Update logic (user input, etc.).
+*/
 void JumpingPlatformerScene::update(float delta) {
     // Step 1: Update the physics
     physicsEngine->update(delta);
@@ -75,16 +82,6 @@ void JumpingPlatformerScene::update(float delta) {
     float speed = 20.0f;
     float jump = 40.0f;
     static bool isJumping = false;
-
-    // Collide with the ground floor
-    // if (playerSprite->getPosition().y < 300.0f) {
-    //     playerSprite->setPosition(playerSprite->getPosition().x, 300.0f);
-    //     playerSprite->getPhysicsComponent()->getVelocity().y = 0.0f;
-    //     isJumping = false;
-    // } else {
-    //     // playerSprite->getPhysicsComponent()->getVelocity().y += -9.8f *
-    //     // delta;
-    // }
 
     // Go right
     if (Input::isKeyPressed(FW_KEY_D) || Input::isKeyPressed(FW_KEY_RIGHT)) {
