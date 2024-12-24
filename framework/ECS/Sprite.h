@@ -1,6 +1,16 @@
 #pragma once
 
-#include "Framework.h"
+#include "pch.h"
+
+// Util
+#include "Memory.h"
+
+// ECS
+#include "Entity.h"
+#include "Component.h"
+
+// Rendering
+#include "Shader.h"
 
 /**
  * A sprite is an squaric Entity with transformation.

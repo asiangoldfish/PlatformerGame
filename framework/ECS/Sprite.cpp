@@ -7,9 +7,9 @@ Sprite::Sprite() {
     transformationComponent = createRef<TransformationComponent>();
     addComponent(transformationComponent);
 
-    spriteShader =
-      createRef<Shader>(RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
-                        RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
+    spriteShader = createRef<Shader>(
+      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.vs"),
+      FW_ECS_RESOURCES_DIR + std::string("shaders/spriteShader.fs"));
 
     // A sprite consists of a square and an image. Therefore we should add them
     // via the drawable component.

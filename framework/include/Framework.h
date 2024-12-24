@@ -38,6 +38,7 @@
 #include "BaseScene.h"
 #include "Component.h"
 #include "Shape.h"
+#include "Sprite.h"
 
 // Physics
 #include "BoundingBoxes.h"

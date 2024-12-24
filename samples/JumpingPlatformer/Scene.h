@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Framework.h"
-#include "Sprite.h"
 
 class JumpingPlatformerScene : public BaseScene {
 public:
