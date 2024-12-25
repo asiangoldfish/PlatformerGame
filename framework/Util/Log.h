@@ -25,6 +25,40 @@
 #include "spdlog/spdlog.h"
 #include "glm/glm.hpp"
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+
+#include <glm/gtx/string_cast.hpp>
+
+// Add support to print vectors with spdlog
+// https://github.com/gabime/spdlog/issues/2390#issuecomment-1139357173
+template<>
+struct fmt::formatter<glm::vec2> : formatter<string_view> {
+    // parse is inherited from formatter<string_view>.
+    template<typename FormatContext>
+    auto format(glm::vec2& v, FormatContext& ctx) {
+        return formatter<string_view>::format(glm::to_string(v), ctx);
+    }
+};
+
+template<>
+struct fmt::formatter<glm::vec3> : formatter<string_view> {
+    // parse is inherited from formatter<string_view>.
+    template<typename FormatContext>
+    auto format(glm::vec3& v, FormatContext& ctx) {
+        return formatter<string_view>::format(glm::to_string(v), ctx);
+    }
+};
+
+template<>
+struct fmt::formatter<glm::vec4> : formatter<string_view> {
+    // parse is inherited from formatter<string_view>.
+    template<typename FormatContext>
+    auto format(glm::vec4& v, FormatContext& ctx) {
+        return formatter<string_view>::format(glm::to_string(v), ctx);
+    }
+};
+
 /**
  * Trace code flow.
  *
