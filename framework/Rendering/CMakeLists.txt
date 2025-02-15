@@ -38,9 +38,9 @@ PRIVATE
 target_link_libraries(${PROJECT_NAME} 
 PUBLIC
     glad
+    glfw
 
 PRIVATE
-    glfw
     glm
     stb
     spdlog
