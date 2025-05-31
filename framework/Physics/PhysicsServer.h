@@ -28,7 +28,11 @@ public:
     /**
      * Update the underlying physics engines.
      */
-    void update(float delta);
+    void update();
+
+    void setDelta(float delta) {
+        this->delta = delta;
+    }
 
 public:
     /**
@@ -43,7 +47,7 @@ public:
 
 private:
     std::vector<Solver> solvers;
-
+    float delta = 1.0/60.0;
 };
 
 } // namespace FW::Physics

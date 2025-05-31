@@ -108,6 +108,7 @@ namespace FW {
         }
 
         /* Physics */
+        // TODO: Remove. Clients may not want to implement physics.
         physicsServer = createScope<Physics::PhysicsServer>();
         physicsServer->stepSize = 1;
 
