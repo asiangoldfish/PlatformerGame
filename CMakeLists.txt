@@ -74,6 +74,8 @@ target_include_directories(stb INTERFACE external/stb)
 target_compile_definitions(stb INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 
+add_subdirectory(Applications)
+
 # TODO fix this repo and move to samples
 # add_subdirectory(src)
 add_subdirectory(PhysicsDemo)
