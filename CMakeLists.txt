@@ -58,15 +58,8 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 set(GLFW_VULKAN_STATIC OFF CACHE BOOL "" FORCE)
 
-# Depdendencies
-add_subdirectory(external/glad)
-add_subdirectory(external/glfw)
-add_subdirectory(external/glm)
-add_subdirectory(external/spdlog)
-#add_subdirectory(external/assimp)
-add_subdirectory(external/imgui)
-add_subdirectory(external/nlohmann_json)
-add_subdirectory(external/doctest)
+## Depdendencies
+add_subdirectory(external)
 
 # stb
 add_library(stb INTERFACE)
