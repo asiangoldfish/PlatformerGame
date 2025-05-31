@@ -1,1 +1,2 @@
 add_subdirectory(QtApp)
+add_subdirectory(QtAppTest)
