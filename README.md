@@ -1,11 +1,12 @@
-# Platformer Game
+# VSE - The Visualisation and Simulation Engine
 
-![render-engine.jpeg](docs%2Fimages%2Frender-engine.jpeg)
-![3d_viewport_with_grid.jpeg](docs%2Fimages%2F3d_viewport_with_grid.jpeg)
+Multi-purpose engine for visualisation and simulation for education. The Engine's primary purpose is to support the [Manim Community](https://www.manim.community/) project in a self-contained environment, and secondarily to provide tools to simulate game physics. The goal is to animate and visualise mathematical concepts.
 
-A render engine based on the [Learn OpenGL](https://learnopengl.com/) book.
+As it currently stands, only particle simulations are supported.
 
-## Dependencies
+## Installation
+Besides the listed dependencies in [\#Dependencies](#dependencies), VSE supports editing code from the Editor itself. This can optionally be turned off with CMake flags. Make sure [code-server](https://coder.com/docs/code-server/install) is installed before using this feature.
+
 **Ubuntu:**
 ```
 sudo apt install libxinerama-dev x11-xserver-utils libxss-dev x11proto-xinerama-dev libxcb-xinerama0-dev libxrandr-dev libxcursor-dev libxi-dev
@@ -83,6 +84,7 @@ This will stop the test even if the test succeeds. To see the rest of the availa
 As doctest is embedded into the Engine itself, all targets inherit it. This means if you create your own project and include the Engine's Framework, then you are still able to test your project.
 
 ## Dependencies
+- [Qt6](https://www.qt.io/product/qt6)
 - [glad](https://github.com/Dav1dde/glad)
 - [glfw](https://github.com/glfw/glfw)
 - [glm](https://github.com/g-truc/glm)
@@ -90,3 +92,7 @@ As doctest is embedded into the Engine itself, all targets inherit it. This mean
 - [stb](https://github.com/nothings/stb)
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [Doctest](https://github.com/doctest/doctest)
+
+## Credits
+- See [AUTHORS.md](./AUTHORS.md)
+- OpenGL code is greatly based on the [Learn OpenGL](https://learnopengl.com/) and TheCherno's [Game Engine Series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT).
