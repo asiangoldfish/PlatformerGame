@@ -4,6 +4,8 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 
+#include "EscapeEventFilter.h"
+
 QtApp::QtApp(int &argc, char **argv)
     : app(argc, argv) {
     mainWindow.setWindowTitle("Qt Editor");
@@ -14,6 +16,9 @@ QtApp::QtApp(int &argc, char **argv)
     vscodium->start();
 
     setupUI();
+
+    EscapeEventFilter *escFilter = new EscapeEventFilter(&app);
+    app.installEventFilter(escFilter);
 }
 
 void QtApp::setupUI() {

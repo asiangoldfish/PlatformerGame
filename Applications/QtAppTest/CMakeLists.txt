@@ -5,6 +5,7 @@ qt_add_executable(${PROJECT_NAME}
     QtApp.cpp
     WebWindow.cpp
     VSCodiumManager.cpp
+    EscapeEventFilter.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} 
