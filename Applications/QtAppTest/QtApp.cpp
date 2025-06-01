@@ -10,7 +10,7 @@ QtApp::QtApp(int &argc, char **argv)
     mainWindow.resize(1280, 720);
 
     // Start the VSCodium server
-    vscodium = new VSCodiumManager("vscodium-server", {"--port", "8080", "--auth", "none"});
+    vscodium = new VSCodiumManager("code-server", {"--port", "8080", "--auth", "none"});
     vscodium->start();
 
     setupUI();
