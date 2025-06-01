@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(ManimEngine)
+set(APPLICATION_NAME ${PROJECT_NAME})
 
 ## Compiler settings
 set(CMAKE_CXX_STANDARD 20)

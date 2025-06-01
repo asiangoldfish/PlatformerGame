@@ -6,6 +6,7 @@ qt_add_executable(${PROJECT_NAME}
     WebWindow.cpp
     VSCodiumManager.cpp
     EscapeEventFilter.cpp
+    ConfigManager.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -17,4 +18,8 @@ target_link_libraries(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE ON
     MACOSX_BUNDLE ON
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    APPLICATION_NAME="${APPLICATION_NAME}"
 )

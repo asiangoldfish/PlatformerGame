@@ -1,11 +1,11 @@
-# VSE - The Visualisation and Simulation Engine
+# Manim Engine
 
 Multi-purpose engine for visualisation and simulation for education. The Engine's primary purpose is to support the [Manim Community](https://www.manim.community/) project in a self-contained environment, and secondarily to provide tools to simulate game physics. The goal is to animate and visualise mathematical concepts.
 
 As it currently stands, only particle simulations are supported.
 
 ## Installation
-Besides the listed dependencies in [\#Dependencies](#dependencies), VSE supports editing code from the Editor itself. This can optionally be turned off with CMake flags. Make sure [code-server](https://coder.com/docs/code-server/install) is installed before using this feature.
+Besides the listed dependencies in [\#Dependencies](#dependencies), the engine supports editing code from the Editor itself. This can optionally be turned off with CMake flags. Make sure [code-server](https://coder.com/docs/code-server/install) is installed before using this feature.
 
 **Ubuntu:**
 ```
