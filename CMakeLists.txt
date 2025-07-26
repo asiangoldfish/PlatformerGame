@@ -36,6 +36,7 @@ add_subdirectory(external/spdlog)
 #add_subdirectory(external/assimp)
 add_subdirectory(external/imgui)
 add_subdirectory(external/nlohmann_json)
+add_subdirectory(external/doctest)
 
 # stb
 add_library(stb INTERFACE)
