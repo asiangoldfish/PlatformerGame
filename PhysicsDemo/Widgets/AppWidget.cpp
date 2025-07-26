@@ -6,6 +6,40 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
+/**
+ * Get the user's data directory based on the platform.
+ *
+ * TODO: Create a util tool for this.
+ */
+std::string widgetGetUserDataDirectory() {
+    std::string userDataPath;
+
+    std::string appName = "PhysicsDemo";
+
+#ifdef _WIN32
+    // TODO error handling when APPDATA doesnt exist
+    char* appdata = std::getenv("APPDATA");
+    if (appdata) {
+        userDataPath = std::string(appdata) + "\\" + appName;
+    }
+#elif __linux__
+    // TODO needs testing
+    // TODO needs error handling
+    char* configHome = std::getenv("XDG_DATA_HOME");
+    char* userHome = std::getenv("HOME");
+    char overrideXdgHome[14] = "/.local/share";
+    if (!configHome) {
+        configHome = strcat(userHome, overrideXdgHome);
+    }
+
+    userDataPath = std::string(configHome) + "/" + appName;
+#elif __APPLE__
+    FATAL("We do not support Apple devices");
+#endif
+
+    return userDataPath;
+}
+
 void sceneTreeEntry(FW::ref<FW::Entity> entity);
 
 void AppWidget::beginDraw() {
@@ -56,18 +90,18 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
     if (ImGui::Begin("Viewport")) {
         ImVec2 viewportSize = ImGui::GetContentRegionAvail();
         // TODO Ugly code. Reformat this.
-        ImGui::Image(
-            (unsigned long long)framebufferID,
-            viewportSize,
-            ImVec2{ 0, 1 },
-            ImVec2{ 1, 0 });
+        ImGui::Image((unsigned long long)framebufferID,
+                     viewportSize,
+                     ImVec2{ 0, 1 },
+                     ImVec2{ 1, 0 });
 
         mouseState.isViewportHovered = ImGui::IsItemHovered();
         mouseState.isViewportFocused = ImGui::IsItemFocused();
-        mouseState.mousePosition = glm::vec2(
-            ImGui::GetMousePos().x, ImGui::GetMousePos().y);
+        mouseState.mousePosition =
+          glm::vec2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
         mouseState.isLeftButtonDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
-        mouseState.isRightButtonDown = ImGui::IsMouseDown(ImGuiMouseButton_Right);
+        mouseState.isRightButtonDown =
+          ImGui::IsMouseDown(ImGuiMouseButton_Right);
 
         ImGui::End();
 
@@ -87,9 +121,8 @@ void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
 void sceneTreeEntry(FW::ref<FW::Entity> entity) {
     ImGui::SetNextItemOpen(entity->getChildren().size(), ImGuiCond_Once);
     ImGui::PushID(entity->name.c_str());
-    if (ImGui::TreeNode(entity->name.c_str()))
-    {
-        for (auto child: entity->getChildren()) {
+    if (ImGui::TreeNode(entity->name.c_str())) {
+        for (auto child : entity->getChildren()) {
             sceneTreeEntry(child);
         }
 
@@ -147,17 +180,16 @@ void AppWidget::drawMenuBar() {
             //     ImGui::PopItemFlag();
             //     ImGui::EndMenu();
             // }
-            ImGui::MenuItem("Preferences", NULL, &widgetStates.editorPreferences);
+            ImGui::MenuItem(
+              "Preferences", NULL, &widgetStates.editorPreferences);
 
             // Demo
             ImGui::Separator();
             ImGui::MenuItem("ImGui Demo", NULL, &widgetStates.showDemo);
 
-
             // Quit
             ImGui::Separator();
-            ImGui::PushItemFlag(ImGuiItemFlags_AutoClosePopups,
-                                true);
+            ImGui::PushItemFlag(ImGuiItemFlags_AutoClosePopups, true);
             if (ImGui::MenuItem("Quit Application", "Escape")) {
                 glfwSetWindowShouldClose(window, 1);
             }
@@ -190,74 +222,89 @@ void AppWidget::propertiesPanel() {
     // glm::vec3 testControllers{0,0,0};
 
     // drawVec3Control("Test Controls,", testControllers);
-        
+
     ImGui::End();
 }
 
 void AppWidget::drawEditorPreferencesMenu() {
     ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
-        
-        if (ImGui::Begin("Example: Simple layout", &widgetStates.editorPreferences, ImGuiWindowFlags_MenuBar)) {
-            // IMGUI_DEMO_MARKER("Examples/Simple layout");
-            if (ImGui::BeginMenuBar()) {
-                if (ImGui::BeginMenu("File"))
-                {
-                    if (ImGui::MenuItem("Close", "Ctrl+W")) { widgetStates.editorPreferences = false; }
-                    ImGui::EndMenu();
+
+    if (ImGui::Begin("Example: Simple layout",
+                     &widgetStates.editorPreferences,
+                     ImGuiWindowFlags_MenuBar)) {
+        // IMGUI_DEMO_MARKER("Examples/Simple layout");
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("Close", "Ctrl+W")) {
+                    widgetStates.editorPreferences = false;
                 }
-                ImGui::EndMenuBar();
+                ImGui::EndMenu();
             }
-
-            // Left
-            static int selectedOption = 0;
-            {
-                ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
-
-                if (ImGui::Selectable("Window", selectedOption == 0)) {
-                    selectedOption = 0;
-                }
-
-                if (ImGui::Selectable("Placeholder 1", selectedOption == 1)) {
-                    selectedOption = 1;
-                }
-
-                if (ImGui::Selectable("Placeholder 2", selectedOption == 2)) {
-                    selectedOption = 2;
-                }
-
-                ImGui::EndChild();
-            }
-            ImGui::SameLine();
-
-            // Right
-            {
-                ImGui::BeginGroup();
-                ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
-                
-                switch(selectedOption) {
-                    case 0:
-                        windowSettings();
-                        break;
-                }
-
-                ImGui::EndChild();
-                if (ImGui::Button("Revert")) {}
-                ImGui::SameLine();
-                if (ImGui::Button("Save")) {
-                    widgetStates.shouldUpdateFontSize = true;
-                }
-                ImGui::EndGroup();
-            }
+            ImGui::EndMenuBar();
         }
 
-        ImGui::End();
+        // Left
+        static int selectedOption = 0;
+        {
+            ImGui::BeginChild("left pane",
+                              ImVec2(150, 0),
+                              ImGuiChildFlags_Borders |
+                                ImGuiChildFlags_ResizeX);
+
+            if (ImGui::Selectable("Window", selectedOption == 0)) {
+                selectedOption = 0;
+            }
+
+            if (ImGui::Selectable("Placeholder 1", selectedOption == 1)) {
+                selectedOption = 1;
+            }
+
+            if (ImGui::Selectable("Placeholder 2", selectedOption == 2)) {
+                selectedOption = 2;
+            }
+
+            ImGui::EndChild();
+        }
+        ImGui::SameLine();
+
+        // Right
+        {
+            ImGui::BeginGroup();
+            ImGui::BeginChild(
+              "item view",
+              ImVec2(0,
+                     -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1
+                                                            // line below us
+
+            switch (selectedOption) {
+                case 0:
+                    windowSettings();
+                    break;
+            }
+
+            ImGui::EndChild();
+            if (ImGui::Button("Revert")) {
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Save")) {
+                widgetStates.shouldUpdateFontSize = true;
+            }
+            ImGui::EndGroup();
+        }
+    }
+
+    ImGui::End();
 }
 
 void AppWidget::windowSettings() {
-    if (ImGui::BeginTable("##properties", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY)) {
+    if (ImGui::BeginTable("##properties",
+                          2,
+                          ImGuiTableFlags_Resizable |
+                            ImGuiTableFlags_ScrollY)) {
         ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed);
-        ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch, 2.0f); // Default twice larger
-        
+        ImGui::TableSetupColumn(
+          "", ImGuiTableColumnFlags_WidthStretch, 2.0f); // Default twice larger
+
         /* Font size */
         ImGui::TableNextRow();
         ImGui::PushID("Fontsize");
@@ -287,13 +334,13 @@ void AppWidget::init(GLFWwindow* window) {
     // Because imgui stores the imgui.ini config in CWD by default, we want to
     // store it in the user's local storage which is OS-dependent.
     // TODO: Add support in the Engine to retrieve the user's local storage.
+    // TODO: Use library to use \\ or / depending on platform in filepath.
     std::string userDataPath;
-    char* appdata = std::getenv("APPDATA");
-    if (appdata) {
-        userDataPath = std::string(appdata) + "\\PhysicsDemo\\imgui.ini";
-        io.IniFilename = NULL;
-        ImGui::LoadIniSettingsFromDisk(userDataPath.c_str());
-    }
+    std::string appdata = widgetGetUserDataDirectory();
+    userDataPath = std::string(appdata) + "/imgui.ini";
+    INFO(userDataPath);
+    io.IniFilename = NULL;
+    ImGui::LoadIniSettingsFromDisk(userDataPath.c_str());
 
     // -----
     // Configure ImGui
@@ -318,11 +365,10 @@ void AppWidget::init(GLFWwindow* window) {
 
     // Source: https://fonts.google.com/specimen/Open+Sans
     std::string fontPath =
-        RESOURCES_DIR +
-        std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
-    io.Fonts->AddFontFromFileTTF(
-        fontPath.c_str(),
-        16.0); //, nullptr, nullptr);
+      RESOURCES_DIR +
+      std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
+    io.Fonts->AddFontFromFileTTF(fontPath.c_str(),
+                                 16.0); //, nullptr, nullptr);
 
     setFontSize(fontSize);
 
@@ -335,79 +381,78 @@ void AppWidget::init(GLFWwindow* window) {
 
 void AppWidget::docking() {
     // ------
-        // BEGIN Dockspace
-        // ------
+    // BEGIN Dockspace
+    // ------
 
-        // Set to true to enable dockspace
-        static bool enableDockspace = true;
-        // ImGui Dockspace
-        static bool opt_fullscreen = true;
-        static bool opt_padding = false;
-        static bool dockspaceOpen = true;
-        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+    // Set to true to enable dockspace
+    static bool enableDockspace = true;
+    // ImGui Dockspace
+    static bool opt_fullscreen = true;
+    static bool opt_padding = false;
+    static bool dockspaceOpen = true;
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-        // We are using the ImGuiWindowFlags_NoDocking flag to make the
-        // parent window not dockable into, because it would be confusing to
-        // have two docking targets within each others.
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
-        if (opt_fullscreen) {
-            const ImGuiViewport* viewport = ImGui::GetMainViewport();
-            ImGui::SetNextWindowPos(viewport->WorkPos);
-            ImGui::SetNextWindowSize(viewport->WorkSize);
-            ImGui::SetNextWindowViewport(viewport->ID);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-            window_flags |= ImGuiWindowFlags_NoTitleBar |
-                            ImGuiWindowFlags_NoCollapse |
-                            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-            window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus |
-                            ImGuiWindowFlags_NoNavFocus;
-        } else {
-            dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
-        }
+    // We are using the ImGuiWindowFlags_NoDocking flag to make the
+    // parent window not dockable into, because it would be confusing to
+    // have two docking targets within each others.
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+    if (opt_fullscreen) {
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar |
+                        ImGuiWindowFlags_NoCollapse |
+                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |=
+          ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    } else {
+        dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+    }
 
-        // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace()
-        // will render our background and handle the pass-thru hole, so we
-        // ask Begin() to not render a background.
-        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-            window_flags |= ImGuiWindowFlags_NoBackground;
+    // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace()
+    // will render our background and handle the pass-thru hole, so we
+    // ask Begin() to not render a background.
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+        window_flags |= ImGuiWindowFlags_NoBackground;
 
-        // Important: note that we proceed even if Begin() returns false
-        // (aka window is collapsed). This is because we want to keep our
-        // DockSpace() active. If a DockSpace() is inactive, all active
-        // windows docked into it will lose their parent and become
-        // undocked. We cannot preserve the docking relationship between an
-        // active window and an inactive docking, otherwise any change of
-        // dockspace/settings would lead to windows being stuck in limbo and
-        // never being visible.
-        if (!opt_padding)
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,
-                                ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-        if (!opt_padding)
-            ImGui::PopStyleVar();
+    // Important: note that we proceed even if Begin() returns false
+    // (aka window is collapsed). This is because we want to keep our
+    // DockSpace() active. If a DockSpace() is inactive, all active
+    // windows docked into it will lose their parent and become
+    // undocked. We cannot preserve the docking relationship between an
+    // active window and an inactive docking, otherwise any change of
+    // dockspace/settings would lead to windows being stuck in limbo and
+    // never being visible.
+    if (!opt_padding)
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+    if (!opt_padding)
+        ImGui::PopStyleVar();
 
-        if (opt_fullscreen)
-            ImGui::PopStyleVar(2);
+    if (opt_fullscreen)
+        ImGui::PopStyleVar(2);
 
-        // Submit the DockSpace
-        ImGuiIO& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-        }
-        ImGui::End();
+    // Submit the DockSpace
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    }
+    ImGui::End();
 }
 
 void AppWidget::setFontSize(float size) {
     fontSize = size;
     ImGuiIO& io = ImGui::GetIO();
-    
+
     io.Fonts->Clear();
-    
+
     std::string fontPath =
-        RESOURCES_DIR +
-        std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
+      RESOURCES_DIR +
+      std::string("fonts/Open_Sans/static/OpenSans-Regular.ttf");
 
     ImFont* newFont = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), size);
     if (!newFont) {
@@ -424,7 +469,15 @@ void AppWidget::setFontSize(float size) {
     uint32_t fontTexture;
     glGenTextures(1, &fontTexture);
     glBindTexture(GL_TEXTURE_2D, fontTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 texWidth,
+                 texHeight,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 texData);
 
     // Set texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -441,13 +494,11 @@ AppWidget::~AppWidget() {
     // We handle managing imgui.ini ourselves, because we have a custom
     // location. Therefore we should save the config file before we shut down.
     std::string userDataPath;
-    char* appdata = std::getenv("APPDATA");
-    if (appdata) {
-        ImGuiIO& io = ImGui::GetIO();
-        userDataPath = std::string(appdata) + "\\PhysicsDemo\\imgui.ini";
-        io.IniFilename = NULL;
-        ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
-    }
+    std::string appdata = widgetGetUserDataDirectory();
+    userDataPath = std::string(appdata) + "/imgui.ini";
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = NULL;
+    ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

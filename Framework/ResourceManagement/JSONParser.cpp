@@ -95,9 +95,9 @@ namespace FW {
         #elif __linux__
             // TODO needs testing
             // TODO needs error handling
-            char* configHome = std::getenv("XDG_CONFIG_HOME");
+            char* configHome = std::getenv("XDG_DATA_HOME");
             char* userHome = std::getenv("HOME");
-            char overrideXdgHome[9] = "/.config";
+            char overrideXdgHome[14] = "/.local/share";
             if (!configHome) {
                 configHome = strcat(userHome, overrideXdgHome);
             }
