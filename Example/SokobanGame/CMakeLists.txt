@@ -1,4 +1,4 @@
-project(MyApplication)
+project(SokobanGame)
 
 add_executable(${PROJECT_NAME}
     SokobanApplication.h
