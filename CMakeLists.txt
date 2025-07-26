@@ -29,18 +29,18 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 set(GLFW_VULKAN_STATIC OFF CACHE BOOL "" FORCE)
 
 # Depdendencies
-add_subdirectory(external/glad)
-add_subdirectory(external/glfw)
-add_subdirectory(external/glm)
-add_subdirectory(external/spdlog)
-#add_subdirectory(external/assimp)
-add_subdirectory(external/imgui)
-add_subdirectory(external/nlohmann_json)
-add_subdirectory(external/doctest)
+add_subdirectory(External/glad)
+add_subdirectory(External/glfw)
+add_subdirectory(External/glm)
+add_subdirectory(External/spdlog)
+#add_subdirectory(External/assimp)
+add_subdirectory(External/imgui)
+add_subdirectory(External/nlohmann_json)
+add_subdirectory(External/doctest)
 
 # stb
 add_library(stb INTERFACE)
-target_include_directories(stb INTERFACE external/stb)
+target_include_directories(stb INTERFACE External/stb)
 target_compile_definitions(stb INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 
@@ -49,7 +49,7 @@ target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 add_subdirectory(PhysicsDemo)
 
 # External framework that I contributed to
-add_subdirectory(framework)
+add_subdirectory(Framework)
 
 # Sample projects
-add_subdirectory(samples)
+add_subdirectory(Samples)
