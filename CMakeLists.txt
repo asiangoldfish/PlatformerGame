@@ -44,12 +44,14 @@ target_include_directories(stb INTERFACE External/stb)
 target_compile_definitions(stb INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 
-# TODO fix this repo and move to samples
-# add_subdirectory(src)
 add_subdirectory(PhysicsDemo)
 
 # External framework that I contributed to
 add_subdirectory(Framework)
 
 # Sample projects
-add_subdirectory(Samples)
+option(BUILD_EXAMPLE "Build example applications" OFF)
+if(BUILD_EXAMPLE)
+    message(STATUS "Building example projects...")
+    add_subdirectory(Example)
+endif()
