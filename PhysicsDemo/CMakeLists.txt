@@ -37,9 +37,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     TEXTURES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/"
     RESOURCES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/"
     CONFIG_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config/"
+    TEMPLATES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/templates/"
 )
 
-# Copy assets directory to binary destination
+# Copy resources directory to binary destination
 set (source "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources")
 add_custom_target (${PROJECT_NAME}_COPY_ASSETS
@@ -47,10 +48,18 @@ add_custom_target (${PROJECT_NAME}_COPY_ASSETS
 )
 add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_ASSETS)
 
-# Copy assets directory to binary destination
+# Copy config directory to binary destination
 set (source "${CMAKE_CURRENT_SOURCE_DIR}/config")
 set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config")
 add_custom_target (${PROJECT_NAME}_COPY_CONFIG
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
 )
 add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_CONFIG)
+
+# Copy templates directory to binary destination
+set (source "${CMAKE_CURRENT_SOURCE_DIR}/templates")
+set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/templates")
+add_custom_target (${PROJECT_NAME}_TEMPLATES_CONFIG
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
+)
+add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_TEMPLATES_CONFIG)

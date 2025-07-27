@@ -6,6 +6,8 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 
+#include "Layouts.h"
+
 /**
  * Get the user's data directory based on the platform.
  *
@@ -212,6 +214,17 @@ void AppWidget::drawMenuBar() {
             }
             ImGui::EndMenu();
         }
+
+
+        if (ImGui::BeginMenu("View")) {
+            // Apply template or custom layouts and change the arrangement or
+            // visibility of ImGui windows.
+            if (ImGui::BeginMenu("Edit layout")) {
+                displayLayoutMenu(window);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
 }
@@ -338,7 +351,7 @@ void AppWidget::init(GLFWwindow* window) {
     std::string userDataPath;
     std::string appdata = widgetGetUserDataDirectory();
     userDataPath = std::string(appdata) + "/imgui.ini";
-    INFO(userDataPath);
+    // Manually save/load the ini file.
     io.IniFilename = NULL;
     ImGui::LoadIniSettingsFromDisk(userDataPath.c_str());
 
@@ -498,7 +511,7 @@ AppWidget::~AppWidget() {
     userDataPath = std::string(appdata) + "/imgui.ini";
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = NULL;
-    ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
+    // ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
