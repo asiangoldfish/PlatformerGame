@@ -26,14 +26,14 @@ namespace FW {
         }
 #elif __linux__
         if (const char* xdgData = std::getenv("XDG_DATA_HOME")) {
-            return std::filesystem::path(xdgData);
+            return std::filesystem::path(xdgData) / appName;
         } else if (const char* home = std::getenv("HOME")) {
             std::filesystem::path userHome =
-              std::filesystem::path(home) / ".local/share";
+              std::filesystem::path(home) / ".local/share" / appName;
             return userHome;
         } else if (struct passwd* pw = getpwuid(getuid())) {
             std::filesystem::path userHome =
-              std::filesystem::path(pw->pw_dir) / ".local/share";
+              std::filesystem::path(pw->pw_dir) / ".local/share" / appName;
             return userHome;
         } else {
             return std::unexpected(
