@@ -1,8 +1,8 @@
 project(FRAMEWORK_UTIL)
 
 add_library(${PROJECT_NAME}
-    FW_Math.h       FW_Math.cpp
-    Util.h
+    FW_Math.cpp
+    Files.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -20,3 +20,8 @@ PUBLIC
 PRIVATE
     glm
 )
+
+if(BUILD_TESTING)
+    message(STATUS "Building Framework::Util test")
+    add_subdirectory(test)
+endif()

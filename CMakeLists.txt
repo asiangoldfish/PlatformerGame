@@ -44,10 +44,20 @@ target_include_directories(stb INTERFACE External/stb)
 target_compile_definitions(stb INTERFACE STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(stb INTERFACE STB_IMAGE_STATIC)
 
-add_subdirectory(PhysicsDemo)
 
-# External framework that I contributed to
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+    # Add support for test submodules to use doctest_discover_tests(TARGET).
+    # It lets doctest automatically find TEST_CASE's
+    set(doctest_dir "${CMAKE_SOURCE_DIR}/External/doctest" CACHE PATH "Path to doctest")
+    include(${doctest_dir}/scripts/cmake/doctest.cmake)
+    include(CTest)
+endif()
+
+# Engine library
 add_subdirectory(Framework)
+
+add_subdirectory(PhysicsDemo)
 
 # Sample projects
 option(BUILD_EXAMPLE "Build example applications" OFF)
@@ -55,3 +65,4 @@ if(BUILD_EXAMPLE)
     message(STATUS "Building example projects...")
     add_subdirectory(Example)
 endif()
+
