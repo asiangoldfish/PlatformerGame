@@ -258,6 +258,18 @@ namespace FW {
 
         void setWindowBlendMode();
 
+    public:
+        /**
+         * Tells the application whether it should restart itself.
+         * 
+         * This is propagated to the main function, and will release all memory
+         * and execute the destructor.
+         * 
+         * The user is responsible to implement logic to set or get this
+         * variable. GLFWApplication stores the data only.
+         */
+        bool shouldRestartItself = false;
+
     protected:
         /** Collection of settings related to a window */
         WindowSettings windowSettings;

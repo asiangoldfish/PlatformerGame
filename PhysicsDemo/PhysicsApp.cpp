@@ -9,6 +9,7 @@
 
 // App Components
 #include "WorldGrid.h"
+#include "ExitStatus.h"
 
 void setCameraPositionAndYaw(GLFWwindow* window,
                              glm::vec2& savedCursorPosition,
@@ -155,6 +156,9 @@ void PhysicsApp::run() {
         glfwSwapBuffers(getWindow());
         FW::Input::clearJustPressed();
     }
+
+    shouldRestartItself = ExitStatus::get();
+    ExitStatus::set(false);
 }
 
 bool PhysicsApp::configureDirectories() {

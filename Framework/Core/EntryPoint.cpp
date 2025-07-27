@@ -3,15 +3,20 @@
 int
 main(int argc, char* argv[])
 {
-    auto app = FW::createApplication();
+    bool shouldRestart = false;
+    do {
 
-    if (!app->init()) {
+        auto app = FW::createApplication();
+        
+        if (!app->init()) {
+            delete app;
+            return 1;
+        }
+        app->run(); // Game loop
+        shouldRestart = app->shouldRestartItself;
+        
         delete app;
-        return 1;
-    }
-    app->run(); // Game loop
-
-    delete app;
+    } while (shouldRestart);
 
     return 0;
 }
