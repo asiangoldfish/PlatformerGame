@@ -13,6 +13,7 @@
 // Framework
 #include "Shader.h"
 #include "TextureManager.h"
+#include "Log.h"
 
 namespace FW {
     /**

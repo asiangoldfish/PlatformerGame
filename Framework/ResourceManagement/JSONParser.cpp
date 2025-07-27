@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "JSONParser.h"
 #include <cstring>
+#include "Log.h"
 
 using json = nlohmann::json;
 

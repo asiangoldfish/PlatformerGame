@@ -18,6 +18,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json
 
     FRAMEWORK_RENDERING
+    FRAMEWORK_UTIL
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

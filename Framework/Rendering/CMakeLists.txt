@@ -42,6 +42,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     stb
     spdlog
 
-    FRAMEWORK_CORE
     FRAMEWORK_GEOMETRICTOOLS
+    FRAMEWORK_UTIL
 )
