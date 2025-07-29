@@ -190,8 +190,6 @@ void AppWidget::drawPopups() {
 
             if (ImGui::Button(entry.path().filename().c_str(), button_size)) {
                 std::filesystem::remove(entry.path());
-                ImGui::EndPopup();
-                goto exitDeleteCustomLayout;
             }
         }
 
@@ -208,9 +206,6 @@ void AppWidget::drawPopups() {
         popups.deleteCustomLayout = false;
         FW::Input::enableKeyboardCapture = false;
     }
-
-    // Very ugly goto hack.
-    exitDeleteCustomLayout:
 }
 
 void AppWidget::drawMenuBar() {
