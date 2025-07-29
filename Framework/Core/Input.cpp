@@ -7,15 +7,16 @@ namespace FW {
     Input::MouseRegister Input::registerMouseJustPressed;
     GLFWwindow* Input::window = nullptr;
     uint32_t Input::currentKeyState = 0;
+    bool Input::enableKeyboardCapture = true;
 
-    bool Input::isKeyPressed(int keycode)
-    {
+    bool Input::isKeyPressed(int keycode) {
         auto state = glfwGetKey(window, keycode);
-        return state == GLFW_PRESS || state == GLFW_REPEAT;
+        return Input::enableKeyboardCapture &&
+               (state == GLFW_PRESS || state == GLFW_REPEAT);
     }
 
-    bool Input::isKeyJustPressed(int keycode)
-    {
+    // TODO rename to modifying key pressed
+    bool Input::isKeyJustPressed(int keycode) {
         switch (keycode) {
             case FW_KEY_LEFT_ALT:
                 return registerKeyJustPressed.leftAlt;
