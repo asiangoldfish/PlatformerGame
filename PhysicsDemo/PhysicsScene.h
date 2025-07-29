@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Framework.h"
+#include "Selections.h"
 
 class PhysicsScene : public FW::BaseScene {
 public:
@@ -13,8 +14,11 @@ public:
 
     void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
     FW::ref<FW::Shader> getShader() { return shader; }
-    
+
+public:
+    FW::ref<SelectedNode> selectedNode;
+
 private:
-    FW::ref<FW::Entity> drawableEntity;
+    /** Selectable entity that is shown in the properties panel */
     FW::ref<FW::Shader> shader;
 };

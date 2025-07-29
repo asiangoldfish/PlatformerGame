@@ -34,6 +34,7 @@ namespace FW {
          * first be iniitialized.
          */
         Entity() = default;
+        // TODO generate random ID
 
         virtual ~Entity();
 
@@ -86,13 +87,15 @@ namespace FW {
          */
         [[nodiscard]] int getId() const { return id; }
 
+        void setId(int id) { this->id = id; }
+
         /**
          * Update itself and all child entities.
          *
          * This funuction should ideally be called at least once per frame.
-         * This allows updating the entities internal logic. The function may be
-         * overwritten by sub-classes, but it is important that the base class
-         * update() is always called at the end. Example:
+         * This allows updating the entities internal logic. The function may
+         * be overwritten by sub-classes, but it is important that the base
+         * class update() is always called at the end. Example:
          *
          * void SubClass::update() {
          *    // Perform some instructions

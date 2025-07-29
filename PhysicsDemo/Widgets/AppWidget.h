@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "Framework.h"
+#include "../Selections.h"
 
 /**
  * Container of states for opened or closed widgets.
@@ -100,6 +101,8 @@ public:
     FW::ref<FW::JSONParser> editorConfig;
     MouseState mouseState;
     Popups popups;
+
+    FW::ref<SelectedNode> selectedNode;
 
 private:
     GLFWwindow* window;

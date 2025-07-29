@@ -22,11 +22,15 @@ void PhysicsScene::init() {
     xformComponent->setShader(shader);
     xformComponent->init();
 
-    drawableEntity = FW::createRef<FW::Entity>();
+    FW::ref<FW::Entity> drawableEntity = FW::createRef<FW::Entity>();
     drawableEntity->addComponent(drawableComponent);
     drawableEntity->addComponent(xformComponent);
     drawableEntity->name = "Drawable Entity";
+    drawableEntity->setId(10);
+
     root->addChild(drawableEntity);
+
+    selectedNode = FW::createRef<SelectedNode>();
 }
 
 void PhysicsScene::cleanUp() {}

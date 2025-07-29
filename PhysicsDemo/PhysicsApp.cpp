@@ -120,17 +120,20 @@ bool PhysicsApp::init() {
 
     worldGrid = FW::createRef<WorldGrid>();
 
-    // Init Dear ImGui
-    appWidget.init(getWindow());
-    appWidget.editorConfig = editorConfig;
-    appWidget.setFontSize(editorConfig->get()["ui"]["fontSize"]);
-
-    // Framebuffer for rendering GL on ImGui
-    viewportFramebuffer = FW::createRef<FW::Framebuffer>();
 
     scene = FW::createRef<PhysicsScene>();
     scene->setShader(shader);
     scene->init();
+
+    // Init Dear ImGui
+    appWidget.init(getWindow());
+    appWidget.editorConfig = editorConfig;
+    appWidget.setFontSize(editorConfig->get()["ui"]["fontSize"]);
+    appWidget.selectedNode = scene->selectedNode;
+
+    // Framebuffer for rendering GL on ImGui
+    viewportFramebuffer = FW::createRef<FW::Framebuffer>();
+
 
     INFO("Client application successfully initialized");
 

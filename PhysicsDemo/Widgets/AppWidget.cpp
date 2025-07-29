@@ -44,7 +44,8 @@ std::string widgetGetUserDataDirectory() {
     return userDataPath;
 }
 
-void sceneTreeEntry(FW::ref<FW::Entity> entity);
+void sceneTreeEntry(FW::ref<FW::Entity> entity,
+                    FW::ref<SelectedNode> selectedNode);
 
 void AppWidget::beginDraw() {
     // Because some things must be set or defined before NewFrame is called, we
@@ -119,16 +120,20 @@ glm::vec2 AppWidget::drawViewport(uint32_t framebufferID) {
 
 void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
     ImGui::Begin("SceneTree");
-    sceneTreeEntry(scene->getRoot());
+    sceneTreeEntry(scene->getRoot(), selectedNode);
     ImGui::End();
 }
 
-void sceneTreeEntry(FW::ref<FW::Entity> entity) {
+void sceneTreeEntry(FW::ref<FW::Entity> entity,
+                    FW::ref<SelectedNode> selectedNode) {
     ImGui::SetNextItemOpen(entity->getChildren().size(), ImGuiCond_Once);
     ImGui::PushID(entity->name.c_str());
     if (ImGui::TreeNode(entity->name.c_str())) {
+        if (ImGui::IsItemClicked()) {
+            selectedNode->setSelectedNode(entity.get());
+        }
         for (auto child : entity->getChildren()) {
-            sceneTreeEntry(child);
+            sceneTreeEntry(child, selectedNode);
         }
 
         ImGui::TreePop();
@@ -174,8 +179,8 @@ void AppWidget::drawPopups() {
     // Delete custom layout
     if (ImGui::BeginPopupModal(
           "DeleteLayoutPopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        
-            ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+
+        ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
 
         std::string customLayoutsPath =
           FW::getDataDir().value() / "templates" / "custom";
@@ -204,6 +209,7 @@ void AppWidget::drawPopups() {
         FW::Input::enableKeyboardCapture = false;
     }
 
+    // Very ugly goto hack.
     exitDeleteCustomLayout:
 }
 
@@ -289,7 +295,6 @@ void AppWidget::drawMenuBar() {
             ImGui::EndMenu();
         }
 
-
         if (ImGui::BeginMenu("View")) {
             // Apply template or custom layouts and change the arrangement or
             // visibility of ImGui windows.
@@ -299,12 +304,17 @@ void AppWidget::drawMenuBar() {
             }
             ImGui::EndMenu();
         }
+
         ImGui::EndMainMenuBar();
     }
 }
 
 void AppWidget::propertiesPanel() {
     ImGui::Begin("Properties");
+
+    if (selectedNode->getSelectedNode()) {
+        ImGui::Text("ID: %d", selectedNode->getSelectedNode()->getId());
+    }
 
     // glm::vec3 testControllers{0,0,0};
 

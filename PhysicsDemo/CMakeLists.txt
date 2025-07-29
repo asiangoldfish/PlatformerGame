@@ -5,6 +5,7 @@ add_executable(${PROJECT_NAME}
     PhysicsScene.cpp
     Widgets/AppWidget.cpp
     ExitStatus.cpp
+    Selections.cpp
 )
 
 add_subdirectory(components)
