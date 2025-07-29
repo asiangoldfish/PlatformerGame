@@ -4,7 +4,7 @@
         "enableDocking": 0
     },
     "window": {
-        "default_size": [
+        "size": [
             1280,
             720
         ],

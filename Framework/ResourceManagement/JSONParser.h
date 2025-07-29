@@ -82,13 +82,10 @@ namespace FW {
         nlohmann::json jObject;
 
     private:
-        std::string getUserDataDirectory();
-
-    private:
         bool isParsed = false;
         std::string fileName;
 
         /// OS-dependent location where user configurations are stored.
-        std::string userConfigPath;
+        std::filesystem::path userConfigPath;
     };
 }

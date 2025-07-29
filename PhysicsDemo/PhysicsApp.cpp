@@ -21,14 +21,19 @@ void setCameraPositionAndYaw(GLFWwindow* window,
                              float& yaw);
 
 bool PhysicsApp::init() {
+    // Due to terrible code, we as the client make sure to read window size from
+    // the configuration file before initialising GLFWApplication.
+    editorConfig = FW::createRef<FW::JSONParser>();
+    auto windowSizeFromConfig = editorConfig->get()["window"]["size"];
+    windowSettings.size =
+      glm::vec2{ windowSizeFromConfig[0], windowSizeFromConfig[1] };
+
     // ------
     // Configure application
     // ------
     if (!GLFWApplication::init()) {
         return false;
     }
-
-    editorConfig = FW::createRef<FW::JSONParser>();
 
     std::string defaultWindowMode = editorConfig->get()["window"]["windowMode"];
     if (defaultWindowMode == "window") {
@@ -235,6 +240,13 @@ void PhysicsApp::keyboardInput() {
 
 PhysicsApp::~PhysicsApp() {
     FW::TextureManager::clearTextures();
+
+    int windowWidth;
+    int windowHeight;
+    glfwGetWindowSize(getWindow(), &windowWidth, &windowHeight);
+    editorConfig->get()["window"]["size"] = { windowWidth,
+                                                      windowHeight };
+    editorConfig->write();
 }
 
 void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
