@@ -27,6 +27,18 @@ struct MouseState {
 };
 
 /**
+ * DearImGUI has a weird system for popups, and one of the requirements is the
+ * popups must be called within the same ID stack and must be implemented
+ * correctly in menus. As a work around, we make have a bool for each
+ * specific type of popup that users can call. AppWidget will then open
+ * the specific popups if the corresponding bool is true.
+ */
+struct Popups {
+    bool saveCustomLayout = false;
+    bool deleteCustomLayout = false;
+};
+
+/**
  * The AppWidget class provides an interface to interact with widgets.
  * 
  * A widget is an additional window created by DearImGUI to provide a feature
@@ -45,6 +57,9 @@ public:
 
     /** End ImGui drawing */
     void endDraw();
+
+    /** Draw popup windows */
+    void drawPopups();
 
     /** Draw all widgets. */
     void drawWidgets();
@@ -84,6 +99,7 @@ public:
     int fontSize = 8;
     FW::ref<FW::JSONParser> editorConfig;
     MouseState mouseState;
+    Popups popups;
 
 private:
     GLFWwindow* window;

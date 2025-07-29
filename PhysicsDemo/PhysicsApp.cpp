@@ -10,6 +10,9 @@
 // App Components
 #include "WorldGrid.h"
 #include "ExitStatus.h"
+#include "Files.h"
+
+#include <filesystem>
 
 void setCameraPositionAndYaw(GLFWwindow* window,
                              glm::vec2& savedCursorPosition,
@@ -37,6 +40,41 @@ bool PhysicsApp::init() {
     } else {
         WARN("defaultWindowMode value '{0}' in PhysicsApp is invalid",
              defaultWindowMode);
+    }
+
+    // TODO create popup window instead of assert
+    auto datadir = FW::getDataDir();
+    ASSERT(datadir, "Data directory was not found");
+
+    // Copy layout templates to data dir
+    // TODO create popup window instead of assert
+    ASSERT(std::filesystem::is_directory(TEMPLATES_DIR),
+           "The templates directory is not a directory or does not exist!");
+
+    // Templates dir in data dir may not exist
+    std::filesystem::create_directories(datadir.value() / "templates" / "custom");
+
+    for (const auto& file :
+         std::filesystem::recursive_directory_iterator(TEMPLATES_DIR)) {
+        if (file.is_regular_file()) {
+            std::filesystem::path filepath = file.path();
+            std::string filename = filepath.filename().string();
+            std::filesystem::path configPath =
+              datadir.value() / "templates" / filename;
+
+            std::ifstream ifs(filepath, std::ios::binary);
+            if (!ifs) {
+                FATAL("Failed to open source file: " + filepath.string());
+            }
+
+            std::ofstream ofs(configPath, std::ios::binary | std::ios::trunc);
+            if (!ofs) {
+                FATAL("Failed to open destination file: " +
+                      configPath.string());
+            }
+
+            ofs << ifs.rdbuf();
+        }
     }
 
     // -----------

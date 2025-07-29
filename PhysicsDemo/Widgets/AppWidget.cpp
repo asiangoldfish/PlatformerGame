@@ -5,8 +5,10 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
+#include <imgui_stdlib.h>
 
 #include "Layouts.h"
+#include "Files.h"
 
 /**
  * Get the user's data directory based on the platform.
@@ -75,6 +77,7 @@ void AppWidget::endDraw() {
 }
 
 void AppWidget::drawWidgets() {
+    drawPopups();
     drawMenuBar();
     propertiesPanel();
 
@@ -131,6 +134,77 @@ void sceneTreeEntry(FW::ref<FW::Entity> entity) {
         ImGui::TreePop();
     }
     ImGui::PopID();
+}
+
+void AppWidget::drawPopups() {
+    // Save as layout
+    if (ImGui::BeginPopupModal(
+          "CustomLayoutPopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+        static std::string saveFilename;
+        // ImGui::SetKeyboardFocusHere();
+        ImGui::SetItemDefaultFocus();
+        ImGui::SetCursorPos(ImVec2(60, 240));
+        // TODO figure out the max size
+        ImGui::InputText("##Filename", &saveFilename);
+
+        ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+        if (ImGui::Button("OK", button_size)) {
+            if (saveFilename.empty()) {
+                INFO("The filename is empty!");
+            } else {
+                saveLayoutAs(saveFilename);
+            }
+            ImGui::CloseCurrentPopup();
+            FW::Input::enableKeyboardCapture = true;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", button_size)) {
+            ImGui::CloseCurrentPopup();
+            FW::Input::enableKeyboardCapture = true;
+        }
+        ImGui::EndPopup();
+    }
+    if (popups.saveCustomLayout) {
+        ImGui::OpenPopup("CustomLayoutPopup");
+        popups.saveCustomLayout = false;
+        FW::Input::enableKeyboardCapture = false;
+    }
+
+    // Delete custom layout
+    if (ImGui::BeginPopupModal(
+          "DeleteLayoutPopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        
+            ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+
+        std::string customLayoutsPath =
+          FW::getDataDir().value() / "templates" / "custom";
+
+        for (const auto& entry :
+             std::filesystem::directory_iterator(customLayoutsPath)) {
+
+            if (ImGui::Button(entry.path().filename().c_str(), button_size)) {
+                std::filesystem::remove(entry.path());
+                ImGui::EndPopup();
+                goto exitDeleteCustomLayout;
+            }
+        }
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Close", button_size)) {
+            ImGui::CloseCurrentPopup();
+            FW::Input::enableKeyboardCapture = true;
+        }
+        ImGui::EndPopup();
+    }
+    if (popups.deleteCustomLayout) {
+        ImGui::OpenPopup("DeleteLayoutPopup");
+        popups.deleteCustomLayout = false;
+        FW::Input::enableKeyboardCapture = false;
+    }
+
+    exitDeleteCustomLayout:
 }
 
 void AppWidget::drawMenuBar() {
@@ -220,7 +294,7 @@ void AppWidget::drawMenuBar() {
             // Apply template or custom layouts and change the arrangement or
             // visibility of ImGui windows.
             if (ImGui::BeginMenu("Edit layout")) {
-                displayLayoutMenu(window);
+                displayLayoutMenu(window, popups);
                 ImGui::EndMenu();
             }
             ImGui::EndMenu();
@@ -504,15 +578,6 @@ void AppWidget::setFontSize(float size) {
 }
 
 AppWidget::~AppWidget() {
-    // We handle managing imgui.ini ourselves, because we have a custom
-    // location. Therefore we should save the config file before we shut down.
-    std::string userDataPath;
-    std::string appdata = widgetGetUserDataDirectory();
-    userDataPath = std::string(appdata) + "/imgui.ini";
-    ImGuiIO& io = ImGui::GetIO();
-    io.IniFilename = NULL;
-    // ImGui::SaveIniSettingsToDisk(userDataPath.c_str());
-
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
