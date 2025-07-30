@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "Framework.h"
 #include "Selections.h"
+#include "Filesystem.h"
 
 class PhysicsScene : public FW::BaseScene {
 public:
@@ -14,6 +15,10 @@ public:
 
     void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
     FW::ref<FW::Shader> getShader() { return shader; }
+    
+    void setFilesystem(FW::ref<Filesystem> filesystem) {
+        this->filesystem = filesystem;
+    }
 
 public:
     FW::ref<SelectedNode> selectedNode;
@@ -21,4 +26,5 @@ public:
 private:
     /** Selectable entity that is shown in the properties panel */
     FW::ref<FW::Shader> shader;
+    FW::ref<Filesystem> filesystem;
 };

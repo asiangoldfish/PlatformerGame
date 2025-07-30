@@ -19,6 +19,9 @@
 // Entity
 #include "Entity.h"
 
+// Util
+#include "FW_random.h"
+
 namespace FW {
     // Recursively update itself and child nodes
     void Entity::update(float delta) {
@@ -38,10 +41,10 @@ namespace FW {
         return *foundIterator;
     }
 
-    ref<Entity> Entity::removeChildById(int id) {
+    ref<Entity> Entity::removeChildByUUID(std::string UUID) {
         auto found = std::find_if(children.begin(),
                                   children.end(),
-                                  [id](ref<Entity> e) { return e->getId() == id; });
+                                  [UUID](ref<Entity> e) { return e->getUUID() == UUID; });
 
         if (found != children.end()) {
             ref<Entity> e = *found;
@@ -52,6 +55,9 @@ namespace FW {
         }
     }
 
-    Entity::~Entity() {
+    Entity::Entity() {
+        UUID = generateUUID();
     }
+
+    Entity::~Entity() {}
 } // Framework

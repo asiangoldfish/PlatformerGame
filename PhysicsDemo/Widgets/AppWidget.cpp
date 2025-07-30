@@ -81,6 +81,7 @@ void AppWidget::drawWidgets() {
     drawPopups();
     drawMenuBar();
     propertiesPanel();
+    drawFilesystemPanel();
 
     if (widgetStates.editorPreferences) {
         drawEditorPreferencesMenu();
@@ -127,7 +128,7 @@ void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
 void sceneTreeEntry(FW::ref<FW::Entity> entity,
                     FW::ref<SelectedNode> selectedNode) {
     ImGui::SetNextItemOpen(entity->getChildren().size(), ImGuiCond_Once);
-    ImGui::PushID(entity->name.c_str());
+    ImGui::PushID(entity->getUUID().c_str());
     if (ImGui::TreeNode(entity->name.c_str())) {
         if (ImGui::IsItemClicked()) {
             selectedNode->setSelectedNode(entity.get());
@@ -153,8 +154,7 @@ void AppWidget::drawPopups() {
         // TODO figure out the max size
         ImGui::InputText("##Filename", &saveFilename);
 
-        ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
-        if (ImGui::Button("OK", button_size)) {
+        if (ImGui::Button("OK", widgetStyle.getButtonSize())) {
             if (saveFilename.empty()) {
                 INFO("The filename is empty!");
             } else {
@@ -164,7 +164,7 @@ void AppWidget::drawPopups() {
             FW::Input::enableKeyboardCapture = true;
         }
         ImGui::SameLine();
-        if (ImGui::Button("Cancel", button_size)) {
+        if (ImGui::Button("Cancel", widgetStyle.getButtonSize())) {
             ImGui::CloseCurrentPopup();
             FW::Input::enableKeyboardCapture = true;
         }
@@ -180,22 +180,21 @@ void AppWidget::drawPopups() {
     if (ImGui::BeginPopupModal(
           "DeleteLayoutPopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
 
-        ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
-
         std::string customLayoutsPath =
           FW::getDataDir().value() / "templates" / "custom";
 
         for (const auto& entry :
              std::filesystem::directory_iterator(customLayoutsPath)) {
 
-            if (ImGui::Button(entry.path().filename().c_str(), button_size)) {
+            if (ImGui::Button(entry.path().filename().c_str(),
+                              widgetStyle.getButtonSize())) {
                 std::filesystem::remove(entry.path());
             }
         }
 
         ImGui::Separator();
 
-        if (ImGui::Button("Close", button_size)) {
+        if (ImGui::Button("Close", widgetStyle.getButtonSize())) {
             ImGui::CloseCurrentPopup();
             FW::Input::enableKeyboardCapture = true;
         }
@@ -307,14 +306,24 @@ void AppWidget::drawMenuBar() {
 void AppWidget::propertiesPanel() {
     ImGui::Begin("Properties");
 
-    if (selectedNode->getSelectedNode()) {
-        ImGui::Text("ID: %d", selectedNode->getSelectedNode()->getId());
+    if (!selectedNode->getSelectedNode()) {
+        ImGui::End();
+        return;
     }
+    ImGui::Text("ID: %s", selectedNode->getSelectedNode()->getUUID().c_str());
 
     // glm::vec3 testControllers{0,0,0};
 
     // drawVec3Control("Test Controls,", testControllers);
 
+    ImGui::End();
+}
+
+void AppWidget::drawFilesystemPanel() {
+    ImGui::Begin("Filesystem");
+    if (ImGui::Button("Cube", widgetStyle.getButtonSize())) {
+        filesystem->spawnCube = true;
+    }
     ImGui::End();
 }
 

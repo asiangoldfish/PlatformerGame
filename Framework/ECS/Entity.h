@@ -33,8 +33,7 @@ namespace FW {
          * Construct an empty entity. If the entity is drawable, it must
          * first be iniitialized.
          */
-        Entity() = default;
-        // TODO generate random ID
+        Entity();
 
         virtual ~Entity();
 
@@ -56,7 +55,7 @@ namespace FW {
          * The entity is a node in a tree structure. By adding a child, we are
          * expanding the tree structure.
          */
-        void addChild(ref<Entity> entity) { children.push_back(entity); }
+        void addChild(ref<Entity> entity) { children.push_back(entity); entity->setParent(this); }
 
         /**
          * Remove a child at the i'th index.
@@ -78,16 +77,16 @@ namespace FW {
          * Please be cautious that removing a child will not delete it. It must
          * manually be deleted by the user.
          */
-        ref<Entity> removeChildById(int id);
+        ref<Entity> removeChildByUUID(std::string UUID);
 
         /**
          * Return the entity's unique identifier.
          *
          * No other entity should have this identifier.
          */
-        [[nodiscard]] int getId() const { return id; }
+        [[nodiscard]] std::string getUUID() const { return UUID; }
 
-        void setId(int id) { this->id = id; }
+        void setUUID(std::string UUID) { this->UUID = UUID; }
 
         /**
          * Update itself and all child entities.
@@ -119,8 +118,11 @@ namespace FW {
         Entity* parent = nullptr;
         std::vector<ref<Entity>> children;
 
-        /** Unique identifier. No other entity should have this id */
-        int id = -1;
+        /** 
+         * The UUID is auto-generated on instantiation. It can still be
+         * overridden, but users must handle collisions manually.
+         */
+        std::string UUID;
 
         std::vector<ref<Component>> components;
     };
