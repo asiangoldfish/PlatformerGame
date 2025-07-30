@@ -64,10 +64,6 @@ void FW::TransformationComponent::setScale(float x, float y, float z) {
     recalculateModelMatrix();
 }
 
-void FW::TransformationComponent::setScale(glm::vec3 scale) {
-    this->setScale(scale.x, scale.y, scale.z);
-}
-
 void FW::TransformationComponent::recalculateModelMatrix() {
     modelMatrix = glm::mat4(1.0f);
     // Translation

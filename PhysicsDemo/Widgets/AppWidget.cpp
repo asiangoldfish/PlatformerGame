@@ -9,6 +9,7 @@
 
 #include "Layouts.h"
 #include "Files.h"
+#include "Component.h"
 
 /**
  * Get the user's data directory based on the platform.
@@ -311,6 +312,40 @@ void AppWidget::propertiesPanel() {
         return;
     }
     ImGui::Text("ID: %s", selectedNode->getSelectedNode()->getUUID().c_str());
+
+    for (auto& component : selectedNode->getSelectedNode()->getComponents()) {
+        const std::type_info& typeOfComponent = typeid(*component);
+
+        if (typeOfComponent == typeid(FW::TransformationComponent)) {
+            ImGui::Separator();
+            ImGui::Text("Transformation");
+
+            FW::TransformationComponent* transformComponent =
+              static_cast<FW::TransformationComponent*>(component.get());
+
+            // Position
+            ImGui::Text("Position");
+            ImGui::SameLine();
+            float position[3] = {0.0f, 0.0f, 0.0f};
+            position[0] = transformComponent->getPosition().x;
+            position[1] = transformComponent->getPosition().y;
+            position[2] = transformComponent->getPosition().z;
+
+            ImGui::SliderFloat3("##Position", position, -10.0f, 10.0f);
+            transformComponent->setPosition({position[0], position[1], position[2]});
+
+                        // Scale
+            ImGui::Text("Scale");
+            ImGui::SameLine();
+            float scale[3] = {0.0f, 0.0f, 0.0f};
+            scale[0] = transformComponent->getScale().x;
+            scale[1] = transformComponent->getScale().y;
+            scale[2] = transformComponent->getScale().z;
+
+            ImGui::SliderFloat3("##Scale", scale, -10.0f, 10.0f);
+            transformComponent->setScale(scale[0], scale[1], scale[2]);
+        }
+    }
 
     // glm::vec3 testControllers{0,0,0};
 
