@@ -29,37 +29,31 @@ namespace FW {
         }
     }
 
-    bool Input::isMouseButtonPressed(int mouseButton)
-    {
+    bool Input::isMouseButtonPressed(int mouseButton) {
         auto state = glfwGetMouseButton(window, mouseButton);
         return state == GLFW_PRESS;
     }
 
-    bool Input::isModKeyCombinationPressed(FW_KEY_BIT keys)
-    {
+    bool Input::isModKeyCombinationPressed(FW_KEY_BIT keys) {
         return currentKeyState == keys;
     }
 
-    float Input::getMouseX()
-    {
+    float Input::getMouseX() {
         return getMousePosition().x;
     }
 
-    float Input::getMouseY()
-    {
+    float Input::getMouseY() {
         return getMousePosition().y;
     }
 
-    glm::vec2 Input::getMousePosition()
-    {
+    glm::vec2 Input::getMousePosition() {
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
 
         return { xpos, ypos };
     }
 
-    void Input::updateJustPressed(int key, int action)
-    {
+    void Input::updateJustPressed(int key, int action) {
         // ----------
         // Mouse
         // ----------
@@ -91,8 +85,7 @@ namespace FW {
         // -----------
     }
 
-    void Input::clearJustPressed()
-    {
+    void Input::clearJustPressed() {
         // Mouse buttons
         registerMouseJustPressed.middleButton = false;
         registerMouseJustPressed.rightButton = false;
@@ -113,8 +106,7 @@ namespace FW {
         return true;
     }
 
-    void Input::updateModKeyState(int key, int action)
-    {
+    void Input::updateModKeyState(int key, int action) {
         /*
          * Only register the following left or right keys:
          * - Control

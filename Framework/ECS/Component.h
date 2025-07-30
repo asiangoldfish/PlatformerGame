@@ -94,15 +94,13 @@ namespace FW {
     public:
         virtual void init() override {};
         virtual void update(float delta) override;
-        
+
         /**
          * Update the current velocity with new values. To add velocity, see
          * PhysicsComponent::addVelocity(...).
          */
         void setVelocity(float x, float y, float z);
-        glm::vec3& getVelocity() {
-            return velocity;
-        }
+        glm::vec3& getVelocity() { return velocity; }
         void addVelocity(float x, float y, float z);
         void addVelocity(float x, float y);
 

@@ -59,7 +59,8 @@ bool PhysicsApp::init() {
            "The templates directory is not a directory or does not exist!");
 
     // Templates dir in data dir may not exist
-    std::filesystem::create_directories(datadir.value() / "templates" / "custom");
+    std::filesystem::create_directories(datadir.value() / "templates" /
+                                        "custom");
 
     for (const auto& file :
          std::filesystem::recursive_directory_iterator(TEMPLATES_DIR)) {
@@ -175,7 +176,8 @@ void PhysicsApp::run() {
         // Viewport
         glm::vec2 oldCamSize =
           getCameraController()->getPerspectiveCamera()->getFrustum().getSize();
-        glm::vec2 newCamSize = appWidget.drawViewport(viewportFramebuffer->getTexture());
+        glm::vec2 newCamSize =
+          appWidget.drawViewport(viewportFramebuffer->getTexture());
 
         if (newCamSize != oldCamSize) {
             viewportFramebuffer->resize(newCamSize);
@@ -190,14 +192,14 @@ void PhysicsApp::run() {
         // the camera snaps a bit every time we right click.
         if (!isRightButtonMousePressed) {
             cursorPosCallback(appWidget.mouseState.mousePosition.x,
-                appWidget.mouseState.mousePosition.y);
+                              appWidget.mouseState.mousePosition.y);
         }
 
         scene->update(timer.getDeltaTime());
         appWidget.drawSceneTree(scene);
 
         appWidget.drawWidgets();
-        
+
         viewportFramebuffer->unbind();
         appWidget.endDraw();
 
@@ -263,15 +265,14 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     //     double xpos, ypos;
     //     glfwGetCursorPos(getWindow(), &xpos, &ypos);
     //     savedCursorPosition = glm::vec2(xpos, ypos);
-    // } 
-    // else 
+    // }
+    // else
     if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-        setCameraPositionAndYaw(
-            getWindow(),
-            savedCursorPosition,
-            *getCameraController()->getPerspectiveCamera(),
-            cameraCurrentPitch,
-            cameraCurrentYaw);
+        setCameraPositionAndYaw(getWindow(),
+                                savedCursorPosition,
+                                *getCameraController()->getPerspectiveCamera(),
+                                cameraCurrentPitch,
+                                cameraCurrentYaw);
     }
 
     static bool altBtnJustPressed = false;
@@ -281,7 +282,7 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
     glfwGetCursorPos(getWindow(), &savedX, &savedY);
 
     // Quit application
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    if (FW::Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
         glfwSetWindowShouldClose(getWindow(), 1);
     }
 
@@ -296,13 +297,12 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         altBtnJustPressed = false;
         isLeftAltPressed = false;
         getCameraController()->getPerspectiveCamera()->setEnablePanning(true);
-        
-        setCameraPositionAndYaw(
-            getWindow(),
-            savedCursorPosition,
-            *getCameraController()->getPerspectiveCamera(),
-            cameraCurrentPitch,
-            cameraCurrentYaw);
+
+        setCameraPositionAndYaw(getWindow(),
+                                savedCursorPosition,
+                                *getCameraController()->getPerspectiveCamera(),
+                                cameraCurrentPitch,
+                                cameraCurrentYaw);
     }
 
     // Camera panning
@@ -311,30 +311,29 @@ void PhysicsApp::keyCallback(int key, int scancode, int action, int mods) {
         ctrlBtnJustPressed = true;
         isLeftCtrlPressed = true;
 
-        setCameraPositionAndYaw(
-            getWindow(),
-            savedCursorPosition,
-            *getCameraController()->getPerspectiveCamera(),
-            cameraCurrentPitch,
-            cameraCurrentYaw);
-            
+        setCameraPositionAndYaw(getWindow(),
+                                savedCursorPosition,
+                                *getCameraController()->getPerspectiveCamera(),
+                                cameraCurrentPitch,
+                                cameraCurrentYaw);
+
         savedCameraPosition = getCameraController()->getPosition();
     }
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE) {
         ctrlBtnJustPressed = false;
         isLeftCtrlPressed = false;
-        setCameraPositionAndYaw(
-            getWindow(),
-            savedCursorPosition,
-            *getCameraController()->getPerspectiveCamera(),
-            cameraCurrentPitch,
-            cameraCurrentYaw);
+        setCameraPositionAndYaw(getWindow(),
+                                savedCursorPosition,
+                                *getCameraController()->getPerspectiveCamera(),
+                                cameraCurrentPitch,
+                                cameraCurrentYaw);
         // savedCameraPosition = getCameraController()->getPosition();
     }
 
     // Window shortcuts
     if (key == GLFW_KEY_P && action == GLFW_PRESS) {
-        appWidget.widgetStates.editorPreferences = !appWidget.widgetStates.editorPreferences;
+        appWidget.widgetStates.editorPreferences =
+          !appWidget.widgetStates.editorPreferences;
     }
 }
 void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
@@ -367,20 +366,23 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             // By doing this, we can walk in a crab-like motion.
 
             glm::vec3 cameraFront = camera->getCameraFront(); // Forward vector
-            glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))); // Right vector
-            glm::vec3 cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront)); // Up vector
+            glm::vec3 cameraRight = glm::normalize(glm::cross(
+              cameraFront, glm::vec3(0.0f, 1.0f, 0.0f))); // Right vector
+            glm::vec3 cameraUp =
+              glm::normalize(glm::cross(cameraRight, cameraFront)); // Up vector
 
             float panSpeed = 0.1f * dt;
 
-            glm::vec3 newPosition = camera->getPosition()
-                                    + cameraRight * (difference.x * panSpeed)
-                                    - cameraUp * (difference.y * panSpeed);
+            glm::vec3 newPosition = camera->getPosition() +
+                                    cameraRight * (difference.x * panSpeed) -
+                                    cameraUp * (difference.y * panSpeed);
 
             controller->setPosition(newPosition);
 
             // We should save the new mouse position, because we compare
             // the next frame's new mouse position to the saved cursor position.
-            glfwSetCursorPos(getWindow(), savedCursorPosition.x, savedCursorPosition.y);
+            glfwSetCursorPos(
+              getWindow(), savedCursorPosition.x, savedCursorPosition.y);
 
         } else if (FW::Input::isModKeyCombinationPressed(FW_KEY_LEFT_ALT_BIT)) {
             // Alt: Orbit around a point.
@@ -400,14 +402,14 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
                                       controller->getPosition().z));
 
             camera->setEnablePanning(false);
-                
+
             controller->setPositionX(std::cos(glm::radians(distance.x)) *
-                                        cameraDistance);
+                                     cameraDistance);
             controller->setPositionY(std::sin(glm::radians(distance.y)) *
-                                        cameraDistance);
+                                     cameraDistance);
             controller->setPositionZ(std::sin(glm::radians(distance.x)) *
-                                        cameraDistance);
-                                        
+                                     cameraDistance);
+
             // ---------------------
             // Current development
 
@@ -421,8 +423,9 @@ void PhysicsApp::cursorPosCallback(double xpos, double ypos) {
             float yaw = glm::degrees(atan2(d.z, d.x));
             // camera->setRotation({ yaw, pitch });
 
-            getCameraController()->getPerspectiveCamera()->setRotation({yaw, pitch});
-            
+            getCameraController()->getPerspectiveCamera()->setRotation(
+              { yaw, pitch });
+
         } else {
             // None: Panning and tilting.
             /*
