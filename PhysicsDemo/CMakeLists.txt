@@ -14,6 +14,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     Widgets/
 )
 
+add_subdirectory(AssetSystem)
+
 # Because Windows does not link automatically to OpenGL, we need to figure out
 # whether this is built on a Windows machine. This is used to reuplaod font
 # texture to the GPU by AppWidget.
@@ -31,6 +33,7 @@ target_link_libraries(${PROJECT_NAME}
     # Framework
     Framework
     COMPONENT_entity2
+    PhysicsDemo_AssetSystem
     ${OpenGlLib}
 )
 

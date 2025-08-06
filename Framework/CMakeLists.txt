@@ -38,3 +38,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE
     FRAMEWORK_UTIL
     FRAMEWORK_GAMEPLAY
 )
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC INTERFACE
+    BUILD_TYPE="${CMAKE_BUILD_TYPE}"
+)

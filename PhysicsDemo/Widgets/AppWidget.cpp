@@ -355,9 +355,9 @@ void AppWidget::propertiesPanel() {
 }
 
 void AppWidget::drawFilesystemPanel() {
-    ImGui::Begin("Filesystem");
+    ImGui::Begin("Assets");
     if (ImGui::Button("Cube", widgetStyle.getButtonSize())) {
-        filesystem->spawnCube = true;
+        assetSystem->spawnCube = true;
     }
     ImGui::End();
 }

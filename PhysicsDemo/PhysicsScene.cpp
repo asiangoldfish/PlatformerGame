@@ -17,8 +17,8 @@ void PhysicsScene::update(float delta) {
     FW::BaseScene::update(delta);
 
     // Test spawn objects
-    if (filesystem->spawnCube) {
-        filesystem->spawnCube = false;
+    if (assetSystem->spawnCube) {
+        assetSystem->spawnCube = false;
 
         FW::ref<FW::PrimitiveCube> shape = FW::createRef<FW::PrimitiveCube>();
         shape->init();
