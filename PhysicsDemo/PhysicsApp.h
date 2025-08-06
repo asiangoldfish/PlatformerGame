@@ -8,8 +8,6 @@
 
 #include "PhysicsScene.h"
 
-#include "AssetSystem.h"
-
 class Cube;
 class Floor;
 class WorldGrid;
@@ -125,9 +123,6 @@ private:
     AppWidget appWidget;
 
     FW::ref<PhysicsScene> scene;
-
-    /** The Application class is the one who owns the filesystem. */
-    FW::ref<AssetSystem> assetSystem;
 };
 
 FW::GLFWApplication* FW::createApplication() {

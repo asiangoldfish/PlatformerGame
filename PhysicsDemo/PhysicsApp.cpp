@@ -47,8 +47,6 @@ bool PhysicsApp::init() {
              defaultWindowMode);
     }
 
-    assetSystem = FW::createRef<AssetSystem>();
-
     // TODO create popup window instead of assert
     auto datadir = FW::getDataDir();
     ASSERT(datadir, "Data directory was not found");
@@ -131,14 +129,12 @@ bool PhysicsApp::init() {
     scene = FW::createRef<PhysicsScene>();
     scene->setShader(shader);
     scene->init();
-    scene->setAssetSystem(assetSystem);
 
     // Init Dear ImGui
     appWidget.init(getWindow());
     appWidget.editorConfig = editorConfig;
     appWidget.setFontSize(editorConfig->get()["ui"]["fontSize"]);
     appWidget.selectedNode = scene->selectedNode;
-    appWidget.setAssetSystem(assetSystem);
 
     // Framebuffer for rendering GL on ImGui
     viewportFramebuffer = FW::createRef<FW::Framebuffer>();

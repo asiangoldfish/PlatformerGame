@@ -12,34 +12,33 @@ class AppWidget;
  * The Filesystem is a collection of states and queries. This is useful for
  * transferring data between components that otherwise don't know about each
  * other, like the AppWidget and the PhysicsScene.
+ *
+ * For now, the AssetSystem is a static class. This may be changed in the
+ * future.
  */
 class AssetSystem {
 public:
-    AssetSystem() = default;
-    virtual ~AssetSystem() = default;
+    AssetSystem() = delete;
 
-    std::vector<Asset>& getAssets() { return assets; }
+    static std::vector<Asset>& getAssets() { return assets; }
 
 public: // IO
     /**
      * While the constructor already loads from disk upon instantiation, this
      * can manually be queries.
      */
-    void loadFromDisk();
+    static void loadFromDisk();
 
-    void serializeAsset();
+    static void serializeAsset();
 
-private:
-    friend PhysicsScene;
-    friend AppWidget;
+public:
+    static std::vector<Asset> assets;
 
-    std::vector<Asset> assets;
-
-    std::string filepath;
+    static std::string filepath;
 
     /**
      * Test for spawning a cube.
      * If a cube should be spawned on the next frame, this is true.
      */
-    bool spawnCube = false;
+    static bool spawnCube;
 };

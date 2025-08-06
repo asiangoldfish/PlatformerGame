@@ -4,7 +4,6 @@
 #include "Framework.h"
 #include "../Selections.h"
 #include "WidgetStyle.h"
-#include "AssetSystem.h"
 
 /**
  * Container of states for opened or closed widgets.
@@ -75,10 +74,6 @@ public:
 
     /** Set the base font size across all widgets */
     void setFontSize(float size);
-
-    void setAssetSystem(FW::ref<AssetSystem> assetSystem) {
-        this->assetSystem = assetSystem;
-    }
     
 private:
     /** Enable ImGui docking */
@@ -119,7 +114,4 @@ public:
 
 private:
     GLFWwindow* window;
-
-    /** A collection of states and queries to communicate with the Scene. */
-    FW::ref<AssetSystem> assetSystem;
 };

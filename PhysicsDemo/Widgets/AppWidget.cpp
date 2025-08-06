@@ -11,6 +11,8 @@
 #include "Files.h"
 #include "Component.h"
 
+#include "AssetSystem.h"
+
 /**
  * Get the user's data directory based on the platform.
  *
@@ -357,7 +359,7 @@ void AppWidget::propertiesPanel() {
 void AppWidget::drawFilesystemPanel() {
     ImGui::Begin("Assets");
     if (ImGui::Button("Cube", widgetStyle.getButtonSize())) {
-        assetSystem->spawnCube = true;
+        AssetSystem::spawnCube = true;
     }
     ImGui::End();
 }
