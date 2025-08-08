@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Framework.h"
+#include "Sprite.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -10,13 +11,9 @@ public:
     virtual void cleanUp();
     virtual void update(float delta) override;
 
-    void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
-    FW::ref<FW::Shader> getShader() { return shader; }
-
-    
 private:
-    FW::ref<FW::Shader> shader;
     FW::ref<FW::OrthographicCamera> camera;
+    FW::ref<Sprite> playerSprite;
 
 private: // Physics
     FW::Physics::Solver mySolver;
