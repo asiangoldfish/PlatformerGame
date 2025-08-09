@@ -15,19 +15,26 @@ void GameScene::init() {
     camera = FW::createRef<FW::OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
 
-    playerSprite = FW::createRef<Sprite>();
-    playerSprite->setSize(500, 250);
-    playerSprite->setPosition(600.f, 400.f);
-    root->addChild(playerSprite);
+    playerShip = FW::createRef<Ship>();
+    playerShip->camera = camera;
+    root->addChild(playerShip->sprite);
 }
 
 void GameScene::update(float delta) {
     FW::BaseScene::update(delta);
 
-    camera->update(playerSprite->getShader());
+    playerShip->update(delta);
+    playerShip->setPosition(FW::Input::getMouseX(), -FW::Input::getMouseY() + 720.0f);
 
-    auto rot = getRotationWithMouse();
-    playerSprite->setRotation(-rot);
 }
 
 void GameScene::cleanUp() {}
+
+void GameScene::keyCallback(int key, int scancode, int action, int mods) {}
+void GameScene::cursorPosCallback(double xpos, double ypos) {}
+void GameScene::mouseButtonCallback(int button, int action, int mods) {
+    // TODO move to game loop so it is called continuously
+    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
+        playerShip->setRotation(-getRotationWithMouse());
+    }
+}

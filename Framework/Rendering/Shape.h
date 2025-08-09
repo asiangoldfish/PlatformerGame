@@ -19,6 +19,8 @@ namespace FW {
      * geometries. This may include quads and disks. It handles the low level
      * implementation and manages OpenGL objects lifecycles. Shapes that inherit
      * this class implement their own geometries.
+     * 
+     * This is the most lowest level geometric shape in the Framework.
      */
     class Shape {
     public:

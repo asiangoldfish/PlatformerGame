@@ -13,11 +13,6 @@
 
 namespace FW {
 
-    class Shader;
-    class VertexArray;
-    class VertexBuffer;
-    class IndexBuffer;
-
     /**
      * Object that exists in the scene
      *

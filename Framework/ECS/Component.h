@@ -71,6 +71,13 @@ namespace FW {
         void setScale(float x, float y, float z);
         glm::vec3 getScale() { return scale; }
 
+        void setRotation(float yaw, float pitch, float roll) {
+            this->yaw = yaw;
+            this->pitch = pitch;
+            this->roll = roll;
+        }
+        glm::vec3 getRotation() { return rotation; }
+
     private:
         // TODO find some way to only recalculate model matrix once per frame.
         void recalculateModelMatrix();
@@ -82,6 +89,7 @@ namespace FW {
         glm::vec3 position;
         float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
         glm::vec3 scale = glm::vec3{ 1.0f };
+        glm::vec3 rotation = glm::vec3{ 0.0f };
     };
 
     /**

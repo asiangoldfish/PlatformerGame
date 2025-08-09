@@ -25,3 +25,20 @@ void GameApplication::run() {
 GameApplication::~GameApplication() {
     FW::TextureManager::clearTextures();
 }
+
+void GameApplication::keyCallback(int key, int scancode, int action, int mods) {
+    // Quit application
+    if (FW::Input::isKeyPressed(GLFW_KEY_ESCAPE)) {
+        glfwSetWindowShouldClose(getWindow(), 1);
+    }
+
+    scene->keyCallback(key, scancode, action, mods);
+}
+
+void GameApplication::cursorPosCallback(double xpos, double ypos) {
+    scene->cursorPosCallback(xpos, ypos);
+}
+
+void GameApplication::mouseButtonCallback(int button, int action, int mods) {
+    scene->mouseButtonCallback(button, action, mods);
+}

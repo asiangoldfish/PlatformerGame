@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Framework.h"
-#include "Sprite.h"
+#include "Ship.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -11,11 +11,11 @@ public:
     virtual void cleanUp();
     virtual void update(float delta) override;
 
+    void keyCallback(int key, int scancode, int action, int mods);
+    void cursorPosCallback(double xpos, double ypos);
+    void mouseButtonCallback(int button, int action, int mods);
+
 private:
     FW::ref<FW::OrthographicCamera> camera;
-    FW::ref<Sprite> playerSprite;
-
-private: // Physics
-    FW::Physics::Solver mySolver;
-    FW::ref<FW::Physics::GravityForce> gravityForce;
+    FW::ref<Ship> playerShip;
 };

@@ -71,9 +71,9 @@ void FW::TransformationComponent::recalculateModelMatrix() {
     glm::mat4 newRotation, rotx, roty, rotz;
 
     // Rotation
-    rotx = glm::rotate(modelMatrix, glm::radians(yaw), { 1.0f, 0.0f, 0.0f });
-    roty = glm::rotate(modelMatrix, glm::radians(pitch), { 0.0f, 1.0f, 0.0f });
-    rotz = glm::rotate(modelMatrix, glm::radians(roll), { 0.0f, 0.0f, 1.0f });
+    rotx = glm::rotate(modelMatrix, yaw, { 1.0f, 0.0f, 0.0f });
+    roty = glm::rotate(modelMatrix, pitch, { 0.0f, 1.0f, 0.0f });
+    rotz = glm::rotate(modelMatrix, roll, { 0.0f, 0.0f, 1.0f });
 
     newRotation = rotx * roty * rotz;
 
