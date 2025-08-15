@@ -35,7 +35,8 @@ namespace FW {
      */
     class DrawableComponent : public Component {
     public:
-        DrawableComponent() = default;
+        DrawableComponent()
+          : Component("DrawableComponent") {}
         DrawableComponent(std::string componentName)
           : Component(componentName) {}
 
@@ -57,7 +58,8 @@ namespace FW {
 
     class TransformationComponent : public Component {
     public:
-        TransformationComponent() = default;
+        TransformationComponent()
+          : Component("TransformationComponent") {}
         TransformationComponent(std::string componentName)
           : Component(componentName) {}
 
@@ -100,6 +102,11 @@ namespace FW {
      */
     class PhysicsComponent : public Component {
     public:
+        PhysicsComponent()
+          : Component("PhysicsComponent") {}
+        PhysicsComponent(std::string name)
+          : Component(name) {}
+
         virtual void init() override {};
         virtual void update(float delta) override;
 
