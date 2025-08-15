@@ -18,6 +18,9 @@ void GameScene::init() {
     playerShip = FW::createRef<Ship>();
     playerShip->camera = camera;
     root->addChild(playerShip->sprite);
+    root->addChild(gameUI.uiRoot);
+
+    gameUI.camera = camera;
 }
 
 void GameScene::update(float delta) {
@@ -26,6 +29,7 @@ void GameScene::update(float delta) {
     playerShip->update(delta);
     playerShip->setPosition(FW::Input::getMouseX(), -FW::Input::getMouseY() + 720.0f);
 
+    gameUI.draw(delta);
 }
 
 void GameScene::cleanUp() {}

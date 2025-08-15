@@ -2,6 +2,7 @@
 
 #include "Framework.h"
 #include "Ship.h"
+#include "GameUI.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -18,4 +19,6 @@ public:
 private:
     FW::ref<FW::OrthographicCamera> camera;
     FW::ref<Ship> playerShip;
+
+    GameUI gameUI;
 };
