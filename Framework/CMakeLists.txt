@@ -21,6 +21,7 @@ add_subdirectory(Physics)
 add_subdirectory(ResourceManagement)
 add_subdirectory(Util)
 add_subdirectory(Gameplay)
+add_subdirectory(UI)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE
     glfw
@@ -37,6 +38,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE
     FRAMEWORK_RESOURCE_MANAGEMENT
     FRAMEWORK_UTIL
     FRAMEWORK_GAMEPLAY
+    FRAMEWORK_UI
 )
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC INTERFACE
