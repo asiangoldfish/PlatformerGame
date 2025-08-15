@@ -1,7 +1,7 @@
 #include "Ship.h"
 
 Ship::Ship() {
-    sprite = FW::createRef<Sprite>();
+    sprite = FW::createRef<FW::Sprite>();
     sprite->setSize(100, 50);
     sprite->setPosition(600.f, 400.f);
 }

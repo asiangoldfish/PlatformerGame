@@ -13,7 +13,7 @@ public:
 
     void update(float delta);
 
-    FW::ref<Sprite> getSprite() { return sprite; }
+    FW::ref<FW::Sprite> getSprite() { return sprite; }
 
 public: // Transformation
     void setPosition(float x, float y) { sprite->setPosition(x, y); }
@@ -22,7 +22,7 @@ public: // Transformation
 private:
     friend GameScene;
 
-    FW::ref<Sprite> sprite;
+    FW::ref<FW::Sprite> sprite;
     FW::ref<FW::OrthographicCamera> camera;
 
 private: // Player stats
