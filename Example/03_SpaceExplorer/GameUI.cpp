@@ -1,10 +1,34 @@
 #include "GameUI.h"
+#include "assertions.h"
+#include <algorithm>
 
-GameUI::GameUI() {
+void GameUI::init() {
+    ASSERT(camera, "GameUI::Camera is not set!");
+
     uiRoot = FW::createRef<FW::Entity>();
+    testBox = FW::createRef<FW::UI::Box>();
+    testBox->setCamera(camera);
+    uiRoot->addChild(testBox);
 }
 
-void GameUI::draw(float delta) {
-    testBox.update(delta);
-    camera->update(testBox.getShader());
+void GameUI::draw(float delta) {}
+
+void GameUI::invokeAllHandlers() {
+    for (auto& [id, handler] : handlers) {
+        handler();
+    }
+}
+
+void GameUI::addHandler(const std::string& id, std::function<void()> func) {
+    auto it = std::find_if(handlers.begin(),
+                           handlers.end(),
+                           [id](auto handler) { return handler.first == id; });
+
+    if (it == handlers.end()) {
+        handlers.emplace_back(id, std::move(func));
+    }
+}
+
+void GameUI::removeHandler(const std::string& id) {
+    std::erase_if(handlers, [id](auto pair) { return pair.first == id; });
 }

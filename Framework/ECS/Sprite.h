@@ -15,11 +15,17 @@ namespace FW {
         void setRotation(float yaw, float pitch, float roll);
         void setRotation(glm::vec3 rot);
         void update(float delta) override;
-        void update(Camera* camera, float delta);
+        void setCamera(ref<Camera> camera) { this->camera = camera; }
 
     protected:
         ref<TransformationComponent> transformationComponent;
         ref<DrawableComponent> drawableComponent;
         ref<Shader> spriteShader;
+
+        /**
+         * If the camera exists, then Sprite::draw() will draw the sprite to
+         * that camera. Otherwise, the user is responsible to draw the sprite.
+         */
+        ref<Camera> camera;
     };
 }

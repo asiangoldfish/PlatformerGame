@@ -7,5 +7,5 @@ Ship::Ship() {
 }
 
 void Ship::update(float delta) {
-    camera->update(sprite->getShader());
+    // camera->update(sprite->getShader());
 }

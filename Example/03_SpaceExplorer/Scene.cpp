@@ -16,20 +16,21 @@ void GameScene::init() {
     camera->setCameraSize(1280.0f, 720.0f);
 
     playerShip = FW::createRef<Ship>();
-    playerShip->camera = camera;
+    playerShip->sprite->setCamera(camera);
     root->addChild(playerShip->sprite);
-    root->addChild(gameUI.uiRoot);
 
     gameUI.camera = camera;
+    gameUI.init();
+    root->addChild(gameUI.uiRoot);
+
+    // TODO figure out why space ship sometimes renders, sometimes doesn't. Race
+    // condition??
 }
 
 void GameScene::update(float delta) {
     FW::BaseScene::update(delta);
-
-    playerShip->update(delta);
-    playerShip->setPosition(FW::Input::getMouseX(), -FW::Input::getMouseY() + 720.0f);
-
-    gameUI.draw(delta);
+    playerShip->setPosition(FW::Input::getMouseX(),
+                            -FW::Input::getMouseY() + 720.0f);
 }
 
 void GameScene::cleanUp() {}

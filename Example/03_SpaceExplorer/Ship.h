@@ -23,7 +23,6 @@ private:
     friend GameScene;
 
     FW::ref<FW::Sprite> sprite;
-    FW::ref<FW::OrthographicCamera> camera;
 
 private: // Player stats
     float health;

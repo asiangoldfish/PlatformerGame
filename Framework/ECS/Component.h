@@ -45,6 +45,7 @@ namespace FW {
 
         void setShape(ref<Shape> shape) { this->shape = shape; }
         void setShader(ref<Shader> shader) { this->shader = shader; }
+        ref<Shader> getShader() { return shader; }
 
     private:
         void draw();

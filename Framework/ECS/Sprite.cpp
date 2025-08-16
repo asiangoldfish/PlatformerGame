@@ -50,11 +50,10 @@ namespace FW {
     }
 
     void Sprite::update(float delta) {
+        if (camera) {
+            camera->update(drawableComponent->getShader());
+        }
+
         Entity::update(delta);
-    }
-    
-    void Sprite::update(Camera* camera, float delta) {
-        update(delta);
-        camera->update(spriteShader);
     }
 }

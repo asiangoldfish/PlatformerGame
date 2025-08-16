@@ -13,8 +13,10 @@
  */
 class GameUI {
 public:
-    GameUI();
+    GameUI() = default;
     virtual ~GameUI() = default;
+
+    void init();
 
     /**
      * Draw all UIs. Call this function to spawn UIs on the screen.
@@ -22,11 +24,35 @@ public:
     void draw(float delta);
 
 public:
-    FW::UI::Box testBox;
+    /**
+     * Add a new callable handler if it already isn't registered.
+     *
+     * @param id string representation of the function. Must be unique for each
+     * handler.
+     * @param func function to call.
+     */
+    void addHandler(const std::string& id, std::function<void()> func);
+
+    /**
+     * Remove a callable handler.
+     *
+     * @param id string representation of the function. Must be unique for each
+     * handler.
+     */
+    void removeHandler(const std::string& id);
+
+private:
+    void invokeAllHandlers();
+
+public:
+    FW::ref<FW::UI::Box> testBox;
     FW::ref<FW::Camera> camera;
 
     /**
      * The root of UI elements. The Sc
      */
     FW::ref<FW::Entity> uiRoot;
+
+private:
+    std::vector<std::pair<std::string, std::function<void()>>> handlers;
 };
