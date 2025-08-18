@@ -14,7 +14,7 @@ TEST_CASE("getDataDir() returns nonempty filepath") {
     }
 }
 
-TEST_CASE("uuid is 128 bytes") {
+TEST_CASE("uuid is 128 bits") {
     std::string result = FW::generateUUID();
     REQUIRE(!result.empty());
 
