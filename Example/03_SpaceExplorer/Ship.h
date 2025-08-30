@@ -8,7 +8,8 @@ class GameScene;
 
 class Ship {
 public:
-    Ship();
+    Ship() = default;
+    Ship(FW::ref<FW::Camera> camera);
     virtual ~Ship() = default;
 
     void update(float delta);

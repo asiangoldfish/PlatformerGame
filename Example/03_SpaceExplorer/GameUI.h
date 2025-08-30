@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Box.h"
+#include "ProgressBar.h"
 #include "Camera/Camera.h"
 #include "Entity.h"
 
@@ -45,7 +45,7 @@ private:
     void invokeAllHandlers();
 
 public:
-    FW::ref<FW::UI::Box> testBox;
+    FW::ref<FW::UI::ProgressBar> healthBar;
     FW::ref<FW::Camera> camera;
 
     /**

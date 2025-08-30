@@ -5,10 +5,10 @@
 void GameUI::init() {
     ASSERT(camera, "GameUI::Camera is not set!");
 
-    uiRoot = FW::createRef<FW::Entity>();
-    testBox = FW::createRef<FW::UI::Box>();
-    testBox->setCamera(camera);
-    uiRoot->addChild(testBox);
+    uiRoot = FW::createRef<FW::Sprite>();
+    healthBar = FW::createRef<FW::UI::ProgressBar>(camera);
+    uiRoot->addChild(healthBar);
+    INFO("GameUI successfully initialised");
 }
 
 void GameUI::draw(float delta) {}

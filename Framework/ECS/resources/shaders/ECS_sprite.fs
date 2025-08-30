@@ -1,10 +1,7 @@
 #version 430 core
 
-in vec2 o_texCoord;
 in vec3 o_position;
 in vec4 o_color;
-in vec3 o_normal;
-in vec3 o_modelPosition;
 
 out vec4 FragColor;
 

@@ -2,6 +2,7 @@ project(FRAMEWORK_UI)
 
 add_library(${PROJECT_NAME} STATIC
     Box.cpp
+    ProgressBar.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

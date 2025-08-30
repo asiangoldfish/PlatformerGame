@@ -15,8 +15,7 @@ void GameScene::init() {
     camera = FW::createRef<FW::OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
 
-    playerShip = FW::createRef<Ship>();
-    playerShip->sprite->setCamera(camera);
+    playerShip = FW::createRef<Ship>(camera);
     root->addChild(playerShip->sprite);
 
     gameUI.camera = camera;

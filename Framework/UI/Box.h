@@ -7,13 +7,11 @@ namespace FW::UI {
      * functionalities.
      */
     class Box : public Sprite {
-        public:
-            Box();
-            virtual ~Box() = default;
+    public:
+        Box();
+        Box(ref<Camera> camera);
+        virtual ~Box() = default;
 
-        private:
-            glm::vec2 position;
-            glm::vec2 size{100.0f};
-            glm::vec3 color{1.0f};
+    private:
     };
 }

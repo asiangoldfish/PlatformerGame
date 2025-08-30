@@ -7,13 +7,23 @@ namespace FW {
     class Sprite : public Entity {
     public:
         Sprite();
+        Sprite(ref<Camera> camera);
+        void init();
         FW::ref<FW::Shader> getShader() { return spriteShader; }
-        void moveBy(float x, float y);
+        
+        glm::vec2 getSize() { return size; }
         void setSize(float x, float y);
+        void setSize(float uniformSize);
+        void setSize(glm::vec2 size);
+        
         glm::vec2 getPosition();
         void setPosition(float x, float y);
+        void setPosition(glm::vec2 position);
+        void moveBy(float x, float y);
+
         void setRotation(float yaw, float pitch, float roll);
         void setRotation(glm::vec3 rot);
+
         void update(float delta) override;
         void setCamera(ref<Camera> camera) { this->camera = camera; }
 
@@ -27,5 +37,13 @@ namespace FW {
          * that camera. Otherwise, the user is responsible to draw the sprite.
          */
         ref<Camera> camera;
+
+    protected:
+        glm::vec2 position;
+        glm::vec2 size{ 100.0f };
+        glm::vec3 color{ 1.0f };
+
+        /** Some sprites do not draw, like root nodes in UI elements. */
+        bool isDrawable = true;
     };
 }
