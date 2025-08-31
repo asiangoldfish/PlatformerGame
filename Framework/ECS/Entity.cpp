@@ -41,6 +41,13 @@ namespace FW {
         return *foundIterator;
     }
 
+    void Entity::removeComponent(const std::string& componentName) {
+        components.erase(std::remove_if(
+          components.begin(), components.end(), [&](ref<Component> c) {
+              return c->name == componentName;
+          }));
+    }
+
     ref<Entity> Entity::removeChildByUUID(std::string UUID) {
         auto found = std::find_if(children.begin(),
                                   children.end(),

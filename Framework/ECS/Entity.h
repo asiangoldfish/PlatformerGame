@@ -108,6 +108,8 @@ namespace FW {
         /** Return all of the Entity's components. */
         std::vector<ref<Component>>& getComponents() { return components; }
 
+        void removeComponent(const std::string& componentName);
+
     public:
         /// The node's unique name. It is display name and identifier.
         std::string name;
