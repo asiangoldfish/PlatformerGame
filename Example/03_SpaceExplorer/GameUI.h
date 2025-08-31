@@ -2,7 +2,7 @@
 
 #include "ProgressBar.h"
 #include "Camera/Camera.h"
-#include "Entity.h"
+#include "UIRoot.h"
 
 /**
  * Container class for UI elements.
@@ -51,7 +51,7 @@ public:
     /**
      * The root of UI elements. The Sc
      */
-    FW::ref<FW::Entity> uiRoot;
+    FW::ref<FW::UI::UIRoot> uiRoot;
 
 private:
     std::vector<std::pair<std::string, std::function<void()>>> handlers;

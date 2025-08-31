@@ -5,9 +5,13 @@
 void GameUI::init() {
     ASSERT(camera, "GameUI::Camera is not set!");
 
-    uiRoot = FW::createRef<FW::Sprite>();
+    uiRoot = FW::createRef<FW::UI::UIRoot>();
+    uiRoot->init();
     healthBar = FW::createRef<FW::UI::ProgressBar>(camera);
     uiRoot->addChild(healthBar);
+
+    healthBar->setPosition(300.f, 500.f);
+
     INFO("GameUI successfully initialised");
 }
 
