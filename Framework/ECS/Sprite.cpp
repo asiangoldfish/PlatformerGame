@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "ShaderManager.h"
 
 namespace FW {
     Sprite::Sprite() {
@@ -11,22 +12,21 @@ namespace FW {
     }
 
     void Sprite::init() {
-        spriteShader =
-          FW::createRef<FW::Shader>(SHADERS_DIR + std::string("ECS_sprite.vs"),
+        shader = "inbuilt_ecs_shader";
+        ShaderManager::get().createShaderFromFiles(shader, SHADERS_DIR + std::string("ECS_sprite.vs"),
                                     SHADERS_DIR + std::string("ECS_sprite.fs"));
-        ASSERT(spriteShader, "Failed to create SpriteShader");
-        
+
         transformationComponent = FW::createRef<FW::TransformationComponent>();
         addComponent(transformationComponent);
 
         if (isDrawable) {
             drawableComponent = FW::createRef<FW::DrawableComponent>();
             addComponent(drawableComponent);
-            drawableComponent->setShader(spriteShader);
+            drawableComponent->setShader(shader);
             drawableComponent->setShape(FW::createRef<FW::PrimitiveQuad>());
         }
 
-        transformationComponent->setShader(spriteShader);
+        transformationComponent->setShader(shader);
     }
 
     void Sprite::moveBy(float x, float y) {
@@ -95,7 +95,8 @@ namespace FW {
 
     void Sprite::update(float delta) {
         if (isDrawable && camera) {
-            camera->update(drawableComponent->getShader());
+            Shader* shaderRef = ShaderManager::get().bind(drawableComponent->getShader());
+            camera->update(shaderRef);
         }
 
         Entity::update(delta);

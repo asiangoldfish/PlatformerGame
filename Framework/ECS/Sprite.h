@@ -9,7 +9,7 @@ namespace FW {
         Sprite();
         Sprite(ref<Camera> camera);
         void init();
-        FW::ref<FW::Shader> getShader() { return spriteShader; }
+        std::string& getShader() { return shader; }
         
         glm::vec2 getSize() { return size; }
         void setSize(float x, float y);
@@ -30,7 +30,7 @@ namespace FW {
     protected:
         ref<TransformationComponent> transformationComponent;
         ref<DrawableComponent> drawableComponent;
-        ref<Shader> spriteShader;
+        std::string shader;
 
         /**
          * If the camera exists, then Sprite::draw() will draw the sprite to

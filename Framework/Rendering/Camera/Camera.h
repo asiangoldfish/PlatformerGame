@@ -33,6 +33,7 @@ namespace FW {
         }
 
         virtual void update(const ref<Shader>& shader) = 0;
+        virtual void update(const Shader* shader) = 0;
 
         // -------------
         // Camera Movement

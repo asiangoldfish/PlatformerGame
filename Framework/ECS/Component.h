@@ -44,15 +44,15 @@ namespace FW {
         virtual void update(float delta) override;
 
         void setShape(ref<Shape> shape) { this->shape = shape; }
-        void setShader(ref<Shader> shader) { this->shader = shader; }
-        ref<Shader> getShader() { return shader; }
+        void setShader(std::string shader) { this->shader = shader; }
+        std::string getShader() { return shader; }
 
     private:
         void draw();
 
     private:
         ref<Shape> shape;
-        ref<Shader> shader;
+        std::string shader;
         Material material;
         GLenum drawType;
     };
@@ -66,7 +66,7 @@ namespace FW {
 
         virtual void init() override;
         virtual void update(float delta) override;
-        void setShader(ref<Shader> shader) { this->shader = shader; }
+        void setShader(const std::string& shader) { this->shader = shader; }
 
         void setPosition(glm::vec3 position);
         glm::vec3 getPosition() { return position; }
@@ -88,7 +88,7 @@ namespace FW {
     private:
         // Transformation
         glm::mat4 modelMatrix;
-        ref<Shader> shader;
+        std::string shader;
         glm::vec3 position;
         float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
         glm::vec3 scale = glm::vec3{ 1.0f };

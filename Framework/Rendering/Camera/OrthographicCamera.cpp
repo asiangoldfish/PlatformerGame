@@ -29,6 +29,16 @@ namespace FW {
         shader->setFloat("u_nearClip", frustum.near);
         shader->setFloat("u_farClip", frustum.far);
     }
+    
+    
+    void OrthographicCamera::update(const Shader* shader) {
+        shader->bind();
+        shader->setMat4("u_projection", getProjectionMatrix());
+        shader->setMat4("u_view", getViewMatrix());
+        shader->setFloat3("u_cameraPosition", getPosition());
+        shader->setFloat("u_nearClip", frustum.near);
+        shader->setFloat("u_farClip", frustum.far);
+    }
 
     void OrthographicCamera::setCentraliseScreenCoordinates(bool b) {
         centraliseScreenCoordinates = b;

@@ -1,5 +1,6 @@
 #include "Component.h"
 #include "TextureManager.h"
+#include "ShaderManager.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -10,8 +11,12 @@ void FW::DrawableComponent::update(float delta) {
 }
 
 void FW::DrawableComponent::draw() {
-    shader->bind();
-    shader->setFloat4("u_color", glm::vec4(1.0, 1.0, 1.0, 1.0));
+    auto shaderRef = ShaderManager::get().bind(shader);
+    if (!shaderRef) {
+        return;
+    }
+
+    shaderRef->setFloat4("u_color", glm::vec4(1.0, 1.0, 1.0, 1.0));
 
     // Upload material properties
     //        shader->setFloat3("u_material.ambient",
@@ -37,7 +42,7 @@ void FW::DrawableComponent::draw() {
         */
 
     // Shininess
-    shader->setFloat("u_material.shininess",
+    shaderRef->setFloat("u_material.shininess",
                      material.getProperties().shininess);
 
     RenderCommand::drawIndex(shape->getVertexArray());
@@ -48,8 +53,12 @@ void FW::TransformationComponent::init() {}
 void FW::TransformationComponent::update(float delta) {
     // TODO find some way to avoid recalculating the model matrix every frame
     recalculateModelMatrix();
-    shader->bind();
-    shader->setMat4("u_model", modelMatrix);
+    auto shaderRef = ShaderManager::get().bind(shader);
+    if (!shaderRef) {
+        return;
+    }
+    
+    shaderRef->setMat4("u_model", modelMatrix);
 }
 
 void FW::TransformationComponent::setPosition(glm::vec3 position) {

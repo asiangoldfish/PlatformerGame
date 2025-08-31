@@ -29,6 +29,7 @@ namespace FW {
         );
 
         void update(const ref<Shader>& shader) override;
+        void update(const Shader* shader) override;
 
         void setFrustum(const Frustum& frust) {
             this->frustum = frust;
