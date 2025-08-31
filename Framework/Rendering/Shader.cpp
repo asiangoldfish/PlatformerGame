@@ -47,7 +47,9 @@ namespace FW {
 
     Shader::~Shader()
     {
-        glDeleteProgram(shaderProgram);
+        if (shaderProgram) {
+            glDeleteProgram(shaderProgram);
+        }
     }
 
     void Shader::bind() const

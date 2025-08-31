@@ -25,6 +25,9 @@ namespace FW {
      * be passed on initialization. Upon initialization, they will be compiled
      * and the source code are discarded. Only the Shader Program remains and
      * will be bound.
+     *
+     * Shader is a non-copyable class. Credits to non-copyable implementation:
+     * https://www.codeproject.com/Tips/1220451/Cplusplus-Tip-Make-Your-Class-Non-copyable-Without
      */
     class Shader {
     public:
@@ -42,10 +45,34 @@ namespace FW {
             const std::string &fragmentSrc
         );
         virtual ~Shader();
+        Shader() = default;
+
+        Shader(const Shader&) = delete;
+        Shader& operator=(const Shader&) = delete;
+
+        /** Copy constructor */
+        Shader(Shader&& other) noexcept {
+            shaderProgram = other.shaderProgram;
+            other.shaderProgram = 0;
+        }
+
+        /** Move assignment operator */
+        Shader& operator=(Shader&& other) noexcept {
+            if (this != &other) {
+                // free current resource before overwriting
+                if (shaderProgram != 0) {
+                    glDeleteProgram(shaderProgram);
+                }
+                shaderProgram = other.shaderProgram; // take ownership
+                other.shaderProgram = 0;             // leave other safe
+            }
+            return *this;
+        }
 
         /**
          * Bind the <u<Shader</u>.
-         * @details Whenever the <u>Shader</u> is bound must be bound whenever it is used, like uploading data to the GPU.
+         * @details Whenever the <u>Shader</u> is bound must be bound whenever
+         * it is used, like uploading data to the GPU.
          */
         void bind() const;
         /** Unbind the shader. */
@@ -102,12 +129,13 @@ namespace FW {
 
     private:
         /** Vertex shader ID */
-        GLuint vertexShader;
+        GLuint vertexShader = 0;
 
         /** Fragment shader ID */
-        GLuint fragmentShader;
+        GLuint fragmentShader = 0;
 
+    public:
         /** Shader program ID */
-        GLuint shaderProgram;
+        GLuint shaderProgram = 0;
     };
 }
