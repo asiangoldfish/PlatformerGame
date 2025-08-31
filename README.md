@@ -1,4 +1,8 @@
-# Platformer Game
+# Yet Another Graphics Engine
+
+Pronounced as *Ja-Gi*, the YAGI project is a ECS based graphics engine.
+
+---
 
 ![render-engine.jpeg](docs%2Fimages%2Frender-engine.jpeg)
 ![3d_viewport_with_grid.jpeg](docs%2Fimages%2F3d_viewport_with_grid.jpeg)
