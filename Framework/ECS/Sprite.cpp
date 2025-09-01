@@ -35,10 +35,15 @@ namespace FW {
           { current.x + x, current.y + y, 0.0f });
     }
 
+    glm::vec2 Sprite::getSize() {
+        return glm::vec2{ transformationComponent->getScale().x,
+                          transformationComponent->getScale().y };
+    }
+
     void Sprite::setSize(float x, float y) {
+        auto size = glm::vec2{ transformationComponent->getScale().x,
+                               transformationComponent->getScale().y };
         transformationComponent->setScale(x, y, 1.0f);
-        size.x = x;
-        size.y = y;
 
         for (auto& childNode : getChildren()) {
             if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());
@@ -65,10 +70,10 @@ namespace FW {
     }
 
     void Sprite::setPosition(float x, float y) {
+        auto position = glm::vec2(transformationComponent->getPosition().x,
+                                  transformationComponent->getPosition().y);
         transformationComponent->setPosition(
           { x, y, transformationComponent->getPosition().z });
-        position.x = x;
-        position.y = y;
 
         for (auto& childNode : getChildren()) {
             if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());

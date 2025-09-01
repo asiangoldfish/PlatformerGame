@@ -105,6 +105,16 @@ namespace FW {
         /** Get the firstly found component by type `T`. */
         ref<Component> getComponent(std::string componentName);
 
+        template<typename T>
+        ref<T> getComponent() {
+            for (auto& c : components) {
+                if (auto ptr = std::dynamic_pointer_cast<T>(c)) {
+                    return ptr;
+                }
+            }
+            return nullptr;
+        }
+
         /** Return all of the Entity's components. */
         std::vector<ref<Component>>& getComponents() { return components; }
 

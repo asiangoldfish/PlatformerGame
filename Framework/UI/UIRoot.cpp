@@ -16,4 +16,24 @@ namespace FW::UI {
         addComponent(transformationComponent);
         transformationComponent->setShader(shader);
     }
+
+    void UIRoot::setPosition(const glm::vec2& position) {
+        glm::vec2 delta = this->position - position;
+        this->position = position;
+
+        // For every child node we must add their position with our delta.
+        for (auto& childNode : getChildren()) {
+            // Transform component was for some reason not found in the
+            // child node (??) Probably not an assert, but this is a strange
+            // behaviour.
+            auto transformComponent =
+              childNode->getComponent<FW::ref<FW::TransformationComponent>>();
+
+            if (transformComponent) {
+                glm::vec3 newPosition = transformationComponent->getPosition() +
+                                        glm::vec3{ delta, 0.0f };
+                transformationComponent->setPosition(newPosition);
+            }
+        }
+    }
 }

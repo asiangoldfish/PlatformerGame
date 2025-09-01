@@ -10,8 +10,8 @@ namespace FW {
         Sprite(ref<Camera> camera);
         void init();
         std::string& getShader() { return shader; }
-        
-        glm::vec2 getSize() { return size; }
+
+        glm::vec2 getSize();
         void setSize(float x, float y);
         void setSize(float uniformSize);
         void setSize(glm::vec2 size);
@@ -67,10 +67,7 @@ namespace FW {
         ref<Camera> camera;
 
     protected:
-        glm::vec2 position;
-        glm::vec2 size{ 100.0f };
-        glm::vec3 color{ 1.0f };
-
+        glm::vec4 color{ 1.0f };
         /** Some sprites do not draw, like root nodes in UI elements. */
         bool isDrawable = true;
     };

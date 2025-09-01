@@ -11,7 +11,9 @@ void GameUI::init() {
     uiRoot->addChild(healthBar);
 
     healthBar->setPosition(300.f, 500.f);
+    healthBar->foreground->setSize(100.f, 200.f);
     healthBar->foreground->setColor(glm::vec3{ 0.3f, 0.75f, 0.5f });
+    healthBar->background->setSize(150.f, 210.f);
     healthBar->background->setColor(glm::vec3{ 0.1f, 0.3f, 0.7f });
 
     INFO("GameUI successfully initialised");
