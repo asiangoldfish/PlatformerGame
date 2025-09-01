@@ -11,6 +11,14 @@ namespace FW {
 
     VertexArray::~VertexArray()
     {
+        // 1st of September 2025:
+        // Unbinding prevents the error that corrupts the global OpenGL state
+        // where another VAO is currently bound while we delete our VAO. No idea
+        // if that makes sense, but it fixes a bug where drawing a deleting a
+        // projectile's VAO while someone else's VAO is bound led to a crash
+        // when drawing with that someone else's VAO.
+        // - Khai Duong
+        unbind();
         glDeleteBuffers(1, &vertexArrayID);
     }
 
