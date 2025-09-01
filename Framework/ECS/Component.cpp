@@ -16,7 +16,7 @@ void FW::DrawableComponent::draw() {
         return;
     }
 
-    shaderRef->setFloat4("u_color", glm::vec4(1.0, 1.0, 1.0, 1.0));
+    shaderRef->setFloat4("u_color", color);
 
     // Upload material properties
     //        shader->setFloat3("u_material.ambient",

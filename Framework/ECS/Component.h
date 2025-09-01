@@ -50,6 +50,9 @@ namespace FW {
     private:
         void draw();
 
+    public:
+        glm::vec4 color{ 1.0f };
+
     private:
         ref<Shape> shape;
         std::string shader;

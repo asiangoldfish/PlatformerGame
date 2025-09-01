@@ -27,6 +27,34 @@ namespace FW {
         void update(float delta) override;
         void setCamera(ref<Camera> camera) { this->camera = camera; }
 
+        // Colors
+        glm::vec4 getColor() { return color; }
+        void setColor(const glm::vec4& color) {
+            this->color = color;
+            drawableSetColor(this->color);
+        }
+        void setColor(const glm::vec3& color) {
+            this->color = glm::vec4{ color, 1.0f };
+            drawableSetColor(this->color);
+        }
+        void setColor(float r, float g, float b, float a) {
+            color = glm::vec4{ r, g, b, a };
+            drawableSetColor(this->color);
+        }
+        void setColor(float r, float g, float b) {
+            color = glm::vec4{ r, g, b, 1.0f };
+            drawableSetColor(this->color);
+        }
+        void setColor(float col) {
+            color = glm::vec4{ col, col, col, 1.0f };
+            drawableSetColor(this->color);
+        }
+
+    private:
+        void drawableSetColor(const glm::vec4& col) {
+            drawableComponent->color = col;
+        }
+
     protected:
         ref<TransformationComponent> transformationComponent;
         ref<DrawableComponent> drawableComponent;
