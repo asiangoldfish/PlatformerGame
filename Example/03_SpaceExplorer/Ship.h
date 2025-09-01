@@ -15,8 +15,22 @@ public:
 
 public: // Transformation
     void setPosition(float x, float y);
+    void setPosition(glm::vec2 pos);
     glm::vec2 getPosition();
     void setRotation(glm::vec3 rot);
+
+    virtual void update(float delta) override;
+
+    /**
+     * Fire bullets.
+     *
+     * The bullets should move independently from the space ship, meaning the
+     * space ship itself has no knowledge of the bullets. The user must
+     * therefore pass a reference to the parent node.
+     *
+     * @param root the node to attach the bullets to
+     */
+    void fireBullets(FW::ref<FW::SceneNode> root);
 
 private:
     friend GameScene;
@@ -24,6 +38,13 @@ private:
 private: // Player stats
     float health;
     float gold;
+    FW::ref<FW::Camera> camera;
+
+    float fireMaxCooldown = 0.075f;
+    float fireCurrentCooldown = 0.0f;
+    float accuracy = 0.8f;
+
+    float speed = 10.0f;
 };
 
 class Bullet : public FW::SceneNode {
