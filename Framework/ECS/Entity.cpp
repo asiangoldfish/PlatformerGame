@@ -35,10 +35,16 @@ namespace FW {
     }
 
     ref<Component> Entity::getComponent(std::string componentName) {
-        auto foundIterator = std::find_if(components.begin(), components.end(), [&](ref<Component> c) {
-            return c->name == componentName; });
+        auto foundIterator = std::find_if(
+          components.begin(), components.end(), [&](ref<Component> c) {
+              return c->name == componentName;
+          });
 
-        return *foundIterator;
+        if (foundIterator == components.end()) {
+            return nullptr;
+        } else {
+            return *foundIterator;
+        }
     }
 
     void Entity::removeComponent(const std::string& componentName) {
