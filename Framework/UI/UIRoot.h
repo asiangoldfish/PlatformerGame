@@ -7,8 +7,11 @@ namespace FW::UI {
     /**
      * This class is a barebone class for UI with minimal functionality.
      *
-     * By default, it is composed by the transformation component only, and its
-     * primary purpose is to group child nodes.
+     * It comes in handy when composing a more complex element consisting of
+     * several other elements, such as a ProgressBar that consists of a
+     * foreground and a background element. It can also be used to group nodes.
+     *
+     * The UIRoot comes with the transformation component by default.
      */
     class UIRoot : public Entity {
     public:
@@ -37,5 +40,9 @@ namespace FW::UI {
     private:
         ref<TransformationComponent> transformationComponent;
         std::string shader;
+
+    protected:
+        /** While the UIRoot does not utilise the camera, subclasses may. */
+        ref<Camera> camera;
     };
 }
