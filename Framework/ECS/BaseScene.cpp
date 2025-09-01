@@ -4,11 +4,28 @@ FW::BaseScene::~BaseScene() {
 }
 
 void FW::BaseScene::init() {
-    root = createRef<Entity>();
-    root->name = "root";
+    rootNode = createRef<SceneNode>();
+    rootNode->entity = createRef<Entity>();
+    rootNode->entity->name = "root";
     viewport = FW::createRef<FW::Viewport>();
 }
 
 void FW::BaseScene::update(float delta) {
-    root->update(delta);
+    if (rootNode) {
+        rootNode->update(delta);
+    }
+}
+
+void FW::SceneNode::update(float delta) {
+    if (entity) {
+        entity->update(delta);
+    }
+
+    for (auto& childNode : childNodes) {
+        childNode->update(delta);
+    }
+}
+
+void FW::SceneNode::addChild(ref<SceneNode> node) {
+    childNodes.push_back(node);
 }

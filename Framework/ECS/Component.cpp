@@ -66,6 +66,14 @@ void FW::TransformationComponent::setPosition(glm::vec3 position) {
     recalculateModelMatrix();
 }
 
+void FW::TransformationComponent::setPosition(float x, float y, float z) {
+    setPosition(glm::vec3{ x, y, z });
+}
+
+void FW::TransformationComponent::setPosition(float x, float y) {
+    setPosition(glm::vec3{ x, y, position.z });
+}
+
 void FW::TransformationComponent::setScale(float x, float y, float z) {
     scale.x = x;
     scale.y = y;

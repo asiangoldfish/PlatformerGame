@@ -72,6 +72,8 @@ namespace FW {
         void setShader(const std::string& shader) { this->shader = shader; }
 
         void setPosition(glm::vec3 position);
+        void setPosition(float x, float y, float z);
+        void setPosition(float x, float y);
         glm::vec3 getPosition() { return position; }
 
         void setScale(float x, float y, float z);

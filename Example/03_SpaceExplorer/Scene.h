@@ -20,6 +20,9 @@ private:
     FW::ref<FW::OrthographicCamera> camera;
     FW::ref<Ship> playerShip;
 
+    /** We put all bullets and stuff here, so they won't move with for example
+     * the ship that shot the projectile. */
+    FW::ref<ProjectileRoot> projectileRoot;
 
     // FW::ref<GameUI> gameUI;
 };

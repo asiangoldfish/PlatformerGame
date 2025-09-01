@@ -28,10 +28,6 @@ namespace FW {
         for (auto& component : components) {
             component->update(delta);
         }
-
-        for (const auto& child : children) {
-            child->update(delta);
-        }
     }
 
     ref<Component> Entity::getComponent(std::string componentName) {
