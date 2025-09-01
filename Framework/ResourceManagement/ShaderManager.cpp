@@ -21,4 +21,8 @@ namespace FW {
             return nullptr;
         }
     }
+
+    void ShaderManager::clear() {
+        shaders.clear();
+    }
 }

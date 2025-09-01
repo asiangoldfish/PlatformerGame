@@ -19,6 +19,10 @@ namespace FW {
         ShaderManager(const ShaderManager&) = delete;
         ShaderManager& operator=(const ShaderManager&) = delete;
 
+        /** Explicitly clear the shader buffer. Should be called before the
+         * application quits. */
+        void clear();
+
     private:
         ShaderManager() {}
         ~ShaderManager() {}

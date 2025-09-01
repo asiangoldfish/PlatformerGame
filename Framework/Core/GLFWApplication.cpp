@@ -9,6 +9,7 @@
 #include "Log.h"
 #include "RenderCommands.h"
 #include "Input.h"
+#include "ShaderManager.h"
 
 static void FW_GLFWKey_Callback(GLFWwindow* window,
                                 int key,
@@ -52,6 +53,7 @@ namespace FW {
 
     GLFWApplication::~GLFWApplication() {
         RenderCommand::destroy();
+        ShaderManager::get().clear();
 
         // Destroy window and terminate GLFW.
         // NOTE: DO NOT run any GLFW functions after calling glfwTerminate()!!
