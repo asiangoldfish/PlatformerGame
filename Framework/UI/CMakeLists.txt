@@ -2,7 +2,6 @@ project(FRAMEWORK_UI)
 
 add_library(${PROJECT_NAME} STATIC
     UIRoot.cpp
-    Box.cpp
     ProgressBar.cpp
 )
 

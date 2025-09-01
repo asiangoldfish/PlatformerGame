@@ -1,23 +1,21 @@
 #include "ProgressBar.h"
 
 namespace FW::UI {
-    ProgressBar::ProgressBar() {
-        init();
-    }
-    ProgressBar::ProgressBar(ref<Camera> camera)
-      : Sprite(camera) {
+    ProgressBar::ProgressBar(ref<Camera> camera){
+        this->camera = camera;
         init();
     }
 
     void ProgressBar::init() {
-        isDrawable = false;
+        if (!camera) {{
+            WARN("ProgressBar: Camera is uninitialized");
+            return;
+        }}
 
-        background = FW::createRef<Box>(camera);
-        foreground = FW::createRef<Box>(camera);
+        background = FW::createRef<FW::Sprite>(camera);
+        foreground = FW::createRef<FW::Sprite>(camera);
 
         addChild(background);
         addChild(foreground);
-
-        setSize(0.3f);
     }
 }

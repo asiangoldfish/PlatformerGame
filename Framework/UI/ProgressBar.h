@@ -1,20 +1,21 @@
 #pragma once
 
-#include "Box.h"
 #include "Memory.h"
 #include "Camera/Camera.h"
+#include "UIRoot.h"
+#include "Sprite.h"
 
 namespace FW::UI {
-    class ProgressBar : public Sprite {
+    class ProgressBar : public UIRoot {
     public:
-        ProgressBar();
+        ProgressBar() = default;
         ProgressBar(ref<Camera> camera);
         virtual ~ProgressBar() = default;
 
         void init();
 
-    private:
-        FW::ref<Box> background;
-        FW::ref<Box> foreground;
+    public:
+        FW::ref<FW::Sprite> background;
+        FW::ref<FW::Sprite> foreground;
     };
 }
