@@ -19,7 +19,7 @@ namespace FW {
         // when drawing with that someone else's VAO.
         // - Khai Duong
         unbind();
-        glDeleteBuffers(1, &vertexArrayID);
+        glDeleteVertexArrays(1, &vertexArrayID);
     }
 
     void VertexArray::bind() const
