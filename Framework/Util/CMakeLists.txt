@@ -1,8 +1,8 @@
 project(FRAMEWORK_UTIL)
 
 add_library(${PROJECT_NAME}
-    FW_Math.cpp
     Files.cpp
+    Math/Math.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

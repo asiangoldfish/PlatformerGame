@@ -1,4 +1,4 @@
-#include "FW_Math.h"
+#include "Math.h"
 
 namespace FW {
     float lerp(float v0, float v1, float t)
