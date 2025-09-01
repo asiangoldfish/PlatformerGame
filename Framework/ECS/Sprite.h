@@ -8,6 +8,7 @@ namespace FW {
     public:
         Sprite();
         Sprite(ref<Camera> camera);
+        virtual ~Sprite() = default;
         void init();
         std::string& getShader() { return shader; }
 
