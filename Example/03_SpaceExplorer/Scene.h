@@ -20,5 +20,6 @@ private:
     FW::ref<FW::OrthographicCamera> camera;
     FW::ref<Ship> playerShip;
 
-    GameUI gameUI;
+
+    // FW::ref<GameUI> gameUI;
 };

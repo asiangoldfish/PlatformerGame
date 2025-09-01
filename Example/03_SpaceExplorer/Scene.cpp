@@ -16,14 +16,10 @@ void GameScene::init() {
     camera->setCameraSize(1280.0f, 720.0f);
 
     playerShip = FW::createRef<Ship>(camera);
-    root->addChild(playerShip->sprite);
-
-    gameUI.camera = camera;
-    gameUI.init();
-    root->addChild(gameUI.uiRoot);
-
-    // TODO figure out why space ship sometimes renders, sometimes doesn't. Race
-    // condition??
+    // gameUI = FW::createRef<GameUI>();
+    // gameUI->camera = camera;
+    // gameUI->init();
+    // rootNode->addChild(gameUI);
 }
 
 void GameScene::update(float delta) {

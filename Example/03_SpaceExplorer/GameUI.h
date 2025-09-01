@@ -3,6 +3,7 @@
 #include "ProgressBar.h"
 #include "Camera/Camera.h"
 #include "UIRoot.h"
+#include "BaseScene.h"
 
 /**
  * Container class for UI elements.
@@ -11,7 +12,7 @@
  * GameUi::draw() in the game scene, all elements will automatically be updated
  * and drawn.
  */
-class GameUI {
+class GameUI : public FW::SceneNode {
 public:
     GameUI() = default;
     virtual ~GameUI() = default;
