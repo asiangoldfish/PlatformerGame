@@ -15,6 +15,7 @@ public:
 
 public: // Transformation
     void setPosition(float x, float y);
+    void setPosition(float x, float y, float z);
     void setPosition(glm::vec2 pos);
     glm::vec2 getPosition();
     void setRotation(glm::vec3 rot);

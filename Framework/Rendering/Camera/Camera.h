@@ -58,9 +58,21 @@ namespace FW {
         // Camera Position
         // -------------
         inline const glm::vec3& getPosition() { return position; }
-        inline void setPosition(const glm::vec3& pos)
-        {
+        inline const glm::vec2 getPosition2D() {
+            return glm::vec2{ position.x, position.y };
+        }
+        inline void setPosition(const glm::vec3& pos) {
             position = pos;
+            computeViewMatrix();
+        }
+        inline void setPosition2D(const glm::vec2& pos) {
+            position.x = pos.x;
+            position.y = pos.y;
+            computeViewMatrix();
+        }
+        inline void setPosition2D(const float x, const float y) {
+            position.x = x;
+            position.y = y;
             computeViewMatrix();
         }
 

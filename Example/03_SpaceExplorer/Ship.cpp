@@ -29,7 +29,7 @@ Ship::Ship(FW::ref<FW::Camera> camera) {
     sprite->name = "Player Spaceship";
     sprite->setColor(0.2f, 0.8f, 0.1f);
     sprite->setSize(100, 50);
-    sprite->setPosition(600.f, 400.f);
+    // sprite->setPosition(600.f, 400.f);
     entity = sprite;
 
     INFO("Ship successfully initialised");
@@ -43,6 +43,16 @@ void Ship::setPosition(float x, float y) {
     }
 
     xformComponent->setPosition(x, y);
+}
+
+void Ship::setPosition(float x, float y, float z) {
+    auto xformComponent = entity->getComponent<FW::TransformationComponent>();
+
+    if (!xformComponent) {
+        return;
+    }
+
+    xformComponent->setPosition(x, y, z);
 }
 
 void Ship::setPosition(glm::vec2 pos) {
@@ -72,7 +82,6 @@ void Ship::setRotation(glm::vec3 rot) {
 
 void Ship::update(float delta) {
     FW::SceneNode::update(delta);
-    INFO("Position: ({}, {})\r", getPosition().x, getPosition().y);
 
     if (fireCurrentCooldown >= 0.0f) {
         fireCurrentCooldown -= delta;

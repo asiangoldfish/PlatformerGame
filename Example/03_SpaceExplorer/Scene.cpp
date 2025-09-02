@@ -7,8 +7,13 @@ void GameScene::init() {
 
     camera = FW::createRef<FW::OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
+    // Centralising the screen coordinates makes sure that the origin is always
+    // in the middle of the screen, thus allowing us to follow the player by
+    // simply setting it to the player's position.
+    camera->setCentraliseScreenCoordinates(true);
 
     playerShip = FW::createRef<Ship>(camera);
+    playerShip->setPosition(0.0f, 0.0f, -3.f);
     rootNode->addChild(playerShip);
 
     projectileRoot = FW::createRef<ProjectileRoot>();
@@ -26,6 +31,11 @@ void GameScene::update(float delta) {
     //                         -FW::Input::getMouseY() + 720.0f);
 
     playerShip->setRotation(-getRotationWithMouse());
+
+    // We wanna stick the ship to the middle of the screen, so we must also
+    // move the camera.
+    glm::vec2 camPos = camera->getPosition2D();
+    camera->setPosition2D(playerShip->getPosition());
 
     // Shoot bullet! Algorithm:
     // 1. Find player position

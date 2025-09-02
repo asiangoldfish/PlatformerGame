@@ -45,9 +45,8 @@ namespace FW {
         centraliseScreenCoordinates = b;
         computeProjectionMatrix();
     }
-
     void OrthographicCamera::computeViewMatrix() {
-        viewMatrix = glm::lookAt(position, { 0, 0, 1 }, { 0, 1, 0 });
+        viewMatrix = glm::lookAt(position, { position.x, position.y, -1.0f }, { 0.0, 1, 0.0 });
     }
 
     void OrthographicCamera::updateViewportSize(const glm::vec2& size) {
@@ -66,6 +65,10 @@ namespace FW {
     }
 
     void OrthographicCamera::computeProjectionMatrix() {
+        // TODO Fix elements getting smaller if centraliseScreenCoordinates is
+        // true
+        // If there's nothing wrong with it, then remove the TODO and do
+        // nothing.
         float left = centraliseScreenCoordinates ? -frustum.right : 0.0f;
         float bottom = centraliseScreenCoordinates ? -frustum.top : 0.0f;
 
