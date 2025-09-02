@@ -8,6 +8,8 @@ bool GameApplication::init() {
     scene = FW::createRef<GameScene>();
     scene->init();
 
+    RenderCommand::setClearColor(glm::vec3{0.5f, 0.25f, 0.4f});
+
     return true;
 }
 
