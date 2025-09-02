@@ -18,7 +18,7 @@ The title of a commit message should start with one of the following tags:
 | Commit Type | Title                    | Description                                                                                                 |
 |:-----------:|--------------------------|-------------------------------------------------------------------------------------------------------------|
 |   `feat`    | Features                 | A new feature                                                                                               |
-|    `fix`    | Bug Fixes                | A bug fix                                                                                                   |
+|    `bug`    | Bug Fixes                | A bug fix                                                                                                   |
 |   `docs`    | Documentation            | Documentation only changes. This may also include comments/docstrings                                       |
 |   `style`   | Styles                   | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
 | `refactor`  | Code Refactoring         | A code change that neither fixes a bug nor adds a feature                                                   |
