@@ -22,7 +22,8 @@
 #include "spdlog/spdlog.h"
 #include "assertions.h"
 #include <iostream>
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 /**
  * Trace code flow.
@@ -50,7 +51,7 @@ inline std::string glmToString(const glm::vec3& v) {
 inline std::string glmToString(const glm::vec4& v) {
     return fmt::format("({}, {}, {}, {})", v.x, v.y, v.z, v.w);
 }
-#define INFO_VEC(v) spdlog::info(glmToString(v))
+#define INFO_VEC(v) spdlog::info(glm::to_string(v))
 
 // Keep these for legacy reasons
 #define INFO_GLM_VEC2(value) INFO("X: {} | Y: {}", value.x, value.y)
