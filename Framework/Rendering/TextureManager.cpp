@@ -4,8 +4,7 @@
 
 namespace FW {
     std::vector<ref<Texture>> TextureManager::textures;
-    uint32_t TextureManager::invalidTextureID =
-      std::numeric_limits<uint32_t>::max();
+    uint32_t TextureManager::invalidTextureID = 0;
 
     void TextureManager::bind(const std::string& name,
                               int textureSlot)
