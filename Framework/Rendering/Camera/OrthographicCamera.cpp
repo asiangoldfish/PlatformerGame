@@ -65,21 +65,14 @@ namespace FW {
     }
 
     void OrthographicCamera::computeProjectionMatrix() {
-        // TODO Fix elements getting smaller if centraliseScreenCoordinates is
-        // true
-        // If there's nothing wrong with it, then remove the TODO and do
-        // nothing.
-        float left = centraliseScreenCoordinates ? -frustum.right : 0.0f;
-        float bottom = centraliseScreenCoordinates ? -frustum.top : 0.0f;
+        float left = centraliseScreenCoordinates ? -frustum.right * 0.5f : 0.0f;
+        float right =
+          centraliseScreenCoordinates ? frustum.right * 0.5f : frustum.right;
+        float bottom = centraliseScreenCoordinates ? -frustum.top * 0.5f : 0.0f;
+        float top =
+          centraliseScreenCoordinates ? frustum.top * 0.5f : frustum.top;
 
         projectionMatrix =
-          glm::ortho(
-            left,
-            frustum.right,
-            bottom,
-            frustum.top,
-            frustum.near,
-            frustum.far
-        );
+          glm::ortho(left, right, bottom, top, frustum.near, frustum.far);
     }
 }
