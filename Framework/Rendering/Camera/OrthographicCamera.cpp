@@ -19,6 +19,7 @@ namespace FW {
           glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);
         
         computeProjectionMatrix();
+        this->position = position;
     }
 
     void OrthographicCamera::update(const ref<Shader>& shader) {
