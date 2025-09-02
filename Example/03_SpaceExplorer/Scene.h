@@ -19,6 +19,9 @@ public:
 private:
     FW::ref<FW::OrthographicCamera> camera;
     FW::ref<Ship> playerShip;
+    FW::ref<FW::SceneNode> backgroundNode;
+    /** Simulates space objects to be far away in the background */
+    float parallaxFactor = 0.2f;
 
     /** We put all bullets and stuff here, so they won't move with for example
      * the ship that shot the projectile. */

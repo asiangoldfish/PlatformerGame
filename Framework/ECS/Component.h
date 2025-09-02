@@ -47,6 +47,27 @@ namespace FW {
         void setShader(std::string shader) { this->shader = shader; }
         std::string getShader() { return shader; }
 
+        /** Create a new texture.
+         *
+         * This method creates new texture resources. The \param name "name" is
+         * the key to reference it using the TextureManager.
+         *
+         * To use an existing resource instead, pass its ID to this method
+         * instead.
+         *
+         * @param name The name to reference the texture with.
+         * @param filepath Absolute or relative path to the texture resource.
+         */
+        void setTexture(const std::string& name, const std::string& filepath);
+
+        /**
+         * Apply an existing texture to the \ref Sprite "Sprite".
+         *
+         * @param id The texture by ID to apply. Use the \ref TextureManager
+         * "TextureManager" to retrieve the ID.
+         */
+        void setTexture(const uint32_t id);
+
     private:
         void draw();
 
@@ -72,6 +93,7 @@ namespace FW {
         void setShader(const std::string& shader) { this->shader = shader; }
 
         void setPosition(glm::vec3 position);
+        void setPosition(glm::vec2 position);
         void setPosition(float x, float y, float z);
         void setPosition(float x, float y);
         glm::vec3 getPosition() { return position; }

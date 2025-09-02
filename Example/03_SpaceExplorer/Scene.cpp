@@ -12,10 +12,23 @@ void GameScene::init() {
     // simply setting it to the player's position.
     camera->setCentraliseScreenCoordinates(true);
 
+    // Background - Must be drawn first
+    auto backgroundSprite = FW::createRef<FW::Sprite>(camera);
+    backgroundSprite->setPosition(0.f, 0.0f, -0.1f);
+    backgroundSprite->setSize(camera->getCameraSize().x * 2.0f);
+    backgroundSprite->setTexture(
+      "background", TEXTURES_DIR + std::string("space_background.jpg"));
+
+    backgroundNode = FW::createRef<FW::SceneNode>();
+    backgroundNode->entity = backgroundSprite;
+    rootNode->addChild(backgroundNode);
+
+    // Player ship
     playerShip = FW::createRef<Ship>(camera);
-    playerShip->setPosition(0.0f, 0.0f, -3.f);
+    playerShip->setPosition(0.0f, 0.0f, 0.0f);
     rootNode->addChild(playerShip);
 
+    // Projectiles
     projectileRoot = FW::createRef<ProjectileRoot>();
     rootNode->addChild(projectileRoot);
 
@@ -27,8 +40,6 @@ void GameScene::init() {
 
 void GameScene::update(float delta) {
     FW::BaseScene::update(delta);
-    // playerShip->setPosition(FW::Input::getMouseX(),
-    //                         -FW::Input::getMouseY() + 720.0f);
 
     playerShip->setRotation(-getRotationWithMouse());
 
@@ -36,6 +47,8 @@ void GameScene::update(float delta) {
     // move the camera.
     glm::vec2 camPos = camera->getPosition2D();
     camera->setPosition2D(playerShip->getPosition());
+    backgroundNode->entity->getComponent<FW::TransformationComponent>()
+      ->setPosition(-playerShip->getPosition() * parallaxFactor);
 
     // Shoot bullet! Algorithm:
     // 1. Find player position

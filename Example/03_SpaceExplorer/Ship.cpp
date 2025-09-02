@@ -27,8 +27,9 @@ Ship::Ship(FW::ref<FW::Camera> camera) {
     this->camera = camera;
     FW::ref<FW::Sprite> sprite = FW::createRef<FW::Sprite>(camera);
     sprite->name = "Player Spaceship";
-    sprite->setColor(0.2f, 0.8f, 0.1f);
-    sprite->setSize(100, 50);
+    // sprite->setColor(0.2f, 0.8f, 0.1f);
+    sprite->setSize(150.0f);
+    sprite->setTexture("spaceship", TEXTURES_DIR + std::string("spaceship_sprite.png"));
     // sprite->setPosition(600.f, 400.f);
     entity = sprite;
 

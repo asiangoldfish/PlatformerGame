@@ -41,19 +41,19 @@ namespace FW {
     }
 
     void Sprite::setSize(float x, float y) {
-        auto size = glm::vec2{ transformationComponent->getScale().x,
-                               transformationComponent->getScale().y };
+        // auto size = glm::vec2{ transformationComponent->getScale().x,
+                            //    transformationComponent->getScale().y };
         transformationComponent->setScale(x, y, 1.0f);
 
-        for (auto& childNode : getChildren()) {
-            if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());
-                childSprite != nullptr) {
-                glm::vec2 sizeRatio = glm::vec2{ x, y } / size;
+        // for (auto& childNode : getChildren()) {
+        //     if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());
+        //         childSprite != nullptr) {
+        //         glm::vec2 sizeRatio = glm::vec2{ x, y } / size;
 
-                glm::vec2 newSize = childSprite->getSize() * sizeRatio;
-                childSprite->setSize(newSize);
-            }
-        }
+        //         glm::vec2 newSize = childSprite->getSize() * sizeRatio;
+        //         childSprite->setSize(newSize);
+        //     }
+        // }
     }
 
     void Sprite::setSize(float uniformSize) {
@@ -70,23 +70,31 @@ namespace FW {
     }
 
     void Sprite::setPosition(float x, float y) {
-        auto position = glm::vec2(transformationComponent->getPosition().x,
-                                  transformationComponent->getPosition().y);
+        // auto position = glm::vec2(transformationComponent->getPosition().x,
+        //   transformationComponent->getPosition().y);
         transformationComponent->setPosition(
           { x, y, transformationComponent->getPosition().z });
 
-        for (auto& childNode : getChildren()) {
-            if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());
-                childSprite != nullptr) {
-                glm::vec2 positionOffset =
-                  position - childSprite->getPosition();
-                childSprite->setPosition(childSprite->getPosition() +
-                                         positionOffset);
-            }
-        }
+        // for (auto& childNode : getChildren()) {
+        //     if (Sprite* childSprite = dynamic_cast<Sprite*>(childNode.get());
+        //         childSprite != nullptr) {
+        //         glm::vec2 positionOffset =
+        //           position - childSprite->getPosition();
+        //         childSprite->setPosition(childSprite->getPosition() +
+        //                                  positionOffset);
+        //     }
+        // }
+    }
+
+    void Sprite::setPosition(float x, float y, float z) {
+        transformationComponent->setPosition({ x, y, z });
     }
 
     void Sprite::setPosition(glm::vec2 position) {
+        setPosition(position.x, position.y);
+    }
+
+    void Sprite::setPosition(glm::vec3 position) {
         setPosition(position.x, position.y);
     }
 
@@ -105,5 +113,9 @@ namespace FW {
         }
 
         Entity::update(delta);
+    }
+    void Sprite::setTexture(const std::string& name,
+                            const std::string filepath) {
+        drawableComponent->setTexture(name, filepath);
     }
 }

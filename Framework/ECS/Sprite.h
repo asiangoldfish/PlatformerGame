@@ -20,6 +20,9 @@ namespace FW {
         glm::vec2 getPosition();
         void setPosition(float x, float y);
         void setPosition(glm::vec2 position);
+        void setPosition(float x, float y, float z);
+        void setPosition(glm::vec3 position);
+
         void moveBy(float x, float y);
 
         void setRotation(float yaw, float pitch, float roll);
@@ -50,6 +53,8 @@ namespace FW {
             color = glm::vec4{ col, col, col, 1.0f };
             drawableSetColor(this->color);
         }
+
+        void setTexture(const std::string& name, const std::string filepath);
 
     private:
         void drawableSetColor(const glm::vec4& col) {

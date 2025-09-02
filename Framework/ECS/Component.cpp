@@ -10,6 +10,15 @@ void FW::DrawableComponent::update(float delta) {
     draw();
 }
 
+void FW::DrawableComponent::setTexture(const std::string& name,
+                                       const std::string& filepath) {
+    material.getProperties().diffuseTextureID = FW::TextureManager::loadTexture2D(name, filepath);
+}
+
+void FW::DrawableComponent::setTexture(const uint32_t id) {
+    material.getProperties().diffuseTextureID = id;
+}
+
 void FW::DrawableComponent::draw() {
     auto shaderRef = ShaderManager::get().bind(shader);
     if (!shaderRef) {
@@ -63,6 +72,12 @@ void FW::TransformationComponent::update(float delta) {
 
 void FW::TransformationComponent::setPosition(glm::vec3 position) {
     this->position = position;
+    recalculateModelMatrix();
+}
+
+void FW::TransformationComponent::setPosition(glm::vec2 position) {
+    this->position.x = position.x;
+    this->position.y = position.y;
     recalculateModelMatrix();
 }
 
