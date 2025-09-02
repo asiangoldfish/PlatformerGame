@@ -10,6 +10,7 @@
 #include "RenderCommands.h"
 #include "Input.h"
 #include "ShaderManager.h"
+#include "TextureManager.h"
 
 static void FW_GLFWKey_Callback(GLFWwindow* window,
                                 int key,
@@ -116,6 +117,11 @@ namespace FW {
 
         /* Time */
         timer.updateDeltaTime();
+
+        // Most drawable entities that use textures expect the default texture
+        // to be white.
+        TextureManager::createTexture(
+          "default", { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f });
 
         INFO("GLFWApplication \'{}\' successfully initiated", appName);
 

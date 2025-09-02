@@ -14,10 +14,11 @@ uniform mat4 u_model = mat4(1.0f);
 // Output variables down the OpenGL pipeline...
 out vec3 o_position;
 out vec4 o_color;
-out vec3 o_modelPosition;  // Position vertex attributes with model matrix
+out vec2 o_texCoord;
 
 void main() {
-    o_color    = a_color;
+    o_color = a_color;
+    o_texCoord = a_texCoord;
 
     gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 }

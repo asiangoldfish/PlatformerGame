@@ -69,8 +69,8 @@ namespace FW {
         glm::vec3 specular = glm::vec3(1.0f);
         std::string diffuseTextureName;
         std::string specularTextureName;
-        uint32_t diffuseTextureID = -1;
-        uint32_t specularTextureID = -1;
+        uint32_t diffuseTextureID = 0;
+        uint32_t specularTextureID = 0;
         float shininess = 1.0f;
 
         /**
