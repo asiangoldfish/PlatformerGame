@@ -130,7 +130,16 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     // inaccuracy should be in radians. We can still have the accuracy in
     // percent, but we have to convert it to radian in the computation, i.e. 2PI
     // * accuracy.
-    angle *= FW::rng(minSpread, maxSpread);
+    float spreadFactor = FW::rng(minSpread, maxSpread);
+
+    float pi = 3.14f;
+    bullet->velocity = glm::vec2{ cos(angle + spreadFactor) * speed,
+                                  sin(angle + spreadFactor) * speed };
+    float deg = spreadFactor * 180.0f / pi;
+    float randAngleFactor = glm::radians(15.0f);
+    
+    
+    spreadFactor = FW::remap(spreadFactor, minSpread, maxSpread, -randAngleFactor/2.0f, randAngleFactor/2.0f);
 
     bullet->setPosition(playerPos);
     bullet->velocity = glm::vec2{ cos(angle) * speed, sin(angle) * speed };
