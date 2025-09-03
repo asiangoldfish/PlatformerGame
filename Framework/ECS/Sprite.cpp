@@ -118,4 +118,14 @@ namespace FW {
                             const std::string filepath) {
         drawableComponent->setTexture(name, filepath);
     }
+    void Sprite::setZIndex(uint32_t z) {
+        if (drawableComponent) {
+            drawableComponent->Z_index = z;
+        }
+    }
+    void Sprite::setIsTransparent(const bool b) {
+        if (drawableComponent) {
+            drawableComponent->isTransparent = b;
+        }
+    }
 }

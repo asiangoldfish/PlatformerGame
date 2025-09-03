@@ -14,8 +14,8 @@ void GameScene::init() {
 
     // Background - Must be drawn first
     auto backgroundSprite = FW::createRef<FW::Sprite>(camera);
-    backgroundSprite->setPosition(0.f, 0.0f, -0.1f);
-    backgroundSprite->setSize(camera->getCameraSize().x * 2.0f);
+    backgroundSprite->name = "background";
+    backgroundSprite->setSize(2000.0f);
     backgroundSprite->setTexture(
       "background", TEXTURES_DIR + std::string("space_background.jpg"));
 
@@ -25,7 +25,8 @@ void GameScene::init() {
 
     // Player ship
     playerShip = FW::createRef<Ship>(camera);
-    playerShip->setPosition(0.0f, 0.0f, 0.0f);
+    playerShip->entity->getComponent<FW::DrawableComponent>()->isTransparent =
+      true;
     rootNode->addChild(playerShip);
 
     // Projectiles
@@ -56,6 +57,8 @@ void GameScene::update(float delta) {
     if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
         playerShip->fireBullets(projectileRoot);
     }
+
+    renderSystem.draw(rootNode);
 }
 
 void GameScene::cleanUp() {}

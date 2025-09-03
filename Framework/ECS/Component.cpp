@@ -7,12 +7,13 @@
 void FW::DrawableComponent::init() {}
 
 void FW::DrawableComponent::update(float delta) {
-    draw();
+    // draw();
 }
 
 void FW::DrawableComponent::setTexture(const std::string& name,
                                        const std::string& filepath) {
-    material.getProperties().diffuseTextureID = FW::TextureManager::loadTexture2D(name, filepath);
+    material.getProperties().diffuseTextureID =
+      FW::TextureManager::loadTexture2D(name, filepath);
 }
 
 void FW::DrawableComponent::setTexture(const uint32_t id) {
@@ -52,7 +53,7 @@ void FW::DrawableComponent::draw() {
 
     // Shininess
     shaderRef->setFloat("u_material.shininess",
-                     material.getProperties().shininess);
+                        material.getProperties().shininess);
 
     RenderCommand::drawIndex(shape->getVertexArray());
 }
@@ -60,14 +61,7 @@ void FW::DrawableComponent::draw() {
 void FW::TransformationComponent::init() {}
 
 void FW::TransformationComponent::update(float delta) {
-    // TODO find some way to avoid recalculating the model matrix every frame
-    recalculateModelMatrix();
-    auto shaderRef = ShaderManager::get().bind(shader);
-    if (!shaderRef) {
-        return;
-    }
-    
-    shaderRef->setMat4("u_model", modelMatrix);
+    // uploadTransformationMatrix()
 }
 
 void FW::TransformationComponent::setPosition(glm::vec3 position) {
@@ -94,6 +88,16 @@ void FW::TransformationComponent::setScale(float x, float y, float z) {
     scale.y = y;
     scale.z = z;
     recalculateModelMatrix();
+}
+
+void FW::TransformationComponent::uploadTransformationMatrix() {
+    recalculateModelMatrix();
+    auto shaderRef = ShaderManager::get().bind(shader);
+    if (!shaderRef) {
+        return;
+    }
+
+    shaderRef->setMat4("u_model", modelMatrix);
 }
 
 void FW::TransformationComponent::recalculateModelMatrix() {

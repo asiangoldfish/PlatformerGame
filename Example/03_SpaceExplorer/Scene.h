@@ -4,6 +4,8 @@
 #include "Ship.h"
 #include "GameUI.h"
 
+#include "ECS_Systems.h"
+
 class GameScene : public FW::BaseScene {
 public:
     GameScene() = default;
@@ -28,4 +30,6 @@ private:
     FW::ref<ProjectileRoot> projectileRoot;
 
     // FW::ref<GameUI> gameUI;
+
+    FW::RenderSystem renderSystem;
 };

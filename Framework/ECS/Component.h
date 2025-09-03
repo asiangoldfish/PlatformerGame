@@ -68,11 +68,12 @@ namespace FW {
          */
         void setTexture(const uint32_t id);
 
-    private:
         void draw();
 
     public:
         glm::vec4 color{ 1.0f };
+        uint32_t Z_index = 0;
+        bool isTransparent = false;
 
     private:
         ref<Shape> shape;
@@ -108,6 +109,9 @@ namespace FW {
         }
         glm::vec3 getRotation() { return rotation; }
 
+        /** Recalculate and upload the transformation matrix to the GPU. */
+        void uploadTransformationMatrix();
+
     private:
         // TODO find some way to only recalculate model matrix once per frame.
         void recalculateModelMatrix();
@@ -116,7 +120,7 @@ namespace FW {
         // Transformation
         glm::mat4 modelMatrix;
         std::string shader;
-        glm::vec3 position{0.0f};
+        glm::vec3 position{ 0.0f };
         float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
         glm::vec3 scale = glm::vec3{ 1.0f };
         glm::vec3 rotation = glm::vec3{ 0.0f };

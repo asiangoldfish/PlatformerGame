@@ -33,6 +33,8 @@ public: // Transformation
      */
     void fireBullets(FW::ref<FW::SceneNode> root);
 
+    void setZIndex(uint32_t z);
+
 private:
     friend GameScene;
 

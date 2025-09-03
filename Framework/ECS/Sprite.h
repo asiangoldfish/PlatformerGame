@@ -56,6 +56,19 @@ namespace FW {
 
         void setTexture(const std::string& name, const std::string filepath);
 
+        /** The Z-index sets the draw priority in the render engine. Objects
+         * with greater Z-index are drawn on top.
+         */
+        void setZIndex(uint32_t z);
+
+        /**
+         * Mark the sprite as possibly having some transparent pixels.
+         *
+         * Applying transparency comes with a cost. To save the cost,
+         * transparent and opaque objects are drawn separately.
+         */
+        void setIsTransparent(const bool b);
+
     private:
         void drawableSetColor(const glm::vec4& col) {
             drawableComponent->color = col;

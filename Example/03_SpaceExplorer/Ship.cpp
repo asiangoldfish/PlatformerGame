@@ -140,6 +140,10 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     fireCurrentCooldown = fireMaxCooldown;
 }
 
+void Ship::setZIndex(uint32_t z) {
+    std::dynamic_pointer_cast<FW::Sprite>(entity)->setZIndex(z);
+}
+
 void Bullet::update(float delta) {
     FW::SceneNode::update(delta);
 
