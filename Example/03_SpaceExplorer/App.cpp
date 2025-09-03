@@ -5,6 +5,8 @@ bool GameApplication::init() {
         return false;
     }
 
+    setDepthTesting(false);
+
     scene = FW::createRef<GameScene>();
     scene->init();
 

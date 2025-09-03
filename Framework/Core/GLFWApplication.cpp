@@ -128,6 +128,14 @@ namespace FW {
         return true;
     }
 
+    void GLFWApplication::setDepthTesting(const bool b) {
+        if (b) {    
+            glEnable(GL_DEPTH_TEST);
+        } else {
+            glDisable(GL_DEPTH_TEST);
+        }
+    }
+
     void GLFWApplication::changeWindowMode(WindowMode mode) {
         const GLFWvidmode* vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 

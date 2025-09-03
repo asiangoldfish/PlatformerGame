@@ -145,6 +145,13 @@ namespace FW {
          */
         virtual bool configureDirectories() { return true; };
 
+        /** 
+         * Define important values for 2D rendering.
+         * 
+         * This includes for example disabling depth testing.
+         */
+        void setDepthTesting(const bool b);
+
         /**
          * An infinite while-loop that runs once each frame.
          *
