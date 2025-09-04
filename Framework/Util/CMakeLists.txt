@@ -2,6 +2,7 @@ project(FRAMEWORK_UTIL)
 
 add_library(${PROJECT_NAME}
     Files.cpp
+    Util.cpp
     Math/Math.cpp
 )
 

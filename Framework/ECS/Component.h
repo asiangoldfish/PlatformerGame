@@ -130,9 +130,11 @@ namespace FW {
         void setPosition(float x, float y, float z);
         void setPosition(float x, float y);
         glm::vec3 getPosition() { return position; }
+        glm::vec2 getPosition2D() { return glm::vec2(position); }
 
         void setScale(float x, float y, float z);
         glm::vec3 getScale() { return scale; }
+        glm::vec2 getScale2D() { return glm::vec2(scale); }
 
         void setRotation(float yaw, float pitch, float roll) {
             this->yaw = yaw;

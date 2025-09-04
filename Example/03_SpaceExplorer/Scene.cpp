@@ -99,12 +99,22 @@ void GameScene::mouseButtonCallback(int button, int action, int mods) {
         //                      720,
         //                      camera.get()));
 
-        if (playerShip->getIsTargeted()) {
-            playerShip->setIsTargeted(false);
-            INFO("Disabling");
-        } else {
-            INFO("Enabling");
-            playerShip->setIsTargeted(true);
+        // Target the first clicked ship
+        for (auto& scene : rootNode->childNodes) {
+            FW::ref<FW::Entity> entity = scene->entity;
+
+            if (entity && isMouseInsideEntityBounds(entity.get(), camera.get())) {
+                FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
+
+                if (ship) {
+                    if (ship->getIsTargeted()) {
+                        ship->setIsTargeted(false);
+                    } else {
+                        ship->setIsTargeted(true);
+                    }
+                    break;
+                }
+            }
         }
     }
 }

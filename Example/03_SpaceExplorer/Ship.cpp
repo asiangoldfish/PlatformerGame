@@ -111,13 +111,8 @@ void Ship::update(float delta) {
     }
 
     if (isTargeted) {
-        for (auto& child : childNodes) {
-            if (child->entity && child->entity->name == "Target Selector") {
-                child->entity->getComponent<FW::TransformationComponent>()
-                  ->setPosition(getPosition());
-                break;
-            }
-        }
+        targetSelectorScene->entity->getComponent<FW::TransformationComponent>()
+          ->setPosition(getPosition());
     }
 }
 
@@ -242,4 +237,6 @@ void PlayerShip::update(float delta) {
     }
 }
 
-void EnemyShip::update(float delta) {}
+void EnemyShip::update(float delta) {
+    Ship::update(delta);
+}
