@@ -17,6 +17,17 @@ inline glm::vec3 getRotationWithMouse() {
     return glm::vec3{ 0.f, 0.f, atan2(yRatioWithScreen, xRatioWithScreen) };
 }
 
+/**
+ * Rotate a ship toward another
+ * 
+ * @param src the ship to rotate
+ * @param dest the target ship to rotate toward
+ */
+inline float angleToEnemy(Ship* src, Ship* dest) {
+    glm::vec2 d = dest->getPosition() - src->getPosition();
+    return atan2(d.y, d.x);
+}
+
 /** Checks if mouse is inside an entity's bounds */
 inline bool isMouseInsideEntityBounds(FW::ref<FW::SceneNode> node,
                                       const FW::ref<FW::Camera> camera) {

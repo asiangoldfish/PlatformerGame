@@ -114,6 +114,12 @@ void Ship::update(float delta) {
         targetSelectorScene->entity->getComponent<FW::TransformationComponent>()
           ->setPosition(getPosition());
     }
+
+    // Ships will turn toward their target
+    if (targetShip) {
+        float angle = angleToEnemy(this, targetShip.get());
+        setRotation({ 0.0f, 0.0f, angle });
+    }
 }
 
 void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
@@ -122,7 +128,11 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     }
 
     glm::vec2 playerPos = getPosition();
-    float angle = -getRotationWithMouse().z;
+
+    // If we have a target, then rotate toward it. Otherwise, point toward the
+    // mouse's position on screen.
+    float angle = targetShip ? angleToEnemy(this, targetShip.get())
+                             : -getRotationWithMouse().z;
     float speed = 1200.0f;
     auto bullet = createBullet(camera);
 
@@ -212,7 +222,10 @@ void ProjectileRoot::update(float delta) {
 void PlayerShip::update(float delta) {
     Ship::update(delta);
 
-    setRotation(-getRotationWithMouse());
+    // Only rotate if we haven't set a target to shoot or chase yet
+    if (!targetShip) {
+        setRotation(-getRotationWithMouse());
+    }
 
     glm::vec2 pos = getPosition();
     glm::vec2 posDelta = glm::vec2{ 0.0f };
