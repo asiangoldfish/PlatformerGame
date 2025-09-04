@@ -92,11 +92,19 @@ void GameScene::keyCallback(int key, int scancode, int action, int mods) {}
 void GameScene::cursorPosCallback(double xpos, double ypos) {}
 void GameScene::mouseButtonCallback(int button, int action, int mods) {
     if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
-        targetSelectorNode->createTarget(
-          FW::mouseToWorld2D(FW::Input::getMouseX(),
-                             FW::Input::getMouseY(),
-                             1280,
-                             720,
-                             camera.get()));
+        // targetSelectorNode->createTarget(
+        //   FW::mouseToWorld2D(FW::Input::getMouseX(),
+        //                      FW::Input::getMouseY(),
+        //                      1280,
+        //                      720,
+        //                      camera.get()));
+
+        if (playerShip->getIsTargeted()) {
+            playerShip->setIsTargeted(false);
+            INFO("Disabling");
+        } else {
+            INFO("Enabling");
+            playerShip->setIsTargeted(true);
+        }
     }
 }

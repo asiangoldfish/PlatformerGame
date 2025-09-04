@@ -10,6 +10,7 @@ namespace FW {
     public:
         virtual void update(float delta);
         virtual void addChild(ref<SceneNode> node);
+        virtual void removeChild(ref<SceneNode> node);
 
     public:
         ref<Entity> entity;

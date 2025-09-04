@@ -44,8 +44,13 @@ public: // Transformation
 
     void setZIndex(uint32_t z);
 
+    void setIsTargeted(const bool b);
+    bool getIsTargeted() { return isTargeted; }
+
 private:
     friend GameScene;
+
+    bool isTargeted = false;
 
 protected: // Player stats
     float health;
@@ -59,6 +64,13 @@ protected: // Player stats
 
     float speed = 3.0f;
 
+    /**
+     * Determines the colour of the targeted ring when player selects the ship
+     */
+    glm::vec3 targetedColor;
+    // We need a reference to this, as we would remove it from children if it
+    // should no longer be rendered.
+    FW::ref<FW::SceneNode> targetSelectorScene;
 
 protected:
     FW::ref<ProjectileRoot> projectileRoot;

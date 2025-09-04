@@ -37,6 +37,24 @@ Ship::Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot)
     // sprite->setPosition(600.f, 400.f);
     entity = sprite;
 
+    // Create a target selector child node
+    targetSelectorScene = FW::createRef<FW::SceneNode>();
+
+    FW::ref<FW::Sprite> targetSelectorSprite = targetSelectorSprite =
+      FW::createRef<FW::Sprite>(camera);
+    targetSelectorSprite->name = "Target Selector";
+    targetSelectorSprite->setColor(1.0f, 0.2f, 0.2f);
+    targetSelectorSprite->setSize(200.f);
+    targetSelectorSprite->setPosition(sprite->getPosition());
+    targetSelectorSprite->setZIndex(3);
+
+    targetSelectorSprite->getComponent<FW::DrawableComponent>()->setShader(
+      "Target selector");
+    targetSelectorSprite->getComponent<FW::TransformationComponent>()
+      ->setShader("Target selector");
+
+    targetSelectorScene->entity = targetSelectorSprite;
+
     INFO("Ship successfully initialised");
 }
 
@@ -91,6 +109,16 @@ void Ship::update(float delta) {
     if (fireCurrentCooldown >= 0.0f) {
         fireCurrentCooldown -= delta;
     }
+
+    if (isTargeted) {
+        for (auto& child : childNodes) {
+            if (child->entity && child->entity->name == "Target Selector") {
+                child->entity->getComponent<FW::TransformationComponent>()
+                  ->setPosition(getPosition());
+                break;
+            }
+        }
+    }
 }
 
 void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
@@ -121,6 +149,15 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
 
 void Ship::setZIndex(uint32_t z) {
     std::dynamic_pointer_cast<FW::Sprite>(entity)->setZIndex(z);
+}
+
+void Ship::setIsTargeted(const bool b) {
+    isTargeted = b;
+    if (b) {
+        addChild(targetSelectorScene);
+    } else {
+        removeChild(targetSelectorScene);
+    }
 }
 
 void Bullet::update(float delta) {

@@ -29,3 +29,9 @@ void FW::SceneNode::update(float delta) {
 void FW::SceneNode::addChild(ref<SceneNode> node) {
     childNodes.push_back(node);
 }
+
+void FW::SceneNode::removeChild(ref<SceneNode> node) {
+    std::erase_if(childNodes, [&](const auto& childNode) {
+        return childNode.get() == node.get();
+    });
+}
