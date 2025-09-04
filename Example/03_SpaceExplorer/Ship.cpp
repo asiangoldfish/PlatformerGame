@@ -219,6 +219,12 @@ void ProjectileRoot::update(float delta) {
     });
 }
 
+PlayerShip::PlayerShip(FW::ref<FW::Camera> camera,
+                       FW::ref<ProjectileRoot> projectileRoot)
+  : Ship(camera, projectileRoot) {
+    entity->name = "Player";
+}
+
 void PlayerShip::update(float delta) {
     Ship::update(delta);
 
@@ -245,11 +251,24 @@ void PlayerShip::update(float delta) {
     }
     setPosition(pos + posDelta);
 
-    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
+    if (targetShip) {
         fireBullets(projectileRoot);
     }
 }
 
+EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
+                     FW::ref<ProjectileRoot> projectileRoot)
+  : Ship(camera, projectileRoot) {
+
+    entity->name = "Enemy";
+}
+
 void EnemyShip::update(float delta) {
     Ship::update(delta);
+
+    ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
+
+    if (targetShip) {
+        fireBullets(projectileRoot);
+    }
 }

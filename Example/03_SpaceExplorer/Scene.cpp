@@ -88,10 +88,21 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::cleanUp() {}
-void GameScene::keyCallback(int key, int scancode, int action, int mods) {}
+
+void GameScene::keyCallback(int key, int scancode, int action, int mods) {
+    if (FW::Input::isKeyPressed(FW_KEY_SPACE)) {
+        if (enemyShip->getTargetShip()) {
+            enemyShip->setTargetShip(nullptr);
+        } else {
+            enemyShip->setTargetShip(playerShip);
+        }
+    }
+}
+
 void GameScene::cursorPosCallback(double xpos, double ypos) {}
+
 void GameScene::mouseButtonCallback(int button, int action, int mods) {
-    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
+    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
         // targetSelectorNode->createTarget(
         //   FW::mouseToWorld2D(FW::Input::getMouseX(),
         //                      FW::Input::getMouseY(),

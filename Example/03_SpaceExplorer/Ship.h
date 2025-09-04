@@ -5,7 +5,6 @@
 #include "Sprite.h"
 #include "BaseScene.h"
 
-
 class GameScene;
 
 class ProjectileRoot : public FW::SceneNode {
@@ -65,10 +64,10 @@ protected: // Player stats
     float gold;
     FW::ref<FW::Camera> camera;
 
-    float fireMaxCooldown = 0.075f;
+    float fireMaxCooldown = 1.0f;
     float fireCurrentCooldown = 0.0f;
 
-    float randomSpreadRadius = glm::radians(15.0f);
+    float randomSpreadRadius = glm::radians(0.0f);
 
     float speed = 3.0f;
 
@@ -107,8 +106,8 @@ public:
 class PlayerShip : public Ship {
 public:
     PlayerShip() = default;
-    PlayerShip(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot = nullptr)
-      : Ship(camera, projectileRoot) {}
+    PlayerShip(FW::ref<FW::Camera> camera,
+               FW::ref<ProjectileRoot> projectileRoot = nullptr);
 
     virtual void update(float delta) override;
 };
@@ -116,8 +115,8 @@ public:
 class EnemyShip : public Ship {
 public:
     EnemyShip() = default;
-    EnemyShip(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot = nullptr)
-      : Ship(camera, projectileRoot) {}
+    EnemyShip(FW::ref<FW::Camera> camera,
+              FW::ref<ProjectileRoot> projectileRoot = nullptr);
 
     virtual void update(float delta) override;
 };
