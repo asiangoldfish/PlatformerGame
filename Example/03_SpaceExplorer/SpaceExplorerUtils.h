@@ -18,8 +18,8 @@ inline glm::vec3 getRotationWithMouse() {
 }
 
 /** Checks if mouse is inside an entity's bounds */
-inline bool isMouseInsideEntityBounds(FW::Entity* entity,
-                                      const FW::Camera* camera) {
+inline bool isMouseInsideEntityBounds(FW::ref<FW::SceneNode> node,
+                                      const FW::ref<FW::Camera> camera) {
     // TODO consider the entity's rotation
     // Assume the entity never rotates. We know what the min is by finding the
     // position - entity size, and the max is position + entity size. It gives
@@ -32,7 +32,8 @@ inline bool isMouseInsideEntityBounds(FW::Entity* entity,
     // clang-format on
     // The X's are where the points we find are.
 
-    auto transformation = entity->getComponent<FW::TransformationComponent>();
+    auto transformation =
+      node->entity->getComponent<FW::TransformationComponent>();
     glm::vec2 min =
       transformation->getPosition2D() - transformation->getScale2D();
     glm::vec2 max =

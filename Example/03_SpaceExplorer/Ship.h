@@ -47,6 +47,14 @@ public: // Transformation
     void setIsTargeted(const bool b);
     bool getIsTargeted() { return isTargeted; }
 
+    void setTargetShip(FW::ref<Ship> targetShip) {
+        this->targetShip = targetShip;
+    }
+
+    FW::ref<Ship> getTargetShip() {
+        return targetShip;
+    }
+
 private:
     friend GameScene;
 
@@ -71,6 +79,9 @@ protected: // Player stats
     // We need a reference to this, as we would remove it from children if it
     // should no longer be rendered.
     FW::ref<FW::SceneNode> targetSelectorScene;
+
+    // The ship will rotate and point toward the target, if a target is locked.
+    FW::ref<Ship> targetShip;
 
 protected:
     FW::ref<ProjectileRoot> projectileRoot;

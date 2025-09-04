@@ -99,20 +99,48 @@ void GameScene::mouseButtonCallback(int button, int action, int mods) {
         //                      720,
         //                      camera.get()));
 
-        // Target the first clicked ship
-        for (auto& scene : rootNode->childNodes) {
-            FW::ref<FW::Entity> entity = scene->entity;
+        // Deselect player targeted ship by clicking somewhere else than the
+        // targeted ship.
+        // Note that the player can still select themselves without deselecting
+        // the target.
+        FW::ref<Ship> targetShip = playerShip->getTargetShip();
+        if (targetShip && !isMouseInsideEntityBounds(targetShip, camera) &&
+            !isMouseInsideEntityBounds(playerShip, camera)) {
+            targetShip->setIsTargeted(false);
+            playerShip->setTargetShip(nullptr);
+        }
 
-            if (entity && isMouseInsideEntityBounds(entity.get(), camera.get())) {
-                FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
+        // Ensure that if the player ship was just deselected, we won't select
+        // it again.
+        bool wasPlayerJustDeselected = false;
 
-                if (ship) {
-                    if (ship->getIsTargeted()) {
-                        ship->setIsTargeted(false);
-                    } else {
-                        ship->setIsTargeted(true);
+        // Player can deselect themselves by reselecting their ship
+        if (playerShip->getIsTargeted() &&
+            isMouseInsideEntityBounds(playerShip, camera)) {
+            playerShip->setIsTargeted(false);
+            wasPlayerJustDeselected = true;
+        } else {
+
+            // Target the first clicked ship
+            for (auto& scene : rootNode->childNodes) {
+                FW::ref<FW::Entity> entity = scene->entity;
+
+                if (entity && isMouseInsideEntityBounds(scene, camera)) {
+                    FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
+
+                    if (ship) {
+                        // If the player just deselected themselves, make sure
+                        // we don't reselect the player again.
+                        // Now, set the target
+                        if (!ship->getIsTargeted()) {
+                            ship->setIsTargeted(true);
+
+                            if (ship != playerShip) {
+                                playerShip->setTargetShip(ship);
+                            }
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
