@@ -2,6 +2,7 @@
 
 #include "SpaceExplorerUtils.h"
 #include "ShaderManager.h"
+#include "Util.h"
 
 void createBackground(FW::ref<FW::Sprite> backgroundSprite) {
     backgroundSprite->name = "background";
@@ -38,6 +39,10 @@ void GameScene::init() {
     backgroundNode->entity = backgroundSprite;
     rootNode->addChild(backgroundNode);
 
+    // Projectiles
+    projectileRoot = FW::createRef<ProjectileRoot>();
+    rootNode->addChild(projectileRoot);
+
     // Player ship
     playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
     playerShip->entity->getComponent<FW::DrawableComponent>()->isTransparent =
@@ -48,9 +53,11 @@ void GameScene::init() {
     enemyShip = FW::createRef<EnemyShip>(camera, projectileRoot);
     rootNode->addChild(enemyShip);
 
-    // Projectiles
-    projectileRoot = FW::createRef<ProjectileRoot>();
-    rootNode->addChild(projectileRoot);
+    // Target selectors
+    // The nodes in this root highlights objects selected by the user
+    targetSelectorNode = FW::createRef<TargetSelector>();
+    targetSelectorNode->camera = camera;
+    rootNode->addChild(targetSelectorNode);
 
     // gameUI = FW::createRef<GameUI>();
     // gameUI->camera = camera;
@@ -83,4 +90,13 @@ void GameScene::update(float delta) {
 void GameScene::cleanUp() {}
 void GameScene::keyCallback(int key, int scancode, int action, int mods) {}
 void GameScene::cursorPosCallback(double xpos, double ypos) {}
-void GameScene::mouseButtonCallback(int button, int action, int mods) {}
+void GameScene::mouseButtonCallback(int button, int action, int mods) {
+    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_RIGHT)) {
+        targetSelectorNode->createTarget(
+          FW::mouseToWorld2D(FW::Input::getMouseX(),
+                             FW::Input::getMouseY(),
+                             1280,
+                             720,
+                             camera.get()));
+    }
+}

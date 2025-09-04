@@ -1,4 +1,7 @@
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Camera/Camera.h"
 
 namespace FW {
     /**
@@ -43,6 +46,28 @@ namespace FW {
             pos.y = boundsMax.y;
         }
 
-        return pos.
+        return pos;
     }
+
+    glm::vec2 mouseToWorld2D(double mouseX,
+                             double mouseY,
+                             int windowWidth,
+                             int windowHeight,
+                             const Camera* const camera) {
+        // OpenGL expects origin bottom-left, so flip Y
+        glm::vec3 screen(mouseX, windowHeight - mouseY, 0.0f);
+
+        // Define viewport rectangle (x, y, width, height)
+        glm::vec4 viewport(0.0f, 0.0f, windowWidth, windowHeight);
+
+        // Unproject at depth = 0.0 (near plane)
+        glm::vec3 world = glm::unProject(screen,
+                                         camera->getViewMatrix(),
+                                         camera->getProjectionMatrix(),
+                                         viewport);
+
+        return glm::vec2{ world.x,
+                          world.y }; // contains (x,y) in game coordinates
+    }
+
 }

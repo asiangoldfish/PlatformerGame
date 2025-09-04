@@ -5,6 +5,7 @@ add_executable(${PROJECT_NAME}
     Scene.cpp
     Ship.cpp
     GameUI.cpp
+    TargetSelector.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

@@ -19,6 +19,7 @@ out vec2 o_texCoord;
 void main() {
     o_color = a_color;
     o_texCoord = a_texCoord;
+    o_position = a_position;
 
     gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);
 }

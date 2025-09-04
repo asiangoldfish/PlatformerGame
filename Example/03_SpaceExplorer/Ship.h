@@ -57,6 +57,8 @@ protected: // Player stats
 
     float randomSpreadRadius = glm::radians(15.0f);
 
+    float speed = 3.0f;
+
 
 protected:
     FW::ref<ProjectileRoot> projectileRoot;
