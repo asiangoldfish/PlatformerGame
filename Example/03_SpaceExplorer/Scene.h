@@ -20,7 +20,7 @@ public:
 
 private:
     FW::ref<FW::OrthographicCamera> camera;
-    FW::ref<Ship> playerShip;
+    FW::ref<PlayerShip> playerShip;
     FW::ref<FW::SceneNode> backgroundNode;
     /** Simulates space objects to be far away in the background */
     float parallaxFactor = 0.2f;
@@ -28,6 +28,8 @@ private:
     /** We put all bullets and stuff here, so they won't move with for example
      * the ship that shot the projectile. */
     FW::ref<ProjectileRoot> projectileRoot;
+
+    FW::ref<EnemyShip> enemyShip;
 
     // FW::ref<GameUI> gameUI;
 

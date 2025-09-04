@@ -39,10 +39,14 @@ void GameScene::init() {
     rootNode->addChild(backgroundNode);
 
     // Player ship
-    playerShip = FW::createRef<Ship>(camera);
+    playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
     playerShip->entity->getComponent<FW::DrawableComponent>()->isTransparent =
       true;
     rootNode->addChild(playerShip);
+
+    // Enemy ship
+    enemyShip = FW::createRef<EnemyShip>(camera, projectileRoot);
+    rootNode->addChild(enemyShip);
 
     // Projectiles
     projectileRoot = FW::createRef<ProjectileRoot>();
@@ -56,8 +60,6 @@ void GameScene::init() {
 
 void GameScene::update(float delta) {
     FW::BaseScene::update(delta);
-
-    playerShip->setRotation(-getRotationWithMouse());
 
     // We wanna stick the ship to the middle of the screen, so we must also
     // move the camera.
@@ -74,13 +76,6 @@ void GameScene::update(float delta) {
     uploadVec.x = uploadVec.y;
     uploadVec.y = camera->getPosition2D().x;
     bgShader->setParam("u_camera", uploadVec);
-
-    // Shoot bullet! Algorithm:
-    // 1. Find player position
-    // 2. Spawn bullet and send it with velocity vector
-    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
-        playerShip->fireBullets(projectileRoot);
-    }
 
     renderSystem.draw(rootNode);
 }

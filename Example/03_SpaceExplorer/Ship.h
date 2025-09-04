@@ -5,12 +5,21 @@
 #include "Sprite.h"
 #include "BaseScene.h"
 
+
 class GameScene;
+
+class ProjectileRoot : public FW::SceneNode {
+public:
+    ProjectileRoot() = default;
+    virtual ~ProjectileRoot() = default;
+
+    virtual void update(float delta) override;
+};
 
 class Ship : public FW::SceneNode {
 public:
     Ship() = default;
-    Ship(FW::ref<FW::Camera> camera);
+    Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot);
     virtual ~Ship() = default;
 
 public: // Transformation
@@ -31,14 +40,14 @@ public: // Transformation
      *
      * @param root the node to attach the bullets to
      */
-    void fireBullets(FW::ref<FW::SceneNode> root);
+    virtual void fireBullets(FW::ref<FW::SceneNode> root);
 
     void setZIndex(uint32_t z);
 
 private:
     friend GameScene;
 
-private: // Player stats
+protected: // Player stats
     float health;
     float gold;
     FW::ref<FW::Camera> camera;
@@ -48,7 +57,9 @@ private: // Player stats
 
     float randomSpreadRadius = glm::radians(15.0f);
 
-    float speed = 10.0f;
+
+protected:
+    FW::ref<ProjectileRoot> projectileRoot;
 };
 
 class Bullet : public FW::SceneNode {
@@ -68,10 +79,20 @@ public:
     float time = 0.0f;
 };
 
-class ProjectileRoot : public FW::SceneNode {
+class PlayerShip : public Ship {
 public:
-    ProjectileRoot() = default;
-    virtual ~ProjectileRoot() = default;
+    PlayerShip() = default;
+    PlayerShip(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot = nullptr)
+      : Ship(camera, projectileRoot) {}
+
+    virtual void update(float delta) override;
+};
+
+class EnemyShip : public Ship {
+public:
+    EnemyShip() = default;
+    EnemyShip(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot = nullptr)
+      : Ship(camera, projectileRoot) {}
 
     virtual void update(float delta) override;
 };

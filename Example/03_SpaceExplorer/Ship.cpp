@@ -24,13 +24,16 @@ FW::ref<Bullet> createBullet(FW::ref<FW::Camera> camera) {
     return bullet;
 }
 
-Ship::Ship(FW::ref<FW::Camera> camera) {
-    this->camera = camera;
+Ship::Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot)
+  : camera(camera)
+  , projectileRoot(projectileRoot) {
+
     FW::ref<FW::Sprite> sprite = FW::createRef<FW::Sprite>(camera);
-    sprite->name = "Player Spaceship";
+    sprite->name = "Spaceship";
     // sprite->setColor(0.2f, 0.8f, 0.1f);
     sprite->setSize(150.0f);
-    sprite->setTexture("spaceship", TEXTURES_DIR + std::string("spaceship_sprite.png"));
+    sprite->setTexture("spaceship",
+                       TEXTURES_DIR + std::string("spaceship_sprite.png"));
     // sprite->setPosition(600.f, 400.f);
     entity = sprite;
 
@@ -88,24 +91,6 @@ void Ship::update(float delta) {
     if (fireCurrentCooldown >= 0.0f) {
         fireCurrentCooldown -= delta;
     }
-
-    glm::vec2 pos = getPosition();
-    glm::vec2 posDelta = glm::vec2{0.0f};
-
-    // Moving the ship
-    if (FW::Input::isKeyPressed(FW_KEY_D)) {
-        posDelta.x += speed;
-    }
-    if (FW::Input::isKeyPressed(FW_KEY_A)) {
-        posDelta.x -= speed;
-    }
-    if (FW::Input::isKeyPressed(FW_KEY_S)) {
-        posDelta.y -= speed;
-    }
-    if (FW::Input::isKeyPressed(FW_KEY_W)) {
-        posDelta.y += speed;
-    }
-    setPosition(pos + posDelta);
 }
 
 void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
@@ -119,7 +104,11 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     auto bullet = createBullet(camera);
 
     // Compute bullet spread
-    float randomSpread = FW::remap(FW::rng(), 0.0f, 1.0f, -randomSpreadRadius/2.0f, randomSpreadRadius/2.0f);
+    float randomSpread = FW::remap(FW::rng(),
+                                   0.0f,
+                                   1.0f,
+                                   -randomSpreadRadius / 2.0f,
+                                   randomSpreadRadius / 2.0f);
 
     bullet->setPosition(playerPos);
     bullet->velocity = glm::vec2{ cos(angle + randomSpread) * speed,
@@ -187,3 +176,33 @@ void ProjectileRoot::update(float delta) {
         return bulletScene && bulletScene->time >= bulletScene->maxTime;
     });
 }
+
+void PlayerShip::update(float delta) {
+    Ship::update(delta);
+
+    setRotation(-getRotationWithMouse());
+
+    glm::vec2 pos = getPosition();
+    glm::vec2 posDelta = glm::vec2{ 0.0f };
+
+    // Moving the ship
+    if (FW::Input::isKeyPressed(FW_KEY_D)) {
+        posDelta.x += speed;
+    }
+    if (FW::Input::isKeyPressed(FW_KEY_A)) {
+        posDelta.x -= speed;
+    }
+    if (FW::Input::isKeyPressed(FW_KEY_S)) {
+        posDelta.y -= speed;
+    }
+    if (FW::Input::isKeyPressed(FW_KEY_W)) {
+        posDelta.y += speed;
+    }
+    setPosition(pos + posDelta);
+
+    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
+        fireBullets(projectileRoot);
+    }
+}
+
+void EnemyShip::update(float delta) {}

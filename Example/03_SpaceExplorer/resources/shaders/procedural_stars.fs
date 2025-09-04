@@ -34,7 +34,7 @@ float starfield(vec2 uv) {
 
 void main() {
     // Transform by camera (parallax factor < 1.0 → stars move slower)
-    float parallaxFactor = 0.1f;
+    float parallaxFactor = 0.02f;
     vec2 uv = (o_texCoord * 100.0f) + u_camera * parallaxFactor;
 
     // Generate star intensity
