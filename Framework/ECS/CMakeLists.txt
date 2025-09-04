@@ -5,6 +5,7 @@ add_library(${PROJECT_NAME} STATIC
     BaseScene.cpp
     Component.cpp
     Sprite.cpp
+    ECS_Systems.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

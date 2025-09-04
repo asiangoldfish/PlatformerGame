@@ -13,9 +13,17 @@ namespace FW {
     }
 
     Shader* ShaderManager::bind(const std::string& name) {
+        if (Shader* shader = getShader(name)) {
+            shader->bind();
+            return shader;
+        }
+
+        return nullptr;
+    }
+
+    Shader* ShaderManager::getShader(const std::string& name) {
         auto iter = shaders.find(name);
         if (iter != shaders.end()) {
-            iter->second.bind();
             return &iter->second;
         } else {
             return nullptr;

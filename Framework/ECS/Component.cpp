@@ -55,7 +55,25 @@ void FW::DrawableComponent::draw() {
     shaderRef->setFloat("u_material.shininess",
                         material.getProperties().shininess);
 
+    // Upload other parameters set by the user
+    for (auto& [name, value] : shaderParams) {
+        std::visit(
+          [&](auto&& v) {
+              shaderRef->setParam(name, v); // overload resolves type
+          },
+          value);
+    }
+
     RenderCommand::drawIndex(shape->getVertexArray());
+}
+
+void FW::DrawableComponent::setShaderParam(const std::string& name,
+                                           const UniformType& value) {
+    shaderParams[name] = value;
+}
+
+void FW::DrawableComponent::removeShaderParam(const std::string& name) {
+    shaderParams.erase(name);
 }
 
 void FW::TransformationComponent::init() {}

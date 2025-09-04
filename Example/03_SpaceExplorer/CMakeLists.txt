@@ -15,8 +15,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 # Copy assets directory to binary destination
-set (source "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/")
-set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/")
+set (source "${CMAKE_CURRENT_SOURCE_DIR}/resources/")
+set (destination "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/")
 add_custom_target (${PROJECT_NAME}_COPY_ASSETS
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
 )

@@ -2,19 +2,25 @@
 
 #include "pch.h"
 #include <string>
+#include <variant>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
+
 #include "RenderCommands.h"
 
-//#define SHADER_LOCATION_OUTPUT
+// #define SHADER_LOCATION_OUTPUT
 #ifdef SHADER_LOCATION_OUTPUT
-#define OUTPUT_SHADER_LOCATION_LOG(location, name) outputShaderLocationLog(location, name)
+#define OUTPUT_SHADER_LOCATION_LOG(location, name)                             \
+    outputShaderLocationLog(location, name)
 #else
 #define OUTPUT_SHADER_LOCATION_LOG(location, name)
 #endif
 
 namespace FW {
+    using UniformType =
+      std::variant<int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4>;
+
     /**
      * Shader class for OpenGL.
      *
@@ -36,14 +42,12 @@ namespace FW {
          *
          * @param vertexSrc Source to vertex shader
          * @param fragmentSrc Source to fragment shader
-         * @param isFilepath If true: source are file paths. If false: source are literal strings.
-         * 
+         * @param isFilepath If true: source are file paths. If false: source
+         * are literal strings.
+         *
          * @example vertexSrc = R"(#version core 330 int main(){})"
-        */
-        Shader(
-            const std::string& vertexSrc, 
-            const std::string &fragmentSrc
-        );
+         */
+        Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
         virtual ~Shader();
         Shader() = default;
 
@@ -79,25 +83,26 @@ namespace FW {
         void unbind() const;
 
         // Uniforms
+        [[deprecated("Replaced by setParam(..)")]]
         void setInt(const std::string& name, const int value) const;
-        void setFloat(const std::string& name,const float value) const;
-        void setFloat2(
-            const std::string& name,
-            const glm::vec2& vector
-        ) const;
-        void setFloat3(
-            const std::string& name,
-            const glm::vec3& vector
-        ) const;
-        void setFloat4(
-            const std::string& name,
-            const glm::vec4& vector
-        ) const;
+        [[deprecated("Replaced by setParam(..)")]]
+        void setFloat(const std::string& name, const float value) const;
+        [[deprecated("Replaced by setParam(..)")]]
+        void setFloat2(const std::string& name, const glm::vec2& vector) const;
+        [[deprecated("Replaced by setParam(..)")]]
+        void setFloat3(const std::string& name, const glm::vec3& vector) const;
+        [[deprecated("Replaced by setParam(..)")]]
+        void setFloat4(const std::string& name, const glm::vec4& vector) const;
+        [[deprecated("Replaced by setParam(..)")]]
+        void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
-        void setMat4(
-            const std::string& name,
-            const glm::mat4& matrix
-        ) const;
+        void setParam(const std::string& name, const int value) const;
+        void setParam(const std::string& name, const float value) const;
+        void setParam(const std::string& name, const glm::vec2& vector) const;
+        void setParam(const std::string& name, const glm::vec3& vector) const;
+        void setParam(const std::string& name, const glm::vec4& vector) const;
+
+        void setParam(const std::string& name, const glm::mat4& matrix) const;
 
         /**
          * Shorthand to create a shared pointer to a Shader object.
@@ -111,7 +116,7 @@ namespace FW {
          * auto shader = Framework::Shader::create(vertexSrc, fragSrc);
          */
         static ref<Shader> create(const std::string& vertexSrc,
-            const std::string &fragmentSrc) {
+                                  const std::string& fragmentSrc) {
             return createRef<Shader>(vertexSrc, fragmentSrc);
         }
 

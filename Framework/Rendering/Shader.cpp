@@ -151,15 +151,60 @@ namespace FW {
     }
 
     void Shader::setFloat4(const std::string& name,
-                           const glm::vec4& vector) const
-    {
+                           const glm::vec4& vector) const {
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
-    void Shader::setMat4(const std::string& name, const glm::mat4& matrix) const
-    {
+    void Shader::setMat4(const std::string& name,
+                         const glm::mat4& matrix) const {
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::setParam(const std::string& name, const int value) const {
+        bind();
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniform1i(location, value);
+    }
+
+    void Shader::setParam(const std::string& name, const float value) const {
+        bind();
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniform1f(location, value);
+    }
+
+    void Shader::setParam(const std::string& name,
+                          const glm::vec2& vector) const {
+        bind();
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniform2f(location, vector.x, vector.y);
+    }
+
+    void Shader::setParam(const std::string& name,
+                          const glm::vec3& vector) const {
+        bind();
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    void Shader::setParam(const std::string& name,
+                          const glm::vec4& vector) const {
+        bind();
+        int location = glGetUniformLocation(shaderProgram, name.c_str());
+        OUTPUT_SHADER_LOCATION_LOG(location, name);
+        glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+    }
+
+    void Shader::setParam(const std::string& name,
+                          const glm::mat4& matrix) const {
+        bind();
         int location = glGetUniformLocation(shaderProgram, name.c_str());
         OUTPUT_SHADER_LOCATION_LOG(location, name);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));

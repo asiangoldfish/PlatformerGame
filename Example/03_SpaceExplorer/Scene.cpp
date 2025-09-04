@@ -1,6 +1,24 @@
 #include "Scene.h"
 
 #include "SpaceExplorerUtils.h"
+#include "ShaderManager.h"
+
+void createBackground(FW::ref<FW::Sprite> backgroundSprite) {
+    backgroundSprite->name = "background";
+    backgroundSprite->setSize(1920.0f);
+
+    std::string bgShaderName = "stars_background_01";
+
+    FW::ShaderManager::get().createShaderFromFiles(
+      bgShaderName,
+      SHADERS_DIR + std::string("ECS_sprite.vs"),
+      SHADERS_DIR + std::string("procedural_stars.fs"));
+
+    backgroundSprite->getComponent<FW::DrawableComponent>()->setShader(
+      bgShaderName);
+    backgroundSprite->getComponent<FW::TransformationComponent>()->setShader(
+      bgShaderName);
+}
 
 void GameScene::init() {
     FW::BaseScene::init();
@@ -14,10 +32,7 @@ void GameScene::init() {
 
     // Background - Must be drawn first
     auto backgroundSprite = FW::createRef<FW::Sprite>(camera);
-    backgroundSprite->name = "background";
-    backgroundSprite->setSize(2000.0f);
-    backgroundSprite->setTexture(
-      "background", TEXTURES_DIR + std::string("space_background.jpg"));
+    createBackground(backgroundSprite);
 
     backgroundNode = FW::createRef<FW::SceneNode>();
     backgroundNode->entity = backgroundSprite;
@@ -46,10 +61,19 @@ void GameScene::update(float delta) {
 
     // We wanna stick the ship to the middle of the screen, so we must also
     // move the camera.
-    glm::vec2 camPos = camera->getPosition2D();
     camera->setPosition2D(playerShip->getPosition());
     backgroundNode->entity->getComponent<FW::TransformationComponent>()
-      ->setPosition(-playerShip->getPosition() * parallaxFactor);
+      ->setPosition(playerShip->getPosition());
+
+    // Scroll the background with the player movement
+    // backgroundNode->entity->getComponent<FW::TransformationComponent>()
+    //   ->setPosition(-playerShip->getPosition() * parallaxFactor);
+    FW::Shader* bgShader =
+      FW::ShaderManager::get().getShader("stars_background_01");
+    glm::vec2 uploadVec = camera->getPosition2D();
+    uploadVec.x = uploadVec.y;
+    uploadVec.y = camera->getPosition2D().x;
+    bgShader->setParam("u_camera", uploadVec);
 
     // Shoot bullet! Algorithm:
     // 1. Find player position

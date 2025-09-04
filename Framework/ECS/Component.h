@@ -70,6 +70,36 @@ namespace FW {
 
         void draw();
 
+        /**
+         * Set a parameter to be uploaded to the shader.
+         *
+         * Parameters are uploaded every frame, and the \ref name "name" is the
+         * same name used by the shader's respective uniform.
+         *
+         * This method is normally used together with a custom shader. To create
+         * such shader, use the \ref ShaderManager "ShaderManager".
+         *
+         * @param name the name which the shader will reference.
+         *
+         * @see ShaderManager
+         */
+        void setShaderParam(const std::string& name, const UniformType& value);
+
+        /**
+         * Remove a shader parameter that is uploaded every frame.
+         *
+         * @param name the name of the shader to remove
+         */
+        void removeShaderParam(const std::string& name);
+
+        /**
+         * Get all shader parameters.
+         */
+        const std::unordered_map<std::string, UniformType>& getShaderParams()
+          const {
+            return shaderParams;
+        }
+
     public:
         glm::vec4 color{ 1.0f };
         uint32_t Z_index = 0;
@@ -80,6 +110,8 @@ namespace FW {
         std::string shader;
         Material material;
         GLenum drawType;
+
+        std::unordered_map<std::string, UniformType> shaderParams;
     };
 
     class TransformationComponent : public Component {

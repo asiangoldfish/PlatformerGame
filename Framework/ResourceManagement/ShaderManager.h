@@ -23,11 +23,14 @@ namespace FW {
          * application quits. */
         void clear();
 
+        Shader* getShader(const std::string& name);
+
     private:
         ShaderManager() {}
         ~ShaderManager() {}
 
     public:
+        // TODO handle cases where creating the shader fails
         void createShaderFromFiles(const std::string& name,
                                    const std::string& vertexSrc,
                                    const std::string& fragmentSrc);
