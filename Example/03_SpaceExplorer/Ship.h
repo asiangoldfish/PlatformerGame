@@ -45,7 +45,8 @@ private: // Player stats
 
     float fireMaxCooldown = 0.075f;
     float fireCurrentCooldown = 0.0f;
-    float accuracy = 0.8f;
+
+    float randomSpreadRadius = glm::radians(15.0f);
 
     float speed = 10.0f;
 };

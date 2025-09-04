@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <random>
+#include <cmath>
 
 FW::ref<Bullet> createBullet(FW::ref<FW::Camera> camera) {
     FW::ref<Bullet> bullet = FW::createRef<Bullet>();
@@ -118,31 +119,11 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     auto bullet = createBullet(camera);
 
     // Compute bullet spread
-    float spreadInaccuracy = (1.0f - accuracy) / 2.0f;
-    float minSpread = 1.0f - spreadInaccuracy;
-    float maxSpread = 1.0f + spreadInaccuracy;
-
-    // 3. Generate and print a random float
-    // TODO Fix inaccuracy
-    // Currently, the inaccuracy is greater the greater the angle is. This is
-    // because the closer to 0 it is, the less the variance. The greater the
-    // angle, proportionally the greater the angle variance is. Therefore, the
-    // inaccuracy should be in radians. We can still have the accuracy in
-    // percent, but we have to convert it to radian in the computation, i.e. 2PI
-    // * accuracy.
-    float spreadFactor = FW::rng(minSpread, maxSpread);
-
-    float pi = 3.14f;
-    bullet->velocity = glm::vec2{ cos(angle + spreadFactor) * speed,
-                                  sin(angle + spreadFactor) * speed };
-    float deg = spreadFactor * 180.0f / pi;
-    float randAngleFactor = glm::radians(15.0f);
-    
-    
-    spreadFactor = FW::remap(spreadFactor, minSpread, maxSpread, -randAngleFactor/2.0f, randAngleFactor/2.0f);
+    float randomSpread = FW::remap(FW::rng(), 0.0f, 1.0f, -randomSpreadRadius/2.0f, randomSpreadRadius/2.0f);
 
     bullet->setPosition(playerPos);
-    bullet->velocity = glm::vec2{ cos(angle) * speed, sin(angle) * speed };
+    bullet->velocity = glm::vec2{ cos(angle + randomSpread) * speed,
+                                  sin(angle + randomSpread) * speed };
     bullet->setRotation(glm::vec3{ 0.0f, 0.0f, angle });
     root->addChild(bullet);
 

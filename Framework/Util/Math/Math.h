@@ -13,7 +13,8 @@ namespace FW {
     constexpr double PI = 3.1415926535897932384626433;
 
     /**
-     * @brief Generate a random number between 0.0 and 1.0
+     * Generate a random number between 0.0 and 1.0
+     * 
      * @return Random number between 0.0 and 1.0
      */
     float rng();
@@ -25,4 +26,6 @@ namespace FW {
      * @return Random number between lowest and highest number
      */
     float rng(float low, float high);
+
+    float remap(float value, float low1, float high1, float low2, float high2);
 }
