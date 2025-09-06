@@ -3,6 +3,8 @@
 #include "Framework.h"
 #include "Scene.h"
 
+#include "Debugging.h"
+
 class GameApplication : public FW::GLFWApplication {
 public:
     GameApplication() = default;
@@ -20,6 +22,8 @@ public:
 
 private:
     FW::ref<GameScene> scene;
+
+    FW::ref<Debugging> debugging;
 };
 
 FW::GLFWApplication* FW::createApplication() {

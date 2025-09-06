@@ -7,8 +7,12 @@ bool GameApplication::init() {
 
     setDepthTesting(false);
 
+    debugging = FW::createRef<Debugging>();
+    debugging->init(getWindow());
+
     scene = FW::createRef<GameScene>();
     scene->init();
+    scene->setDebugging(debugging);
 
     RenderCommand::setClearColor(glm::vec3{0.5f, 0.25f, 0.4f});
 

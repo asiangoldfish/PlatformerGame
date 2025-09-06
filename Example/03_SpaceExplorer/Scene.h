@@ -5,6 +5,7 @@
 #include "GameUI.h"
 
 #include "ECS_Systems.h"
+#include "Debugging.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -17,6 +18,8 @@ public:
     void keyCallback(int key, int scancode, int action, int mods);
     void cursorPosCallback(double xpos, double ypos);
     void mouseButtonCallback(int button, int action, int mods);
+
+    void setDebugging(FW::ref<Debugging> d);
 
 private:
     FW::ref<FW::OrthographicCamera> camera;
@@ -35,4 +38,8 @@ private:
     // FW::ref<GameUI> gameUI;
 
     FW::RenderSystem renderSystem;
+
+private:
+    FW::ref<Debugging> debugging;
+
 };

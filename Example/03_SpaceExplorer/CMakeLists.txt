@@ -6,6 +6,7 @@ add_executable(${PROJECT_NAME}
     Ship.cpp
     GameUI.cpp
     TargetSelector.cpp
+    Debugging.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -13,6 +14,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Framework
+    imgui
 )
 
 # Copy assets directory to binary destination
@@ -25,4 +27,5 @@ add_dependencies (${PROJECT_NAME} ${PROJECT_NAME}_COPY_ASSETS)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     TEXTURES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/"
+    RESOURCES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/"
 )

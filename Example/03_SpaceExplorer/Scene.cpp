@@ -21,6 +21,14 @@ void createBackground(FW::ref<FW::Sprite> backgroundSprite) {
       bgShaderName);
 }
 
+void GameScene::setDebugging(FW::ref<Debugging> d) {
+    debugging = d;
+
+    // Debugging windows
+    debugging->playerShip = playerShip;
+    debugging->enemyShip = enemyShip;
+}
+
 void GameScene::init() {
     FW::BaseScene::init();
 
@@ -86,10 +94,11 @@ void GameScene::update(float delta) {
     uploadVec.y = camera->getPosition2D().x;
     bgShader->setParam("u_camera", uploadVec);
 
-    // Debug player stats
-    INFO("Player HP: {} | Enemy HP: {}", playerShip->vitalStats.health, enemyShip->vitalStats.health);
-
     renderSystem.draw(rootNode);
+
+    if (debugging) {
+        debugging->draw(delta);
+    }
 }
 
 void GameScene::cleanUp() {}
