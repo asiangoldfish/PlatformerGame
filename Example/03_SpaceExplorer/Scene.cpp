@@ -24,6 +24,11 @@ void createBackground(FW::ref<FW::Sprite> backgroundSprite) {
 void GameScene::init() {
     FW::BaseScene::init();
 
+    FW::ShaderManager::get().createShaderFromFiles(
+      "Target selector",
+      SHADERS_DIR + std::string("ECS_sprite.vs"),
+      SHADERS_DIR + std::string("target_selector.fs"));
+
     camera = FW::createRef<FW::OrthographicCamera>();
     camera->setCameraSize(1280.0f, 720.0f);
     // Centralising the screen coordinates makes sure that the origin is always
@@ -54,11 +59,7 @@ void GameScene::init() {
     enemyShip->setTargetShip(playerShip);
     rootNode->addChild(enemyShip);
 
-    // Target selectors
-    // The nodes in this root highlights objects selected by the user
-    targetSelectorNode = FW::createRef<TargetSelector>();
-    targetSelectorNode->camera = camera;
-    rootNode->addChild(targetSelectorNode);
+    selectedEnemyShips.reserve(10);
 
     // gameUI = FW::createRef<GameUI>();
     // gameUI->camera = camera;
@@ -100,59 +101,57 @@ void GameScene::keyCallback(int key, int scancode, int action, int mods) {
     }
 }
 
-void GameScene::cursorPosCallback(double xpos, double ypos) {}
+void GameScene::cursorPosCallback(double xpos, double ypos) {
+    // When hovering over an enemy ship and it isn't hovered, then make a gray
+    // selection outline
+    // TODO in the future after adding a separate group for enemy ships, iterate
+    // over this instead.
+    if (!enemyShip->isTargeted) {
+        bool isInBounds = isMouseInsideEntityBounds(enemyShip, camera);
+
+        // Only hover if it isn't already hovered
+        if (isInBounds && enemyShip->getTargetedState() == TargetSelectionState::INACTIVE) {
+            enemyShip->setTargetedState(TargetSelectionState::HOVERED);
+        } else if (enemyShip->getTargetedState() == TargetSelectionState::HOVERED && !isInBounds) {
+            enemyShip->setTargetedState(TargetSelectionState::INACTIVE);
+        }
+    }
+}
 
 void GameScene::mouseButtonCallback(int button, int action, int mods) {
     if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
-        // targetSelectorNode->createTarget(
-        //   FW::mouseToWorld2D(FW::Input::getMouseX(),
-        //                      FW::Input::getMouseY(),
-        //                      1280,
-        //                      720,
-        //                      camera.get()));
-
         // Deselect player targeted ship by clicking somewhere else than the
         // targeted ship.
-        // Note that the player can still select themselves without deselecting
-        // the target.
+        // Note that the player can still select themselves without
+        // deselecting the target.
         FW::ref<Ship> targetShip = playerShip->getTargetShip();
         if (targetShip && !isMouseInsideEntityBounds(targetShip, camera) &&
             !isMouseInsideEntityBounds(playerShip, camera)) {
             targetShip->setIsTargeted(false);
+            targetShip->setTargetedState(TargetSelectionState::INACTIVE);
             playerShip->setTargetShip(nullptr);
         }
 
-        // Ensure that if the player ship was just deselected, we won't select
-        // it again.
+        // Ensure that if the player ship was just deselected, we won't
+        // select it again.
         bool wasPlayerJustDeselected = false;
 
-        // Player can deselect themselves by reselecting their ship
-        if (playerShip->getIsTargeted() &&
-            isMouseInsideEntityBounds(playerShip, camera)) {
-            playerShip->setIsTargeted(false);
-            wasPlayerJustDeselected = true;
-        } else {
+        // Target the first clicked ship
+        for (auto& scene : rootNode->childNodes) {
+            FW::ref<FW::Entity> entity = scene->entity;
 
-            // Target the first clicked ship
-            for (auto& scene : rootNode->childNodes) {
-                FW::ref<FW::Entity> entity = scene->entity;
+            if (entity && isMouseInsideEntityBounds(scene, camera)) {
+                FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
 
-                if (entity && isMouseInsideEntityBounds(scene, camera)) {
-                    FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
-
-                    if (ship) {
-                        // If the player just deselected themselves, make sure
-                        // we don't reselect the player again.
-                        // Now, set the target
-                        if (!ship->getIsTargeted()) {
-                            ship->setIsTargeted(true);
-
-                            if (ship != playerShip) {
-                                playerShip->setTargetShip(ship);
-                            }
-                        }
-                        break;
+                if (ship) {
+                    // If the player just deselected themselves, make sure
+                    // we don't reselect the player again.
+                    // Now, set the target
+                    if (!ship->getIsTargeted() && ship != playerShip) {
+                        playerShip->setTargetShip(ship);
+                        ship->setTargetedState(TargetSelectionState::ACTIVE);
                     }
+                    break;
                 }
             }
         }

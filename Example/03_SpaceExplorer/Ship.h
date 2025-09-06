@@ -5,6 +5,8 @@
 #include "Sprite.h"
 #include "BaseScene.h"
 
+#include "TargetSelector.h"
+
 class GameScene;
 
 class ProjectileRoot : public FW::SceneNode {
@@ -50,6 +52,29 @@ public: // Transformation
 
     FW::ref<Ship> getTargetShip() { return targetShip; }
 
+    /**
+     * Set the selection state.
+     */
+    void setTargetedState(const TargetSelectionState type) {
+        if (targetSelectorScene) {
+            targetSelectorScene->setSelectionState(type);
+
+            if (type == TargetSelectionState::INACTIVE) {
+                removeChild(targetSelectorScene);
+            } else {
+                addChild(targetSelectorScene);
+            }
+        }
+    }
+
+    TargetSelectionState getTargetedState() {
+        if (targetSelectorScene) {
+            return targetSelectorScene->getSelectionState();
+        }
+
+        return TargetSelectionState::INACTIVE;
+    }
+
 private:
     friend GameScene;
 
@@ -70,10 +95,9 @@ protected: // Player stats
     /**
      * Determines the colour of the targeted ring when player selects the ship
      */
-    glm::vec3 targetedColor;
     // We need a reference to this, as we would remove it from children if it
     // should no longer be rendered.
-    FW::ref<FW::SceneNode> targetSelectorScene;
+    FW::ref<TargetSelector> targetSelectorScene;
 
     // The ship will rotate and point toward the target, if a target is locked.
     FW::ref<Ship> targetShip;

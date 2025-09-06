@@ -5,7 +5,6 @@
 #include "GameUI.h"
 
 #include "ECS_Systems.h"
-#include "TargetSelector.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -23,7 +22,6 @@ private:
     FW::ref<FW::OrthographicCamera> camera;
     FW::ref<PlayerShip> playerShip;
     FW::ref<FW::SceneNode> backgroundNode;
-    FW::ref<TargetSelector> targetSelectorNode;
     /** Simulates space objects to be far away in the background */
     float parallaxFactor = 0.2f;
 
@@ -32,6 +30,7 @@ private:
     FW::ref<ProjectileRoot> projectileRoot;
 
     FW::ref<EnemyShip> enemyShip;
+    std::vector<FW::ref<EnemyShip>> selectedEnemyShips;
 
     // FW::ref<GameUI> gameUI;
 

@@ -5,15 +5,29 @@
 
 #include <glm/glm.hpp>
 
+/**
+ *
+ */
+enum TargetSelectionState { INACTIVE = 0, HOVERED, ACTIVE };
+
+/**
+ * A ring that surrounds a target, indicating that it is selected.
+ */
 class TargetSelector : public FW::SceneNode {
 public:
-    TargetSelector();
+    TargetSelector() = default;
+    TargetSelector(FW::ref<FW::Camera> camera);
     virtual ~TargetSelector() = default;
 
     virtual void update(float delta);
 
-    void createTarget(glm::vec2 position);
+    void setSelectionState(TargetSelectionState type);
+    TargetSelectionState getSelectionState() { return selectionState; }
 
-public:
-    FW::ref<FW::Camera> camera;
+private:
+    void setColor(TargetSelectionState type);
+
+private:
+    TargetSelectionState selectionState = TargetSelectionState::INACTIVE;
+    glm::vec4 color{ 1.0f };
 };

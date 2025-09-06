@@ -38,22 +38,7 @@ Ship::Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot)
     entity = sprite;
 
     // Create a target selector child node
-    targetSelectorScene = FW::createRef<FW::SceneNode>();
-
-    FW::ref<FW::Sprite> targetSelectorSprite = targetSelectorSprite =
-      FW::createRef<FW::Sprite>(camera);
-    targetSelectorSprite->name = "Target Selector";
-    targetSelectorSprite->setColor(1.0f, 0.2f, 0.2f);
-    targetSelectorSprite->setSize(sprite->getSize());
-    targetSelectorSprite->setPosition(sprite->getPosition());
-    targetSelectorSprite->setZIndex(3);
-
-    targetSelectorSprite->getComponent<FW::DrawableComponent>()->setShader(
-      "Target selector");
-    targetSelectorSprite->getComponent<FW::TransformationComponent>()
-      ->setShader("Target selector");
-
-    targetSelectorScene->entity = targetSelectorSprite;
+    targetSelectorScene = FW::createRef<TargetSelector>(camera);
 
     INFO("Ship successfully initialised");
 }
@@ -108,11 +93,6 @@ void Ship::update(float delta) {
 
     if (fireCurrentCooldown >= 0.0f) {
         fireCurrentCooldown -= delta;
-    }
-
-    if (isTargeted) {
-        targetSelectorScene->entity->getComponent<FW::TransformationComponent>()
-          ->setPosition(getPosition());
     }
 
     // Ships will turn toward their target
