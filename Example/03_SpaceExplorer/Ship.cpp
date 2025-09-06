@@ -252,11 +252,6 @@ PlayerShip::PlayerShip(FW::ref<FW::Camera> camera,
 void PlayerShip::update(float delta) {
     Ship::update(delta);
 
-    // Only rotate if we haven't set a target to shoot or chase yet
-    if (!targetShip) {
-        setRotation(-getRotationWithMouse());
-    }
-
     glm::vec2 pos = getPosition();
     glm::vec2 posDelta = glm::vec2{ 0.0f };
 
@@ -273,7 +268,24 @@ void PlayerShip::update(float delta) {
     if (FW::Input::isKeyPressed(FW_KEY_W)) {
         posDelta.y += speed * delta;
     }
-    setPosition(pos + posDelta);
+
+    // Move and rotate
+    glm::vec2 newPos = pos + posDelta;
+    setPosition(newPos);
+    
+    float angle = atan2(posDelta.y, posDelta.x);
+
+    // Rotate toward target ship only if within range to attack, otherwise
+    // rotate toward the mouse cursor.
+    if (targetShip) {
+        glm::vec2 d = targetShip->getPosition() - getPosition();
+        if (glm::length(d) < weaponRange) {
+            angle = atan2(d.y, d.x);
+        }
+    }
+
+    // Override the angle if the target is within range
+    setRotation(glm::vec3{ 0.0f, 0.0f, angle });
 }
 
 EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
