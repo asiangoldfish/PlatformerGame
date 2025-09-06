@@ -99,6 +99,12 @@ void Ship::update(float delta) {
     if (targetShip) {
         float angle = angleToEnemy(this, targetShip.get());
         setRotation({ 0.0f, 0.0f, angle });
+
+        float distance = glm::length(targetShip->getPosition() - getPosition());
+
+        if (distance <= weaponRange) {
+            fireBullets(projectileRoot);
+        }
     }
 }
 
@@ -154,17 +160,9 @@ void Ship::setIsTargeted(const bool b) {
 void Ship::setTargetShip(FW::ref<Ship> targetShip) {
 
     // 1. The player can only select a ship if it's within target....
-    if (targetShip &&
-        glm::length(targetShip->getPosition() - getPosition()) <= weaponRange) {
-
-        // Deselect the previous target
-        if (this->targetShip) {
-            this->targetShip->setIsTargeted(false);
-        }
-
+    if (targetShip) {
         this->targetShip = targetShip;
         targetShip->setIsTargeted(true);
-
     } else if (!targetShip) {
         // 2. but the player can always deselect a target ship
         this->targetShip = nullptr;
@@ -265,10 +263,6 @@ void PlayerShip::update(float delta) {
         posDelta.y += speed;
     }
     setPosition(pos + posDelta);
-
-    if (targetShip) {
-        fireBullets(projectileRoot);
-    }
 }
 
 EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
@@ -282,10 +276,4 @@ void EnemyShip::update(float delta) {
     Ship::update(delta);
 
     ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
-
-    float d = glm::length(targetShip->getPosition() - getPosition());
-
-    if (targetShip && d <= weaponRange) {
-        fireBullets(projectileRoot);
-    }
 }
