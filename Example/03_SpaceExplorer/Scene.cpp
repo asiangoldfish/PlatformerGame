@@ -98,6 +98,15 @@ void GameScene::update(float delta) {
     if (debugging) {
         debugging->draw(delta);
     }
+
+    if (enemyShip) {
+        if (enemyShip->isDead) {
+            // TODO Use weak_ptr for objects that don't own the ship.
+            rootNode->removeChild(enemyShip);
+            enemyShip = nullptr;
+            playerShip->targetShip = nullptr;
+        }
+    }
 }
 
 void GameScene::cleanUp() {}
@@ -117,7 +126,7 @@ void GameScene::cursorPosCallback(double xpos, double ypos) {
     // selection outline
     // TODO in the future after adding a separate group for enemy ships, iterate
     // over this instead.
-    if (!enemyShip->isTargeted) {
+    if (enemyShip && !enemyShip->isTargeted) {
         bool isInBounds = isMouseInsideEntityBounds(enemyShip, camera);
 
         // Only hover if it isn't already hovered

@@ -15,6 +15,7 @@ public:
 
 private:
     void drawShipStats();
+    void drawCurrencies();
 
 public:
     FW::ref<PlayerShip> playerShip;

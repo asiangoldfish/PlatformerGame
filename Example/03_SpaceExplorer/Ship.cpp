@@ -296,6 +296,7 @@ EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
 
     entity->name = "Enemy";
     chaseMode = AIChaseMode::PATROLCOOLDOWN;
+    currenciesStats.cash = 3;
 }
 
 void EnemyShip::update(float delta) {
@@ -355,6 +356,14 @@ std::string EnemyShip::chaseModeToStr() {
     }
 
     return "ERROR";
+}
+
+void EnemyShip::takeDamage(float damage) {
+    Ship::takeDamage(damage);
+
+    if (isDead) {
+        targetShip->currenciesStats.cash += currenciesStats.cash;
+    }
 }
 
 void EnemyShip::AiPatrolling(float delta) {

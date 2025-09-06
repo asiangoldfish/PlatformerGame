@@ -58,6 +58,7 @@ void Debugging::draw(float delta) {
     // ====== BEGIN DRAWING STUFF =============
     // ImGui::ShowDemoWindow();
     drawShipStats();
+    drawCurrencies();
     // ====== END DRAWING STUFF ===============
 
     // Render ImGui
@@ -117,6 +118,18 @@ void Debugging::drawShipStats() {
         glm::vec2 targetPosition = enemyShip->getPatrollingTargetPosition();
         ImGui::Text("(%.0f:%.0f)", targetPosition.x, targetPosition.y);
     }
+
+    ImGui::End();
+}
+
+void Debugging::drawCurrencies() {
+    ImGui::Begin("Currencies");
+
+    // Player ship
+    // =======================
+    ImGui::Text("\tCash:");
+    ImGui::SameLine();
+    ImGui::Text("%i", playerShip->currenciesStats.cash);
 
     ImGui::End();
 }

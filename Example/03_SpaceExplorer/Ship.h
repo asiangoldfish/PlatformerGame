@@ -81,16 +81,16 @@ public: // Combat related methods
     /**
      * Take damage. If enough damage is dealt, mark this ship as dead.
      */
-    void takeDamage(float incomingDamage);
+    virtual void takeDamage(float incomingDamage);
 
 private:
     friend GameScene;
 
     bool isTargeted = false;
 
-    bool isDead = false;
-
+    
 protected: // Player stats
+    bool isDead = false;
     float health;
     float gold;
     FW::ref<FW::Camera> camera;
@@ -118,6 +118,7 @@ protected: // Player stats
 public:
     VitalStats vitalStats;
     CombatStats combatStats;
+    CurrenciesStats currenciesStats;
 
 protected:
     FW::ref<ProjectileRoot> projectileRoot;
@@ -177,6 +178,8 @@ public:
 
     float getPatrollingCooldown() { return aiPatrollingCurrentCooldown; }
     glm::vec2 getPatrollingTargetPosition() { return aiMovementDestination; }
+
+    virtual void takeDamage(float damage) override;
 
 private:
     /**

@@ -13,3 +13,7 @@ struct VitalStats {
 struct CombatStats {
     float damage = 1.0f;
 };
+
+struct CurrenciesStats {
+    int cash = 0;
+};
