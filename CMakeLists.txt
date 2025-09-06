@@ -60,7 +60,7 @@ add_subdirectory(Framework)
 add_subdirectory(PhysicsDemo)
 
 # Sample projects
-option(BUILD_EXAMPLE "Build example applications" OFF)
+option(BUILD_EXAMPLE "Build example applications" ON)
 if(BUILD_EXAMPLE)
     message(STATUS "Building example projects...")
     add_subdirectory(Example)
