@@ -58,10 +58,12 @@ void GameScene::init() {
 
     // Player ship
     playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
+    playerShip->setPosition(-300.0f, 500.0f);
     rootNode->addChild(playerShip);
 
     // Enemy ship
     enemyShip = FW::createRef<EnemyShip>(camera, projectileRoot);
+    enemyShip->setTargetShip(playerShip);
     rootNode->addChild(enemyShip);
 
     selectedEnemyShips.reserve(10);

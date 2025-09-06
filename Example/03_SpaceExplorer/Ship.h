@@ -189,7 +189,12 @@ private:
     /**
      * Chase down and kill the target ship.
      */
-    void AiHunting();
+    void AiHunting(float delta);
+
+    /**
+     * Move the ship toward a destination.
+     */
+    void moveToPosition(glm::vec2 dst, float delta);
 
 public:
     AIChaseMode chaseMode = AIChaseMode::NONE;
@@ -214,4 +219,6 @@ private: // AI movement
 
     float aiPatrollingMaxCooldown = 3.0f;
     float aiPatrollingCurrentCooldown = 1.0f;
+
+    float aiHuntingRange = 250.0f;
 };

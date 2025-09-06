@@ -100,7 +100,6 @@ void Ship::update(float delta) {
     // Ships will turn toward their target
     if (targetShip) {
         float angle = angleToEnemy(this, targetShip.get());
-        setRotation({ 0.0f, 0.0f, angle });
 
         float distance = glm::length(targetShip->getPosition() - getPosition());
 
@@ -108,6 +107,9 @@ void Ship::update(float delta) {
             fireBullets(projectileRoot);
         }
     }
+
+    // The base class will not rotate the ship, as this may not be desirable. It
+    // is up to subclasses to rotate themselves.
 }
 
 void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
@@ -301,12 +303,21 @@ void EnemyShip::update(float delta) {
 
     ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
 
+    // Check for hunt mode
+    if (targetShip) {
+        float distToTarget =
+          glm::length(targetShip->getPosition() - getPosition());
+        if (distToTarget < weaponRange) {
+            chaseMode = AIChaseMode::HUNTING;
+        }
+    }
+
     switch (chaseMode) {
         case AIChaseMode::NONE:
             break;
 
         case AIChaseMode::HUNTING:
-            AiHunting();
+            AiHunting(delta);
             break;
 
         case AIChaseMode::PATROLLING:
@@ -372,23 +383,9 @@ void EnemyShip::AiPatrolling(float delta) {
         }
     }
 
-    // To find the next exact position to move to, the following
-    // algorithm can help:
-    // 1. Find the angle between the current and the target
-    // positions: atan2(y, x).
-    // 2. Multiply delta and speed, and use the angle to compose
-    // the new position vectr.
-    glm::vec2 dist = aiMovementDestination - getPosition();
-    float angle = atan2(dist.y, dist.x);
-    float newSpeed = speed * delta;
-    glm::vec2 velocity = glm::vec2{ cos(angle), sin(angle) } * newSpeed;
-    glm::vec2 newPos = getPosition() + velocity;
-    setPosition(newPos);
-
-    if (targetSelectorScene) {
-        targetSelectorScene->setPosition2D(newPos);
-    }
-
+    moveToPosition(aiMovementDestination, delta);
+    glm::vec2 d = aiMovementDestination - getPosition();
+    float angle = atan2(d.y, d.x);
     setRotation(glm::vec3{ 0.0f, 0.0f, angle });
 }
 
@@ -403,4 +400,54 @@ glm::vec2 EnemyShip::findNextPatrollingPoint() {
     return glm::vec2(cos(randAngle), sin(randAngle)) * randDist;
 }
 
-void EnemyShip::AiHunting() {}
+void EnemyShip::AiHunting(float delta) {
+    // Cancellation condition: target is out of range.
+    ASSERT(targetShip,
+           "Hunting a nullptr target ship! This should never happen");
+
+    float distToTarget = glm::length(targetShip->getPosition() - getPosition());
+    if (distToTarget > weaponRange) {
+        chaseMode = AIChaseMode::PATROLCOOLDOWN;
+    } else {
+        // While chasing, try to get within hunting range. Algorithm:
+        // 1. Get the angle between the ship and the target's positions.
+        // 2. Compose the position vector by multiplying the target ship's
+        // position by the velocity vector.
+        glm::vec2 d = targetShip->getPosition() - getPosition();
+
+        float angle = atan2(d.y, d.x);
+        glm::vec2 offset = glm::vec2{ cos(angle), sin(angle) } * aiHuntingRange;
+
+        // Hunting position is relative to origin, so we have to offset it
+        glm::vec2 huntingPosition = targetShip->getPosition() - offset;
+
+        // Prevent oscillation
+        if (glm::length(huntingPosition - getPosition()) <=
+            destinationTolerance) {
+            return;
+        }
+
+        moveToPosition(huntingPosition, delta);
+        setRotation({ 0.0f, 0.0f, angle });
+    }
+}
+
+void EnemyShip::moveToPosition(glm::vec2 dst, float delta) {
+    // To find the next exact position to move to, the following
+    // algorithm can help:
+    // 1. Find the angle between the current and the target
+    // positions: atan2(y, x).
+    // 2. Multiply delta and speed, and use the angle to compose
+    // the new position vectr.
+    glm::vec2 dist = dst - getPosition();
+    float angle = atan2(dist.y, dist.x);
+    float newSpeed = speed * delta;
+    glm::vec2 velocity = glm::vec2{ cos(angle), sin(angle) } * newSpeed;
+    glm::vec2 newPos = getPosition() + velocity;
+
+    if (targetSelectorScene) {
+        targetSelectorScene->setPosition2D(newPos);
+    }
+
+    setPosition(newPos);
+}
