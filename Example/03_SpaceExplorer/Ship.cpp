@@ -40,6 +40,8 @@ Ship::Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot)
     // Create a target selector child node
     targetSelectorScene = FW::createRef<TargetSelector>(camera);
 
+    entity->getComponent<FW::DrawableComponent>()->isTransparent = true;
+
     INFO("Ship successfully initialised");
 }
 
@@ -134,7 +136,7 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
                                   sin(angle + randomSpread) * speed };
     bullet->setRotation(glm::vec3{ 0.0f, 0.0f, angle });
     bullet->targetShip = targetShip;
-    
+
     bullet->damage = combatStats.damage;
     root->addChild(bullet);
 
@@ -375,7 +377,7 @@ void EnemyShip::AiPatrolling(float delta) {
         targetSelectorScene->setPosition2D(newPos);
     }
 
-    setRotation(glm::vec3{0.0f, 0.0f, angle});
+    setRotation(glm::vec3{ 0.0f, 0.0f, angle });
 }
 
 glm::vec2 EnemyShip::findNextPatrollingPoint() {

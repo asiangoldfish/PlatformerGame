@@ -58,8 +58,6 @@ void GameScene::init() {
 
     // Player ship
     playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
-    playerShip->entity->getComponent<FW::DrawableComponent>()->isTransparent =
-      true;
     rootNode->addChild(playerShip);
 
     // Enemy ship
