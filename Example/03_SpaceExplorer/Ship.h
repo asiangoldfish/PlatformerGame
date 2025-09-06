@@ -6,6 +6,7 @@
 #include "BaseScene.h"
 
 #include "TargetSelector.h"
+#include "Stats.h"
 
 class GameScene;
 
@@ -75,10 +76,19 @@ public: // Transformation
         return TargetSelectionState::INACTIVE;
     }
 
+public: // Combat related methods
+
+    /**
+     * Take damage. If enough damage is dealt, mark this ship as dead.
+     */
+    void takeDamage(float incomingDamage);
+
 private:
     friend GameScene;
 
     bool isTargeted = false;
+
+    bool isDead = false;
 
 protected: // Player stats
     float health;
@@ -105,6 +115,10 @@ protected: // Player stats
     /** The ship will shoot the target if the target is within range. */
     float weaponRange = 400.0f;
 
+public:
+    VitalStats vitalStats;
+    CombatStats combatStats;
+
 protected:
     FW::ref<ProjectileRoot> projectileRoot;
 };
@@ -128,12 +142,14 @@ public:
     bool isDead = false;
 
     /** Once reaching the target, the bullet dies*/
-    glm::vec2 targetDestination{ 0.0f };
+    FW::ref<Ship> targetShip;
     /**
      * If the bullet is within d distance from the target destination, register
      * it as a hit.
      * */
     float collisionTolerance = 50.0f;
+
+    float damage = 0.0f;
 };
 
 class PlayerShip : public Ship {

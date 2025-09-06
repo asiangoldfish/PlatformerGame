@@ -133,7 +133,9 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     bullet->velocity = glm::vec2{ cos(angle + randomSpread) * speed,
                                   sin(angle + randomSpread) * speed };
     bullet->setRotation(glm::vec3{ 0.0f, 0.0f, angle });
-    bullet->targetDestination = targetShip->getPosition();
+    bullet->targetShip = targetShip;
+    
+    bullet->damage = combatStats.damage;
     root->addChild(bullet);
 
     fireCurrentCooldown = fireMaxCooldown;
@@ -169,6 +171,11 @@ void Ship::setTargetShip(FW::ref<Ship> targetShip) {
     }
 }
 
+void Ship::takeDamage(float incomingDamage) {
+    vitalStats.health -= incomingDamage;
+    isDead = ceil(vitalStats.health) <= 0.0f;
+}
+
 void Bullet::update(float delta) {
     FW::SceneNode::update(delta);
 
@@ -179,8 +186,9 @@ void Bullet::update(float delta) {
         time += delta;
     }
 
-    if (glm::length(targetDestination - getPosition()) <= collisionTolerance) {
+    if (glm::length(targetShip->getPosition() - getPosition()) <= collisionTolerance) {
         isDead = true;
+        targetShip->takeDamage(damage);
     }
 }
 
@@ -233,7 +241,7 @@ void ProjectileRoot::update(float delta) {
 PlayerShip::PlayerShip(FW::ref<FW::Camera> camera,
                        FW::ref<ProjectileRoot> projectileRoot)
   : Ship(camera, projectileRoot) {
-    
+
     targetSelectorScene.reset();
     entity->name = "Player";
 }

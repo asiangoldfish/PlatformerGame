@@ -86,6 +86,9 @@ void GameScene::update(float delta) {
     uploadVec.y = camera->getPosition2D().x;
     bgShader->setParam("u_camera", uploadVec);
 
+    // Debug player stats
+    INFO("Player HP: {} | Enemy HP: {}", playerShip->vitalStats.health, enemyShip->vitalStats.health);
+
     renderSystem.draw(rootNode);
 }
 
