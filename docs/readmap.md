@@ -1,12 +1,12 @@
 # Tomt map:
-    - AI movements / Generere NPC-er å drepe
-    - Astroidefelt / stein i verdensrommet for å mine
-    - Space stations
-        -> Bygge om skip
-        -> Kjøpe andre skip / komponenter
-        -> Missions
-        -> Burde ha en space zone eller defensive grid
-    - Kule ting å finne
+- [x] AI movements / Generere NPC-er å drepe 
+- [ ] Astroidefelt / stein i verdensrommet for å mine
+- [ ] Space stations
+    -> Bygge om skip
+    -> Kjøpe andre skip / komponenter
+    -> Missions
+    -> Burde ha en space zone eller defensive grid
+- [ ] Kule ting å finne
 
 # Factions
 
