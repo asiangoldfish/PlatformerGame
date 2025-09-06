@@ -11,6 +11,12 @@ namespace FW {
      */
     class ShaderManager {
     public:
+        /**
+         * Get the singleton instance of the ShaderManager.
+         *
+         * To consume ShaderManager's API, one would normally get the instance
+         * first.
+         */
         static ShaderManager& get() {
             static ShaderManager s;
             return s;
