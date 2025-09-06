@@ -259,16 +259,16 @@ void PlayerShip::update(float delta) {
 
     // Moving the ship
     if (FW::Input::isKeyPressed(FW_KEY_D)) {
-        posDelta.x += speed;
+        posDelta.x += speed * delta;
     }
     if (FW::Input::isKeyPressed(FW_KEY_A)) {
-        posDelta.x -= speed;
+        posDelta.x -= speed * delta;
     }
     if (FW::Input::isKeyPressed(FW_KEY_S)) {
-        posDelta.y -= speed;
+        posDelta.y -= speed * delta;
     }
     if (FW::Input::isKeyPressed(FW_KEY_W)) {
-        posDelta.y += speed;
+        posDelta.y += speed * delta;
     }
     setPosition(pos + posDelta);
 }

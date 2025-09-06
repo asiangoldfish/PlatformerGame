@@ -100,7 +100,7 @@ protected: // Player stats
 
     float randomSpreadRadius = glm::radians(0.0f);
 
-    float speed = 3.0f;
+    float speed = 100.0f;
 
     /**
      * Determines the colour of the targeted ring when player selects the ship
