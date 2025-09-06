@@ -24,6 +24,10 @@ public:
     void setSelectionState(TargetSelectionState type);
     TargetSelectionState getSelectionState() { return selectionState; }
 
+    void setPosition2D(glm::vec2 pos) {
+        entity->getComponent<FW::TransformationComponent>()->setPosition(pos);
+    }
+
 private:
     void setColor(TargetSelectionState type);
 

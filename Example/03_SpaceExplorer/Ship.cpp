@@ -186,7 +186,8 @@ void Bullet::update(float delta) {
         time += delta;
     }
 
-    if (glm::length(targetShip->getPosition() - getPosition()) <= collisionTolerance) {
+    if (glm::length(targetShip->getPosition() - getPosition()) <=
+        collisionTolerance) {
         isDead = true;
         targetShip->takeDamage(damage);
     }
@@ -278,10 +279,114 @@ EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
   : Ship(camera, projectileRoot) {
 
     entity->name = "Enemy";
+    chaseMode = AIChaseMode::PATROLCOOLDOWN;
 }
 
 void EnemyShip::update(float delta) {
     Ship::update(delta);
 
     ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
+
+    switch (chaseMode) {
+        case AIChaseMode::NONE:
+            break;
+
+        case AIChaseMode::HUNTING:
+            AiHunting();
+            break;
+
+        case AIChaseMode::PATROLLING:
+        case AIChaseMode::PATROLCOOLDOWN:
+            AiPatrolling(delta);
+            break;
+
+        default:
+            ASSERT(false,
+                   "EnemyShip::update(): AIChaseMode::{} is not "
+                   "implemented in swith statement");
+            break;
+    }
 }
+
+std::string EnemyShip::chaseModeToStr() {
+    switch (chaseMode) {
+        case AIChaseMode::NONE:
+            return "NONE";
+
+        case AIChaseMode::PATROLLING:
+            return "PATROLLING";
+
+        case AIChaseMode::HUNTING:
+            return "HUNTING";
+
+        case AIChaseMode::PATROLCOOLDOWN:
+            return "PATROLCOOLDOWN";
+
+        default:
+            ASSERT(false,
+                   "EnemyShip::chaseModeToStr(): AIChaseMode::{} is not "
+                   "implemented in swith statement");
+            break;
+    }
+
+    return "ERROR";
+}
+
+void EnemyShip::AiPatrolling(float delta) {
+    // Consensus: If the ship has stopped after reaching the destination, a
+    // cooldown stars before the next control point is found.
+
+    // State machine: Go from patrol mode to chase mode.
+    if (AIChaseMode::PATROLCOOLDOWN == chaseMode) {
+        aiPatrollingCurrentCooldown -= delta;
+        if (aiPatrollingCurrentCooldown <= 0.0f) {
+            // We are now patrolling.
+            chaseMode = AIChaseMode::PATROLLING;
+            aiMovementDestination = findNextPatrollingPoint();
+        } else {
+            // Cooldown is ongoing, so do nothing more.
+            return;
+        }
+    }
+
+    // State machine: Chase mode to patrol mode.
+    if (AIChaseMode::PATROLLING == chaseMode) {
+        if (glm::length(aiMovementDestination - getPosition()) <
+            destinationTolerance) {
+            chaseMode = AIChaseMode::PATROLCOOLDOWN;
+            aiPatrollingCurrentCooldown = aiPatrollingMaxCooldown;
+        }
+    }
+
+    // To find the next exact position to move to, the following
+    // algorithm can help:
+    // 1. Find the angle between the current and the target
+    // positions: atan2(y, x).
+    // 2. Multiply delta and speed, and use the angle to compose
+    // the new position vectr.
+    glm::vec2 dist = aiMovementDestination - getPosition();
+    float angle = atan2(dist.y, dist.x);
+    float newSpeed = speed * delta;
+    glm::vec2 velocity = glm::vec2{ cos(angle), sin(angle) } * newSpeed;
+    glm::vec2 newPos = getPosition() + velocity;
+    setPosition(newPos);
+
+    if (targetSelectorScene) {
+        targetSelectorScene->setPosition2D(newPos);
+    }
+
+    setRotation(glm::vec3{0.0f, 0.0f, angle});
+}
+
+glm::vec2 EnemyShip::findNextPatrollingPoint() {
+    // We use trigonometry to find the next position:
+    // 1. Find a random distance between min and max radius.
+    // 2. Find a random angle between 0 and 2*pi.
+    // 3. Compute the final position.
+    float randDist =
+      FW::rng(aiRandomPositionRadius.x, aiRandomPositionRadius.y);
+    float randAngle = FW::rng(0.0f, 2.0f * 3.14159);
+    return glm::vec2(cos(randAngle), sin(randAngle)) * randDist;
+}
+
+void EnemyShip::AiHunting() {}

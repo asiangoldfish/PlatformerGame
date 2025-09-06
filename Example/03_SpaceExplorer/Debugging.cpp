@@ -77,16 +77,46 @@ void Debugging::drawShipStats() {
     ImGui::Begin("Ship Stats");
 
     // Player ship
+    // =======================
     ImGui::Text(playerShip->entity->name.c_str());
     ImGui::Text("\tHP:");
     ImGui::SameLine();
     ImGui::Text("%.2f", playerShip->vitalStats.health);
 
+
+    ImGui::Text("Position:");
+    ImGui::SameLine();
+    glm::vec2 playerPos = playerShip->getPosition();
+    ImGui::Text("(%.0f:%.0f)", playerPos.x, playerPos.y);
+
+    ImGui::Separator();
+
     // EnemyShip
+    // =======================
     ImGui::Text(enemyShip->entity->name.c_str());
     ImGui::Text("\tHp:");
     ImGui::SameLine();
     ImGui::Text("%.2f", enemyShip->vitalStats.health);
+
+    ImGui::Text("Position:");
+    ImGui::SameLine();
+    glm::vec2 enemyPos = enemyShip->getPosition();
+    ImGui::Text("(%.0f:%.0f)", enemyPos.x, enemyPos.y);
+
+    // Case mode
+    ImGui::Text("Chase mode:");
+    ImGui::SameLine();
+    ImGui::Text(enemyShip->chaseModeToStr().c_str());
+
+    if (enemyShip->chaseMode == EnemyShip::AIChaseMode::PATROLCOOLDOWN) {
+        ImGui::SameLine();
+        ImGui::Text("(%.2fs)", enemyShip->getPatrollingCooldown());
+    } else if (enemyShip->chaseMode == EnemyShip::AIChaseMode::PATROLLING) {
+        ImGui::Text("Next position:");
+        ImGui::SameLine();
+        glm::vec2 targetPosition = enemyShip->getPatrollingTargetPosition();
+        ImGui::Text("(%.0f:%.0f)", targetPosition.x, targetPosition.y);
+    }
 
     ImGui::End();
 }

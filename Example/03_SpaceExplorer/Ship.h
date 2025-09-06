@@ -161,11 +161,57 @@ public:
     virtual void update(float delta) override;
 };
 
+// TODO extract AI behaviour to an AI controller.
 class EnemyShip : public Ship {
+public:
+    enum AIChaseMode { NONE = 0, PATROLLING, PATROLCOOLDOWN, HUNTING};
+
 public:
     EnemyShip() = default;
     EnemyShip(FW::ref<FW::Camera> camera,
               FW::ref<ProjectileRoot> projectileRoot = nullptr);
 
     virtual void update(float delta) override;
+
+    std::string chaseModeToStr();
+
+    float getPatrollingCooldown() { return aiPatrollingCurrentCooldown; }
+    glm::vec2 getPatrollingTargetPosition() { return aiMovementDestination; }
+
+private:
+    /**
+     * Patrol to a random position within r radius.
+     */
+    void AiPatrolling(float delta);
+
+    glm::vec2 findNextPatrollingPoint();
+
+    /**
+     * Chase down and kill the target ship.
+     */
+    void AiHunting();
+
+public:
+    AIChaseMode chaseMode = AIChaseMode::NONE;
+
+private: // AI movement
+    /** The next position the AI controller moves the ship to. */
+    glm::vec2 aiMovementDestination{ 30.0f };
+
+    /**
+     * While looking for a new position, the AI will go to the next position
+     * within radius r.
+     *
+     * x is minimum, and y is maximum.
+     */
+    glm::vec2 aiRandomPositionRadius{ 230.0f, 800.0f };
+
+    /**
+     * A tolerance will mitigate floating point error with computing whether the
+     * ship has reached a position.
+     */
+    float destinationTolerance = 1.0f;
+
+    float aiPatrollingMaxCooldown = 3.0f;
+    float aiPatrollingCurrentCooldown = 1.0f;
 };

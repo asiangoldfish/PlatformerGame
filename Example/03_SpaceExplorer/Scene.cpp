@@ -64,7 +64,6 @@ void GameScene::init() {
 
     // Enemy ship
     enemyShip = FW::createRef<EnemyShip>(camera, projectileRoot);
-    enemyShip->setTargetShip(playerShip);
     rootNode->addChild(enemyShip);
 
     selectedEnemyShips.reserve(10);
