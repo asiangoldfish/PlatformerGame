@@ -46,13 +46,9 @@ public: // Transformation
     void setIsTargeted(const bool b);
     bool getIsTargeted() { return isTargeted; }
 
-    void setTargetShip(FW::ref<Ship> targetShip) {
-        this->targetShip = targetShip;
-    }
+    void setTargetShip(FW::ref<Ship> targetShip);
 
-    FW::ref<Ship> getTargetShip() {
-        return targetShip;
-    }
+    FW::ref<Ship> getTargetShip() { return targetShip; }
 
 private:
     friend GameScene;
@@ -82,6 +78,9 @@ protected: // Player stats
     // The ship will rotate and point toward the target, if a target is locked.
     FW::ref<Ship> targetShip;
 
+    /** The ship will shoot the target if the target is within range. */
+    float weaponRange = 400.0f;
+
 protected:
     FW::ref<ProjectileRoot> projectileRoot;
 };
@@ -101,6 +100,16 @@ public:
     glm::vec2 velocity{ 0.0f };
     float maxTime = 0.5f;
     float time = 0.0f;
+
+    bool isDead = false;
+
+    /** Once reaching the target, the bullet dies*/
+    glm::vec2 targetDestination{ 0.0f };
+    /**
+     * If the bullet is within d distance from the target destination, register
+     * it as a hit.
+     * */
+    float collisionTolerance = 50.0f;
 };
 
 class PlayerShip : public Ship {

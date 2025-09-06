@@ -133,7 +133,7 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     // mouse's position on screen.
     float angle = targetShip ? angleToEnemy(this, targetShip.get())
                              : -getRotationWithMouse().z;
-    float speed = 1200.0f;
+    float speed = 2400.0f;
     auto bullet = createBullet(camera);
 
     // Compute bullet spread
@@ -147,6 +147,7 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     bullet->velocity = glm::vec2{ cos(angle + randomSpread) * speed,
                                   sin(angle + randomSpread) * speed };
     bullet->setRotation(glm::vec3{ 0.0f, 0.0f, angle });
+    bullet->targetDestination = targetShip->getPosition();
     root->addChild(bullet);
 
     fireCurrentCooldown = fireMaxCooldown;
@@ -157,11 +158,36 @@ void Ship::setZIndex(uint32_t z) {
 }
 
 void Ship::setIsTargeted(const bool b) {
+    if (!targetSelectorScene) {
+        return;
+    }
+
     isTargeted = b;
+
     if (b) {
         addChild(targetSelectorScene);
     } else {
         removeChild(targetSelectorScene);
+    }
+}
+
+void Ship::setTargetShip(FW::ref<Ship> targetShip) {
+
+    // 1. The player can only select a ship if it's within target....
+    if (targetShip &&
+        glm::length(targetShip->getPosition() - getPosition()) <= weaponRange) {
+
+        // Deselect the previous target
+        if (this->targetShip) {
+            this->targetShip->setIsTargeted(false);
+        }
+
+        this->targetShip = targetShip;
+        targetShip->setIsTargeted(true);
+
+    } else if (!targetShip) {
+        // 2. but the player can always deselect a target ship
+        this->targetShip = nullptr;
     }
 }
 
@@ -173,6 +199,10 @@ void Bullet::update(float delta) {
         glm::vec2 newPos = currentPos + (velocity * delta);
         setPosition(newPos);
         time += delta;
+    }
+
+    if (glm::length(targetDestination - getPosition()) <= collisionTolerance) {
+        isDead = true;
     }
 }
 
@@ -213,15 +243,20 @@ void Bullet::setRotation(glm::vec3 rot) {
 void ProjectileRoot::update(float delta) {
     FW::SceneNode::update(delta);
 
+    // Kill the bullet if its timer has expired. Also it may have declared
+    // itself dead. If so, then also kill it.
     std::erase_if(childNodes, [](const FW::ref<SceneNode>& child) {
         auto bulletScene = std::dynamic_pointer_cast<Bullet>(child);
-        return bulletScene && bulletScene->time >= bulletScene->maxTime;
+        return bulletScene && (bulletScene->isDead ||
+                               bulletScene->time >= bulletScene->maxTime);
     });
 }
 
 PlayerShip::PlayerShip(FW::ref<FW::Camera> camera,
                        FW::ref<ProjectileRoot> projectileRoot)
   : Ship(camera, projectileRoot) {
+    
+    targetSelectorScene.reset();
     entity->name = "Player";
 }
 
@@ -268,7 +303,9 @@ void EnemyShip::update(float delta) {
 
     ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
 
-    if (targetShip) {
+    float d = glm::length(targetShip->getPosition() - getPosition());
+
+    if (targetShip && d <= weaponRange) {
         fireBullets(projectileRoot);
     }
 }
