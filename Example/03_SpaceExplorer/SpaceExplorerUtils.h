@@ -19,7 +19,7 @@ inline glm::vec3 getRotationWithMouse() {
 
 /**
  * Rotate a ship toward another
- * 
+ *
  * @param src the ship to rotate
  * @param dest the target ship to rotate toward
  */
@@ -50,10 +50,6 @@ inline bool isMouseInsideEntityBounds(FW::ref<FW::SceneNode> node,
     glm::vec2 max =
       transformation->getPosition2D() + transformation->getScale2D();
 
-    // Condition A: Mouse pos.x > left border
-    // Condition B: Mouse pos.x < right border
-    // Condition C: Mouse pos.y > bottom border
-    // Condition D: Mouse pos.y < top border
     glm::vec2 mousePos = FW::mouseToWorld2D(FW::Input::getMouseX(),
                                             FW::Input::getMouseY(),
                                             1280.0f,
@@ -61,12 +57,6 @@ inline bool isMouseInsideEntityBounds(FW::ref<FW::SceneNode> node,
                                             camera->getViewMatrix(),
                                             camera->getProjectionMatrix());
 
-    // clang-format off
-    return (
-        mousePos.x > min.x && // Condition A
-        mousePos.x < max.x && // Condition B
-        mousePos.y > min.y && // Condition C
-        mousePos.y < max.y    // Condition D
-    );
-    // clang-format on
+    float d = glm::length(transformation->getPosition2D() - mousePos);
+    return d <= transformation->getScale2D().x/2.0;
 }

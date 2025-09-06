@@ -44,7 +44,7 @@ Ship::Ship(FW::ref<FW::Camera> camera, FW::ref<ProjectileRoot> projectileRoot)
       FW::createRef<FW::Sprite>(camera);
     targetSelectorSprite->name = "Target Selector";
     targetSelectorSprite->setColor(1.0f, 0.2f, 0.2f);
-    targetSelectorSprite->setSize(200.f);
+    targetSelectorSprite->setSize(sprite->getSize());
     targetSelectorSprite->setPosition(sprite->getPosition());
     targetSelectorSprite->setZIndex(3);
 
