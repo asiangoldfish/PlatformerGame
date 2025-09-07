@@ -291,6 +291,10 @@ void PlayerShip::update(float delta) {
         // Override the angle if the target is within range
         setRotation(glm::vec3{ 0.0f, 0.0f, angle });
     }
+
+    // We wanna stick the ship to the middle of the screen, so we must also
+    // move the camera.
+    camera->setPosition2D(getPosition());
 }
 
 EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,

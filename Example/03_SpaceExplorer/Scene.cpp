@@ -76,10 +76,6 @@ void GameScene::init() {
 
 void GameScene::update(float delta) {
     FW::BaseScene::update(delta);
-
-    // We wanna stick the ship to the middle of the screen, so we must also
-    // move the camera.
-    camera->setPosition2D(playerShip->getPosition());
     backgroundNode->entity->getComponent<FW::TransformationComponent>()
       ->setPosition(playerShip->getPosition());
 
