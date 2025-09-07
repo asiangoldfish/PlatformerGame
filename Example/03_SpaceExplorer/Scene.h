@@ -41,6 +41,8 @@ private:
     FW::RenderSystem renderSystem;
     SelectionSystem selectionSystem;
 
+    FW::ref<Asteroid> asteroid;
+
 private: // Development
     FW::ref<Debugging> debugging;
 

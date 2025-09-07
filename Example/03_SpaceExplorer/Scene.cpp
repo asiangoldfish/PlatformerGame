@@ -74,6 +74,10 @@ void GameScene::init() {
     selectionSystem.setPlayerShip(playerShip);
     selectionSystem.setEnemiesRoot(enemyShips);
 
+    // Test minable asteroid
+    asteroid = FW::createRef<Asteroid>(camera);
+    rootNode->addChild(asteroid);
+
     // gameUI = FW::createRef<GameUI>();
     // gameUI->camera = camera;
     // gameUI->init();

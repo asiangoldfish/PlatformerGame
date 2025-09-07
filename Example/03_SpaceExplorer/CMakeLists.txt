@@ -8,6 +8,7 @@ add_executable(${PROJECT_NAME}
     TargetSelector.cpp
     Debugging.cpp
     Systems.cpp
+    Environment.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
