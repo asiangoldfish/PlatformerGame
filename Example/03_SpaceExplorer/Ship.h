@@ -51,7 +51,7 @@ public: // Transformation
 
     void setTargetShip(FW::ref<Ship> targetShip);
 
-    FW::ref<Ship> getTargetShip() { return targetShip; }
+    std::weak_ptr<Ship> getTargetShip() { return targetShip; }
 
     /**
      * Set the selection state.
@@ -77,7 +77,6 @@ public: // Transformation
     }
 
 public: // Combat related methods
-
     /**
      * Take damage. If enough damage is dealt, mark this ship as dead.
      */
@@ -90,7 +89,6 @@ private:
 
     bool isTargeted = false;
 
-    
 protected: // Player stats
     bool isDead = false;
     float health;
@@ -112,7 +110,7 @@ protected: // Player stats
     FW::ref<TargetSelector> targetSelectorScene;
 
     // The ship will rotate and point toward the target, if a target is locked.
-    FW::ref<Ship> targetShip;
+    std::weak_ptr<Ship> targetShip;
 
     /** The ship will shoot the target if the target is within range. */
     float weaponRange = 400.0f;
@@ -145,7 +143,7 @@ public:
     bool isDead = false;
 
     /** Once reaching the target, the bullet dies*/
-    FW::ref<Ship> targetShip;
+    std::weak_ptr<Ship> targetShip;
     /**
      * If the bullet is within d distance from the target destination, register
      * it as a hit.
@@ -167,7 +165,7 @@ public:
 // TODO extract AI behaviour to an AI controller.
 class EnemyShip : public Ship {
 public:
-    enum AIChaseMode { NONE = 0, PATROLLING, PATROLCOOLDOWN, HUNTING};
+    enum AIChaseMode { NONE = 0, PATROLLING, PATROLCOOLDOWN, HUNTING };
 
 public:
     EnemyShip() = default;

@@ -47,7 +47,7 @@ void SelectionSystem::onClicking() {
         // targeted ship.
         // Note that the player can still select themselves without
         // deselecting the target.
-        FW::ref<Ship> targetShip = player->getTargetShip();
+        auto targetShip = player->getTargetShip().lock();
         if (targetShip && !isMouseInsideEntityBounds(targetShip, cam)) {
             targetShip->setIsTargeted(false);
             targetShip->setTargetedState(TargetSelectionState::INACTIVE);

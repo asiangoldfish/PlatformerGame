@@ -98,10 +98,11 @@ void Ship::update(float delta) {
     }
 
     // Ships will turn toward their target
-    if (targetShip) {
-        float angle = angleToEnemy(this, targetShip.get());
+    auto target = targetShip.lock();
+    if (target) {
+        float angle = angleToEnemy(this, target.get());
 
-        float distance = glm::length(targetShip->getPosition() - getPosition());
+        float distance = glm::length(target->getPosition() - getPosition());
 
         if (distance <= weaponRange) {
             fireBullets(projectileRoot);
@@ -117,11 +118,13 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
         return;
     }
 
+    auto target = targetShip.lock();
+
     glm::vec2 playerPos = getPosition();
 
     // If we have a target, then rotate toward it. Otherwise, point toward the
     // mouse's position on screen.
-    float angle = targetShip ? angleToEnemy(this, targetShip.get())
+    float angle = target ? angleToEnemy(this, target.get())
                              : -getRotationWithMouse().z;
     float speed = 2400.0f;
     auto bullet = createBullet(camera);
@@ -137,7 +140,7 @@ void Ship::fireBullets(FW::ref<FW::SceneNode> root) {
     bullet->velocity = glm::vec2{ cos(angle + randomSpread) * speed,
                                   sin(angle + randomSpread) * speed };
     bullet->setRotation(glm::vec3{ 0.0f, 0.0f, angle });
-    bullet->targetShip = targetShip;
+    bullet->targetShip = target;
 
     bullet->damage = combatStats.damage;
     root->addChild(bullet);
@@ -166,12 +169,10 @@ void Ship::setIsTargeted(const bool b) {
 void Ship::setTargetShip(FW::ref<Ship> targetShip) {
 
     // 1. The player can only select a ship if it's within target....
-    if (targetShip) {
-        this->targetShip = targetShip;
+    // Make sure that a dead ship isn't targeted
+    this->targetShip = targetShip;
+    if (this->targetShip.lock()) {
         targetShip->setIsTargeted(true);
-    } else if (!targetShip) {
-        // 2. but the player can always deselect a target ship
-        this->targetShip = nullptr;
     }
 }
 
@@ -190,10 +191,16 @@ void Bullet::update(float delta) {
         time += delta;
     }
 
-    if (glm::length(targetShip->getPosition() - getPosition()) <=
-        collisionTolerance) {
+    auto target = targetShip.lock();
+    if (target) {
+        if (glm::length(target->getPosition() - getPosition()) <=
+            collisionTolerance) {
+            isDead = true;
+            target->takeDamage(damage);
+        }
+    } else {
+        // Kill the bullet if the target is already dead.
         isDead = true;
-        targetShip->takeDamage(damage);
     }
 }
 
@@ -274,27 +281,28 @@ void PlayerShip::update(float delta) {
     // Move and rotate
     glm::vec2 newPos = pos + posDelta;
     setPosition(newPos);
-    
+
     float angle = atan2(posDelta.y, posDelta.x);
 
     // Rotate toward target ship only if within range to attack, otherwise
     // rotate toward the mouse cursor.
-    if (targetShip) {
-        glm::vec2 d = targetShip->getPosition() - getPosition();
+    auto target = targetShip.lock();
+    if (target) {
+        glm::vec2 d = target->getPosition() - getPosition();
         if (glm::length(d) < weaponRange) {
             angle = atan2(d.y, d.x);
         }
     }
 
     // Do not rotate if not necessary
-    if (0.0f < glm::length2(posDelta) || targetShip) {
+    if (0.0f < glm::length2(posDelta) || target) {
         // Override the angle if the target is within range
         setRotation(glm::vec3{ 0.0f, 0.0f, angle });
     }
 
     // We wanna stick the ship to the middle of the screen, so we must also
     // move the camera.
-    camera->setPosition2D(getPosition());
+    camera->setPosition2D(newPos);
 }
 
 EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
@@ -302,8 +310,8 @@ EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
   : Ship(camera, projectileRoot) {
 
     entity->name = "Enemy";
-    chaseMode = AIChaseMode::PATROLCOOLDOWN;
     currenciesStats.cash = 3;
+    speed = 25.0f;
 }
 
 void EnemyShip::update(float delta) {
@@ -312,9 +320,9 @@ void EnemyShip::update(float delta) {
     ASSERT(projectileRoot, "EnemyShip: ProjectileRoot not set!");
 
     // Check for hunt mode
-    if (targetShip) {
-        float distToTarget =
-          glm::length(targetShip->getPosition() - getPosition());
+    auto target = targetShip.lock();
+    if (target) {
+        float distToTarget = glm::length(target->getPosition() - getPosition());
         if (distToTarget < weaponRange) {
             chaseMode = AIChaseMode::HUNTING;
         }
@@ -368,8 +376,9 @@ std::string EnemyShip::chaseModeToStr() {
 void EnemyShip::takeDamage(float damage) {
     Ship::takeDamage(damage);
 
-    if (isDead) {
-        targetShip->currenciesStats.cash += currenciesStats.cash;
+    auto target = targetShip.lock();
+    if (isDead && target) {
+        target->currenciesStats.cash += currenciesStats.cash;
     }
 }
 
@@ -418,10 +427,10 @@ glm::vec2 EnemyShip::findNextPatrollingPoint() {
 
 void EnemyShip::AiHunting(float delta) {
     // Cancellation condition: target is out of range.
-    ASSERT(targetShip,
-           "Hunting a nullptr target ship! This should never happen");
+    auto target = targetShip.lock();
+    ASSERT(target, "Hunting a nullptr target ship! This should never happen");
 
-    float distToTarget = glm::length(targetShip->getPosition() - getPosition());
+    float distToTarget = glm::length(target->getPosition() - getPosition());
     if (distToTarget > weaponRange) {
         chaseMode = AIChaseMode::PATROLCOOLDOWN;
     } else {
@@ -429,13 +438,13 @@ void EnemyShip::AiHunting(float delta) {
         // 1. Get the angle between the ship and the target's positions.
         // 2. Compose the position vector by multiplying the target ship's
         // position by the velocity vector.
-        glm::vec2 d = targetShip->getPosition() - getPosition();
+        glm::vec2 d = target->getPosition() - getPosition();
 
         float angle = atan2(d.y, d.x);
         glm::vec2 offset = glm::vec2{ cos(angle), sin(angle) } * aiHuntingRange;
 
         // Hunting position is relative to origin, so we have to offset it
-        glm::vec2 huntingPosition = targetShip->getPosition() - offset;
+        glm::vec2 huntingPosition = target->getPosition() - offset;
 
         // Prevent oscillation
         if (glm::length(huntingPosition - getPosition()) <=
