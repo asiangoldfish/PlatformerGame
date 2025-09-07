@@ -77,47 +77,58 @@ void Debugging::draw(float delta) {
 void Debugging::drawShipStats() {
     ImGui::Begin("Ship Stats");
 
+    auto player = playerShip.lock();
+    auto targetEnemy =
+      std::dynamic_pointer_cast<EnemyShip>(player->getTargetShip().lock());
+
     // Player ship
     // =======================
-    ImGui::Text(playerShip->entity->name.c_str());
-    ImGui::Text("\tHP:");
-    ImGui::SameLine();
-    ImGui::Text("%.2f", playerShip->vitalStats.health);
+    if (player) {
 
+        ImGui::Text(player->entity->name.c_str());
+        ImGui::Text("\tHP:");
+        ImGui::SameLine();
+        ImGui::Text("%.2f", player->vitalStats.health);
 
-    ImGui::Text("Position:");
-    ImGui::SameLine();
-    glm::vec2 playerPos = playerShip->getPosition();
-    ImGui::Text("(%.0f:%.0f)", playerPos.x, playerPos.y);
+        ImGui::Text("Position:");
+        ImGui::SameLine();
+        glm::vec2 playerPos = player->getPosition();
+        ImGui::Text("(%.0f:%.0f)", playerPos.x, playerPos.y);
 
-    ImGui::Separator();
+        ImGui::Separator();
+    }
 
     // EnemyShip
     // =======================
-    // ImGui::Text(enemyShip->entity->name.c_str());
-    // ImGui::Text("\tHp:");
-    // ImGui::SameLine();
-    // ImGui::Text("%.2f", enemyShip->vitalStats.health);
+    if (targetEnemy) {
 
-    // ImGui::Text("Position:");
-    // ImGui::SameLine();
-    // glm::vec2 enemyPos = enemyShip->getPosition();
-    // ImGui::Text("(%.0f:%.0f)", enemyPos.x, enemyPos.y);
+        ImGui::Text(targetEnemy->entity->name.c_str());
+        ImGui::Text("\tHp:");
+        ImGui::SameLine();
+        ImGui::Text("%.2f", targetEnemy->vitalStats.health);
 
-    // // Case mode
-    // ImGui::Text("Chase mode:");
-    // ImGui::SameLine();
-    // ImGui::Text(enemyShip->chaseModeToStr().c_str());
+        ImGui::Text("Position:");
+        ImGui::SameLine();
+        glm::vec2 enemyPos = targetEnemy->getPosition();
+        ImGui::Text("(%.0f:%.0f)", enemyPos.x, enemyPos.y);
 
-    // if (enemyShip->chaseMode == EnemyShip::AIChaseMode::PATROLCOOLDOWN) {
-    //     ImGui::SameLine();
-    //     ImGui::Text("(%.2fs)", enemyShip->getPatrollingCooldown());
-    // } else if (enemyShip->chaseMode == EnemyShip::AIChaseMode::PATROLLING) {
-    //     ImGui::Text("Next position:");
-    //     ImGui::SameLine();
-    //     glm::vec2 targetPosition = enemyShip->getPatrollingTargetPosition();
-    //     ImGui::Text("(%.0f:%.0f)", targetPosition.x, targetPosition.y);
-    // }
+        // Case mode
+        ImGui::Text("Chase mode:");
+        ImGui::SameLine();
+        ImGui::Text(targetEnemy->chaseModeToStr().c_str());
+
+        if (targetEnemy->chaseMode == EnemyShip::AIChaseMode::PATROLCOOLDOWN) {
+            ImGui::SameLine();
+            ImGui::Text("(%.2fs)", targetEnemy->getPatrollingCooldown());
+        } else if (targetEnemy->chaseMode ==
+                   EnemyShip::AIChaseMode::PATROLLING) {
+            ImGui::Text("Next position:");
+            ImGui::SameLine();
+            glm::vec2 targetPosition =
+              targetEnemy->getPatrollingTargetPosition();
+            ImGui::Text("(%.0f:%.0f)", targetPosition.x, targetPosition.y);
+        }
+    }
 
     ImGui::End();
 }
@@ -125,11 +136,14 @@ void Debugging::drawShipStats() {
 void Debugging::drawCurrencies() {
     ImGui::Begin("Currencies");
 
-    // Player ship
-    // =======================
-    ImGui::Text("\tCash:");
-    ImGui::SameLine();
-    ImGui::Text("%i", playerShip->currenciesStats.cash);
+    auto player = playerShip.lock();
+
+    if (player) {
+        // Cash
+        ImGui::Text("\tCash:");
+        ImGui::SameLine();
+        ImGui::Text("%i", player->currenciesStats.cash);
+    }
 
     ImGui::End();
 }

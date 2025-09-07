@@ -26,7 +26,6 @@ void GameScene::setDebugging(FW::ref<Debugging> d) {
 
     // Debugging windows
     debugging->playerShip = playerShip;
-    // debugging->enemyShip = enemyShip;
 }
 
 void GameScene::init() {

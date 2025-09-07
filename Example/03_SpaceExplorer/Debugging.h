@@ -18,8 +18,7 @@ private:
     void drawCurrencies();
 
 public:
-    FW::ref<PlayerShip> playerShip;
-    FW::ref<EnemyShip> enemyShip;
+    std::weak_ptr<PlayerShip> playerShip;
 
 private:
     GLFWwindow* window = nullptr;
