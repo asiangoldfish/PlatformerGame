@@ -23,9 +23,8 @@ void createBackground(FW::ref<FW::Sprite> backgroundSprite) {
 
 void GameScene::setDebugging(FW::ref<Debugging> d) {
     debugging = d;
-
-    // Debugging windows
     debugging->playerShip = playerShip;
+    debugging->mapSystem = &mapSystem;
 }
 
 void GameScene::init() {
@@ -57,7 +56,7 @@ void GameScene::init() {
 
     // Player ship
     playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
-    playerShip->setPosition(-200.0f, 300.0f);
+    // playerShip->setPosition(-200.0f, 300.0f);
     rootNode->addChild(playerShip);
 
     // Enemy ships
@@ -74,9 +73,7 @@ void GameScene::init() {
     selectionSystem.setPlayerShip(playerShip);
     selectionSystem.setEnemiesRoot(enemyShips);
 
-    // Test minable asteroid
-    asteroid = FW::createRef<Asteroid>(camera);
-    rootNode->addChild(asteroid);
+    mapSystem.setPlayerShip(playerShip);
 
     // gameUI = FW::createRef<GameUI>();
     // gameUI->camera = camera;
@@ -99,13 +96,14 @@ void GameScene::update(float delta) {
     uploadVec.y = camera->getPosition2D().x;
     bgShader->setParam("u_camera", uploadVec);
 
+    // Systems
+    enemyShips->update(delta);
     renderSystem.draw(rootNode);
+    mapSystem.update(delta);
 
     if (debugging) {
         debugging->draw(delta);
     }
-
-    enemyShips->update(delta);
 }
 
 void GameScene::cleanUp() {}

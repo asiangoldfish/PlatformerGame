@@ -3,11 +3,10 @@
 #include "Framework.h"
 #include "Ship.h"
 #include "GameUI.h"
-
 #include "ECS_Systems.h"
 #include "Debugging.h"
-#include "Systems.h"
-
+#include "systems/Systems.h"
+#include "systems/Map.h"
 
 class GameScene : public FW::BaseScene {
 public:
@@ -21,6 +20,7 @@ public:
     void cursorPosCallback(double xpos, double ypos);
     void mouseButtonCallback(int button, int action, int mods);
 
+    /** Invoked by the Application class. */
     void setDebugging(FW::ref<Debugging> d);
 
 private:
@@ -38,12 +38,11 @@ private:
 
     // FW::ref<GameUI> gameUI;
 
+public: // Systems
     FW::RenderSystem renderSystem;
     SelectionSystem selectionSystem;
-
-    FW::ref<Asteroid> asteroid;
+    MapSystem mapSystem;
 
 private: // Development
     FW::ref<Debugging> debugging;
-
 };

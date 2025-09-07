@@ -59,6 +59,7 @@ void Debugging::draw(float delta) {
     // ImGui::ShowDemoWindow();
     drawShipStats();
     drawCurrencies();
+    drawChunks();
     // ====== END DRAWING STUFF ===============
 
     // Render ImGui
@@ -143,6 +144,22 @@ void Debugging::drawCurrencies() {
         ImGui::Text("\tCash:");
         ImGui::SameLine();
         ImGui::Text("%i", player->currenciesStats.cash);
+    }
+
+    ImGui::End();
+}
+
+void Debugging::drawChunks() {
+    ImGui::Begin("Chunks");
+
+    ImGui::Text("Loaded chunks:");
+
+    int i = 0;
+    for (const auto& chunk: mapSystem->getLoadedChunks()) {
+        ImGui::Separator();
+        ImGui::Text("[%i]:", i++);
+        ImGui::SameLine();
+        ImGui::Text("(%d, %d)", chunk.chunkPosition.x, chunk.chunkPosition.y);
     }
 
     ImGui::End();

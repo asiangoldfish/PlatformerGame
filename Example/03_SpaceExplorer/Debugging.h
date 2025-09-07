@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Ship.h"
+#include "systems/Map.h"
 
 #include <GLFW/glfw3.h>
 
@@ -16,9 +17,11 @@ public:
 private:
     void drawShipStats();
     void drawCurrencies();
+    void drawChunks();
 
 public:
     std::weak_ptr<PlayerShip> playerShip;
+    MapSystem* mapSystem;
 
 private:
     GLFWwindow* window = nullptr;

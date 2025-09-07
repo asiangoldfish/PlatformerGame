@@ -7,8 +7,11 @@ add_executable(${PROJECT_NAME}
     GameUI.cpp
     TargetSelector.cpp
     Debugging.cpp
-    Systems.cpp
     Environment.cpp
+    
+    # Systems
+    systems/Systems.cpp
+    systems/Map.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
