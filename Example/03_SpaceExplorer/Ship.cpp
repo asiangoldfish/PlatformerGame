@@ -286,8 +286,11 @@ void PlayerShip::update(float delta) {
         }
     }
 
-    // Override the angle if the target is within range
-    setRotation(glm::vec3{ 0.0f, 0.0f, angle });
+    // Do not rotate if not necessary
+    if (0.0f < glm::length2(posDelta) || targetShip) {
+        // Override the angle if the target is within range
+        setRotation(glm::vec3{ 0.0f, 0.0f, angle });
+    }
 }
 
 EnemyShip::EnemyShip(FW::ref<FW::Camera> camera,
