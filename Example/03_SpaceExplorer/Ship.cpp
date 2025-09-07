@@ -467,3 +467,15 @@ void EnemyShip::moveToPosition(glm::vec2 dst, float delta) {
 
     setPosition(newPos);
 }
+
+void ShipCollection::update(float delta) {
+    FW::SceneNode::update(delta);
+
+    for (auto& node : childNodes) {
+        FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(node);
+        if (ship && ship->getIsDead()) {
+            removeChild(ship);
+            ship = nullptr;
+        }
+    }
+}

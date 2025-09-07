@@ -6,6 +6,8 @@
 
 #include "ECS_Systems.h"
 #include "Debugging.h"
+#include "Systems.h"
+
 
 class GameScene : public FW::BaseScene {
 public:
@@ -32,14 +34,14 @@ private:
      * the ship that shot the projectile. */
     FW::ref<ProjectileRoot> projectileRoot;
 
-    FW::ref<EnemyShip> enemyShip;
-    std::vector<FW::ref<EnemyShip>> selectedEnemyShips;
+    FW::ref<ShipCollection> enemyShips;
 
     // FW::ref<GameUI> gameUI;
 
     FW::RenderSystem renderSystem;
+    SelectionSystem selectionSystem;
 
-private:
+private: // Development
     FW::ref<Debugging> debugging;
 
 };

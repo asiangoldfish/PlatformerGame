@@ -83,6 +83,8 @@ public: // Combat related methods
      */
     virtual void takeDamage(float incomingDamage);
 
+    bool getIsDead() { return isDead; }
+
 private:
     friend GameScene;
 
@@ -200,7 +202,7 @@ private:
     void moveToPosition(glm::vec2 dst, float delta);
 
 public:
-    AIChaseMode chaseMode = AIChaseMode::NONE;
+    AIChaseMode chaseMode = AIChaseMode::PATROLCOOLDOWN;
 
 private: // AI movement
     /** The next position the AI controller moves the ship to. */
@@ -224,4 +226,15 @@ private: // AI movement
     float aiPatrollingCurrentCooldown = 1.0f;
 
     float aiHuntingRange = 250.0f;
+};
+
+/**
+ * Data structure to manage Ship life time.
+ */
+class ShipCollection : public FW::SceneNode {
+public:
+    ShipCollection() = default;
+    virtual ~ShipCollection() = default;
+
+    virtual void update(float delta) override;
 };

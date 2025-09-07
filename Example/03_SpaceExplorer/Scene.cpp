@@ -26,7 +26,7 @@ void GameScene::setDebugging(FW::ref<Debugging> d) {
 
     // Debugging windows
     debugging->playerShip = playerShip;
-    debugging->enemyShip = enemyShip;
+    // debugging->enemyShip = enemyShip;
 }
 
 void GameScene::init() {
@@ -58,15 +58,22 @@ void GameScene::init() {
 
     // Player ship
     playerShip = FW::createRef<PlayerShip>(camera, projectileRoot);
-    playerShip->setPosition(-300.0f, 500.0f);
+    playerShip->setPosition(-200.0f, 300.0f);
     rootNode->addChild(playerShip);
 
-    // Enemy ship
-    enemyShip = FW::createRef<EnemyShip>(camera, projectileRoot);
-    enemyShip->setTargetShip(playerShip);
-    rootNode->addChild(enemyShip);
+    // Enemy ships
+    enemyShips = FW::createRef<ShipCollection>();
+    rootNode->addChild(enemyShips);
 
-    selectedEnemyShips.reserve(10);
+    FW::ref<EnemyShip> enemyShip =
+      FW::createRef<EnemyShip>(camera, projectileRoot);
+    enemyShip->setTargetShip(playerShip);
+    enemyShips->addChild(enemyShip);
+
+    // Systems
+    selectionSystem.setCamera(camera);
+    selectionSystem.setPlayerShip(playerShip);
+    selectionSystem.setEnemiesRoot(enemyShips);
 
     // gameUI = FW::createRef<GameUI>();
     // gameUI->camera = camera;
@@ -95,81 +102,17 @@ void GameScene::update(float delta) {
         debugging->draw(delta);
     }
 
-    if (enemyShip) {
-        if (enemyShip->isDead) {
-            // TODO Use weak_ptr for objects that don't own the ship.
-            rootNode->removeChild(enemyShip);
-            enemyShip = nullptr;
-            playerShip->targetShip = nullptr;
-        }
-    }
+    enemyShips->update(delta);
 }
 
 void GameScene::cleanUp() {}
 
-void GameScene::keyCallback(int key, int scancode, int action, int mods) {
-    if (FW::Input::isKeyPressed(FW_KEY_SPACE)) {
-        if (enemyShip->getTargetShip()) {
-            enemyShip->setTargetShip(nullptr);
-        } else {
-            enemyShip->setTargetShip(playerShip);
-        }
-    }
-}
+void GameScene::keyCallback(int key, int scancode, int action, int mods) {}
 
 void GameScene::cursorPosCallback(double xpos, double ypos) {
-    // When hovering over an enemy ship and it isn't hovered, then make a gray
-    // selection outline
-    // TODO in the future after adding a separate group for enemy ships, iterate
-    // over this instead.
-    if (enemyShip && !enemyShip->isTargeted) {
-        bool isInBounds = isMouseInsideEntityBounds(enemyShip, camera);
-
-        // Only hover if it isn't already hovered
-        if (isInBounds && enemyShip->getTargetedState() == TargetSelectionState::INACTIVE) {
-            enemyShip->setTargetedState(TargetSelectionState::HOVERED);
-        } else if (enemyShip->getTargetedState() == TargetSelectionState::HOVERED && !isInBounds) {
-            enemyShip->setTargetedState(TargetSelectionState::INACTIVE);
-        }
-    }
+    selectionSystem.onHovering();
 }
 
 void GameScene::mouseButtonCallback(int button, int action, int mods) {
-    if (FW::Input::isMouseButtonPressed(FW_MOUSE_BUTTON_LEFT)) {
-        // Deselect player targeted ship by clicking somewhere else than the
-        // targeted ship.
-        // Note that the player can still select themselves without
-        // deselecting the target.
-        FW::ref<Ship> targetShip = playerShip->getTargetShip();
-        if (targetShip && !isMouseInsideEntityBounds(targetShip, camera) &&
-            !isMouseInsideEntityBounds(playerShip, camera)) {
-            targetShip->setIsTargeted(false);
-            targetShip->setTargetedState(TargetSelectionState::INACTIVE);
-            playerShip->setTargetShip(nullptr);
-        }
-
-        // Ensure that if the player ship was just deselected, we won't
-        // select it again.
-        bool wasPlayerJustDeselected = false;
-
-        // Target the first clicked ship
-        for (auto& scene : rootNode->childNodes) {
-            FW::ref<FW::Entity> entity = scene->entity;
-
-            if (entity && isMouseInsideEntityBounds(scene, camera)) {
-                FW::ref<Ship> ship = std::dynamic_pointer_cast<Ship>(scene);
-
-                if (ship) {
-                    // If the player just deselected themselves, make sure
-                    // we don't reselect the player again.
-                    // Now, set the target
-                    if (!ship->getIsTargeted() && ship != playerShip) {
-                        playerShip->setTargetShip(ship);
-                        ship->setTargetedState(TargetSelectionState::ACTIVE);
-                    }
-                    break;
-                }
-            }
-        }
-    }
+    selectionSystem.onClicking();
 }
