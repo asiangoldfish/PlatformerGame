@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Framework.h"
 #include "Ship.h"
-#include "GameUI.h"
 #include "ECS_Systems.h"
 #include "Debugging.h"
 #include "systems/Systems.h"
@@ -12,8 +10,8 @@ class GameScene : public FW::BaseScene {
 public:
     GameScene() = default;
     virtual ~GameScene() = default;
-    virtual void init();
-    virtual void cleanUp();
+    virtual void init() override;
+    virtual void cleanUp() override;
     virtual void update(float delta) override;
 
     void keyCallback(int key, int scancode, int action, int mods);
