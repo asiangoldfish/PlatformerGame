@@ -30,6 +30,7 @@ Description:
   Build and execute the exam project.
 
 Options:
+      --build-only    do not execute the application after build completion
   -g, --generator     CMake generator to use. Use cmake --help for a list of
                       all available generators for your platform.
   -h, --help          show this help message and exit.
@@ -39,6 +40,7 @@ Options:
 Targets:
   PhysicsDemo
   MyApplication
+  Example_SpaceExplorer
 EOF
 }
 
@@ -72,13 +74,15 @@ if [[ $# -eq 0 ]]; then usage; exit; fi
 # Available script parameters
 GENERATOR=""    # CMake generator
 TARGET=""       # CMake project name
+BUILD_ONLY=""
 
 # Checks for flags and runs accordingly
 for arg in "$@"; do
     case $arg in
+             --build-only) BUILD_ONLY="true" ;;
         -g | --generator) GENERATOR="$2" ;;
         -h | --help) usage ;;
-        -t | --target) TARGET="$2" ;;
+        -t | --target) TARGET="$2"; echo $TARGET ;;
         --docs) generate_doxygen; exit "$?" ;;
     esac
     shift
@@ -95,8 +99,10 @@ fi
 cmd_generator=""
 if [ ! -z "$GENERATOR" ]; then cmd_generator="-G $GENERATOR"; fi
 
-cmake -S . -B build "$cmd_generator" && \
+cmake -S . -B build "$cmd_generator" -DCMAKE_BUILD_TYPE=Debug && \
     cmake --build build --target "$TARGET" && \
     #execute "$TARGET"
 
+if [ "$BUILD_ONLY" != "true" ]; then
     cd "./build/bin" && ./"$TARGET"
+fi
