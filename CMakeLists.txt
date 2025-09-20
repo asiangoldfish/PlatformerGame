@@ -37,6 +37,7 @@ add_subdirectory(External/spdlog)
 add_subdirectory(External/imgui)
 add_subdirectory(External/nlohmann_json)
 add_subdirectory(External/doctest)
+add_subdirectory(External/entt)
 
 # stb
 add_library(stb INTERFACE)
