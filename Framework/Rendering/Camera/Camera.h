@@ -32,8 +32,7 @@ namespace FW {
             return projectionMatrix;
         }
 
-        virtual void update(const ref<Shader>& shader) = 0;
-        virtual void update(const Shader* shader) = 0;
+        virtual void update(const std::string& shader) = 0;
 
         // -------------
         // Camera Movement

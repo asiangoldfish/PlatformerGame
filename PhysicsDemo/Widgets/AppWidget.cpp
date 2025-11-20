@@ -13,6 +13,25 @@
 
 #include "AssetSystem.h"
 
+void sceneTreeEntry(FW::ref<FW::SceneNode> sceneNode,
+                    FW::ref<SelectedNode> selectedNode) {
+    ImGui::SetNextItemOpen(sceneNode->entity->getChildren().size(),
+                           ImGuiCond_Once);
+    ImGui::PushID(sceneNode->entity->getUUID().c_str());
+
+    if (ImGui::TreeNode(sceneNode->entity->name.c_str())) {
+        if (ImGui::IsItemClicked()) {
+            selectedNode->setSelectedNode(sceneNode->entity.get());
+        }
+        for (auto child : sceneNode->childNodes) {
+            sceneTreeEntry(child, selectedNode);
+        }
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+}
+
 /**
  * Get the user's data directory based on the platform.
  *
@@ -46,9 +65,6 @@ std::string widgetGetUserDataDirectory() {
 
     return userDataPath;
 }
-
-void sceneTreeEntry(FW::ref<FW::Entity> entity,
-                    FW::ref<SelectedNode> selectedNode);
 
 void AppWidget::beginDraw() {
     // Because some things must be set or defined before NewFrame is called, we
@@ -126,23 +142,6 @@ void AppWidget::drawSceneTree(FW::ref<FW::BaseScene> scene) {
     ImGui::Begin("SceneTree");
     sceneTreeEntry(scene->getRoot(), selectedNode);
     ImGui::End();
-}
-
-void sceneTreeEntry(FW::ref<FW::Entity> entity,
-                    FW::ref<SelectedNode> selectedNode) {
-    ImGui::SetNextItemOpen(entity->getChildren().size(), ImGuiCond_Once);
-    ImGui::PushID(entity->getUUID().c_str());
-    if (ImGui::TreeNode(entity->name.c_str())) {
-        if (ImGui::IsItemClicked()) {
-            selectedNode->setSelectedNode(entity.get());
-        }
-        for (auto child : entity->getChildren()) {
-            sceneTreeEntry(child, selectedNode);
-        }
-
-        ImGui::TreePop();
-    }
-    ImGui::PopID();
 }
 
 void AppWidget::drawPopups() {
@@ -328,18 +327,19 @@ void AppWidget::propertiesPanel() {
             // Position
             ImGui::Text("Position");
             ImGui::SameLine();
-            float position[3] = {0.0f, 0.0f, 0.0f};
+            float position[3] = { 0.0f, 0.0f, 0.0f };
             position[0] = transformComponent->getPosition().x;
             position[1] = transformComponent->getPosition().y;
             position[2] = transformComponent->getPosition().z;
 
             ImGui::SliderFloat3("##Position", position, -10.0f, 10.0f);
-            transformComponent->setPosition({position[0], position[1], position[2]});
+            transformComponent->setPosition(
+              { position[0], position[1], position[2] });
 
-                        // Scale
+            // Scale
             ImGui::Text("Scale");
             ImGui::SameLine();
-            float scale[3] = {0.0f, 0.0f, 0.0f};
+            float scale[3] = { 0.0f, 0.0f, 0.0f };
             scale[0] = transformComponent->getScale().x;
             scale[1] = transformComponent->getScale().y;
             scale[2] = transformComponent->getScale().z;

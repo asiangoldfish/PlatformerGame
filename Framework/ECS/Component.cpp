@@ -52,7 +52,7 @@ void FW::DrawableComponent::draw() {
         */
 
     // Shininess
-    shaderRef->setFloat("u_material.shininess",
+    shaderRef->setParam("u_material.shininess",
                         material.getProperties().shininess);
 
     // Upload other parameters set by the user
@@ -115,7 +115,7 @@ void FW::TransformationComponent::uploadTransformationMatrix() {
         return;
     }
 
-    shaderRef->setMat4("u_model", modelMatrix);
+    shaderRef->setParam("u_model", modelMatrix);
 }
 
 void FW::TransformationComponent::recalculateModelMatrix() {

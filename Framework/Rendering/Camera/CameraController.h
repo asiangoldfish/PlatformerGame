@@ -38,7 +38,7 @@ namespace FW {
         }
 
         /** Upload data to the GPU */
-        void update(const ref<Shader>& shader);
+        void update(const std::string& shader);
 
         /**
          * Add rotation to the camera.

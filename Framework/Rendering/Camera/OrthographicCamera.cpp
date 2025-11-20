@@ -1,44 +1,33 @@
 #include "OrthographicCamera.h"
+#include "ShaderManager.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace FW {
     OrthographicCamera::OrthographicCamera(const OrthographicCamera& other)
-      : Camera(other)
-    {
+      : Camera(other) {
         frustum = other.frustum;
         computeProjectionMatrix();
     }
 
     OrthographicCamera::OrthographicCamera(
       const OrthographicCamera::Frustum& frustum,
-      const glm::vec3& position)
-    {
+      const glm::vec3& position) {
         this->frustum = frustum;
         // Use the frustrum to construct the projection matrix
         projectionMatrix =
           glm::ortho(frustum.left, frustum.right, frustum.bottom, frustum.top);
-        
+
         computeProjectionMatrix();
         this->position = position;
     }
 
-    void OrthographicCamera::update(const ref<Shader>& shader) {
-        shader->bind();
-        shader->setMat4("u_projection", getProjectionMatrix());
-        shader->setMat4("u_view", getViewMatrix());
-        shader->setFloat3("u_cameraPosition", getPosition());
-        shader->setFloat("u_nearClip", frustum.near);
-        shader->setFloat("u_farClip", frustum.far);
-    }
-    
-    
-    void OrthographicCamera::update(const Shader* shader) {
-        shader->bind();
-        shader->setMat4("u_projection", getProjectionMatrix());
-        shader->setMat4("u_view", getViewMatrix());
-        shader->setFloat3("u_cameraPosition", getPosition());
-        shader->setFloat("u_nearClip", frustum.near);
-        shader->setFloat("u_farClip", frustum.far);
+    void OrthographicCamera::update(const std::string& shader) {
+        auto shaderRef = ShaderManager::get().bind(shader);
+        shaderRef->setParam("u_projection", getProjectionMatrix());
+        shaderRef->setParam("u_view", getViewMatrix());
+        shaderRef->setParam("u_cameraPosition", getPosition());
+        shaderRef->setParam("u_nearClip", frustum.near);
+        shaderRef->setParam("u_farClip", frustum.far);
     }
 
     void OrthographicCamera::setCentraliseScreenCoordinates(bool b) {
@@ -46,7 +35,8 @@ namespace FW {
         computeProjectionMatrix();
     }
     void OrthographicCamera::computeViewMatrix() {
-        viewMatrix = glm::lookAt(position, { position.x, position.y, -1.0f }, { 0.0, 1, 0.0 });
+        viewMatrix = glm::lookAt(
+          position, { position.x, position.y, -1.0f }, { 0.0, 1, 0.0 });
     }
 
     void OrthographicCamera::updateViewportSize(const glm::vec2& size) {
@@ -60,7 +50,7 @@ namespace FW {
     }
 
     void OrthographicCamera::setCameraSize(float x, float y) {
-        glm::vec2 newSize{x, y};
+        glm::vec2 newSize{ x, y };
         updateViewportSize(newSize);
     }
 

@@ -26,19 +26,19 @@ void PhysicsScene::update(float delta) {
         FW::ref<FW::DrawableComponent> drawableComponent =
           FW::createRef<FW::DrawableComponent>();
         drawableComponent->setShape(shape);
-        drawableComponent->setShader(shader);
+        drawableComponent->setShader("cube");
         drawableComponent->init();
 
         FW::ref<FW::TransformationComponent> xformComponent =
           FW::createRef<FW::TransformationComponent>();
-        xformComponent->setShader(shader);
+        xformComponent->setShader("cube");
         xformComponent->init();
 
-        FW::ref<FW::Entity> drawableEntity = FW::createRef<FW::Entity>();
-        drawableEntity->addComponent(drawableComponent);
-        drawableEntity->addComponent(xformComponent);
-        drawableEntity->name = "Drawable Entity";
+        auto sceneNode = FW::createRef<FW::SceneNode>(true);
+        sceneNode->entity->addComponent(drawableComponent);
+        sceneNode->entity->addComponent(xformComponent);
+        sceneNode->entity->name = "Drawable Entity";
 
-        root->addChild(drawableEntity);
+        rootNode->addChild(sceneNode);
     }
 }

@@ -8,6 +8,14 @@
 namespace FW {
     class SceneNode {
     public:
+        SceneNode() = default;
+        SceneNode(bool createEntity) {
+            entity = createRef<Entity>();
+        }
+        SceneNode(ref<Entity> entity) {
+            this->entity = entity;
+        }
+
         virtual void update(float delta);
         virtual void addChild(ref<SceneNode> node);
         virtual void removeChild(ref<SceneNode> node);

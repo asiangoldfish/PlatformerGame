@@ -108,8 +108,7 @@ namespace FW {
 
     void Sprite::update(float delta) {
         if (isDrawable && camera) {
-            Shader* shaderRef = ShaderManager::get().bind(drawableComponent->getShader());
-            camera->update(shaderRef);
+            camera->update(drawableComponent->getShader());
         }
 
         Entity::update(delta);

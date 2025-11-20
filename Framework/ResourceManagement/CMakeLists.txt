@@ -2,7 +2,6 @@ project(FRAMEWORK_RESOURCE_MANAGEMENT)
 
 add_library(${PROJECT_NAME}
     JSONParser.cpp
-    ShaderManager.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

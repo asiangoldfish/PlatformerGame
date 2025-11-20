@@ -13,8 +13,8 @@ public:
     virtual void cleanUp();
     virtual void update(float delta) override;
 
-    void setShader(FW::ref<FW::Shader> shader) { this->shader = shader; }
-    FW::ref<FW::Shader> getShader() { return shader; }
+    void setShader(std::string shader) { this->shader = shader; }
+    std::string getShader() { return shader; }
     
     void setAssetSystem(FW::ref<AssetSystem> assetSystem) {
         this->assetSystem = assetSystem;
@@ -25,6 +25,6 @@ public:
 
 private:
     /** Selectable entity that is shown in the properties panel */
-    FW::ref<FW::Shader> shader;
+    std::string shader;
     FW::ref<AssetSystem> assetSystem;
 };

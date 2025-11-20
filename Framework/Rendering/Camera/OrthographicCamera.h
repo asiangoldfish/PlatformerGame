@@ -25,8 +25,7 @@ namespace FW {
           // we should move the camera a little backward
           const glm::vec3& position = glm::vec3(0.0f, 0.0f, -0.01f));
 
-        void update(const ref<Shader>& shader) override;
-        void update(const Shader* shader) override;
+        void update(const std::string& shader) override;
 
         void setFrustum(const Frustum& frust) {
             this->frustum = frust;

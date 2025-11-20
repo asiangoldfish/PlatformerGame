@@ -47,7 +47,7 @@ public:
         return cameraController;
     }
 
-    [[nodiscard]] FW::ref<FW::Shader> getShader() { return shader; }
+    [[nodiscard]] std::string getShader() { return cubeShader; }
 
     // --------
     // Inputs
@@ -107,7 +107,7 @@ public:
     float cameraCurrentPitch = 0.0f;
 
 private:
-    FW::ref<FW::Shader> shader;
+    std::string cubeShader;
     FW::scope<FW::PlayerController> playerController;
     FW::ref<FW::CameraController> cameraController;
     float cameraSpeed = 15.0f;
@@ -115,7 +115,7 @@ private:
 
     FW::ref<FW::Framebuffer> viewportFramebuffer;
 
-    FW::ref<FW::Shader> worldGridShader;
+    std::string worldGridShader;
     FW::ref<WorldGrid> worldGrid;
 
     FW::ref<FW::JSONParser> editorConfig;

@@ -8,6 +8,7 @@
 // Framework
 #include "PerspectiveCamera.h"
 #include "Log.h"
+#include "ShaderManager.h"
 
 namespace FW {
     PerspectiveCamera::PerspectiveCamera(
@@ -62,22 +63,13 @@ namespace FW {
         }
     }
 
-    void PerspectiveCamera::update(const ref<Shader>& shader) {
-        shader->bind();
-        shader->setMat4("u_projection", getProjectionMatrix());
-        shader->setMat4("u_view", getViewMatrix());
-        shader->setFloat3("u_cameraPosition", getPosition());
-        shader->setFloat("u_nearClip", frustum.nearClip);
-        shader->setFloat("u_farClip", frustum.farClip);
-    }
-
-    void PerspectiveCamera::update(const Shader* shader) {
-        shader->bind();
-        shader->setMat4("u_projection", getProjectionMatrix());
-        shader->setMat4("u_view", getViewMatrix());
-        shader->setFloat3("u_cameraPosition", getPosition());
-        shader->setFloat("u_nearClip", frustum.nearClip);
-        shader->setFloat("u_farClip", frustum.farClip);
+    void PerspectiveCamera::update(const std::string& shader) {
+        auto shaderRef = ShaderManager::get().bind(shader);
+        shaderRef->setParam("u_projection", getProjectionMatrix());
+        shaderRef->setParam("u_view", getViewMatrix());
+        shaderRef->setParam("u_cameraPosition", getPosition());
+        shaderRef->setParam("u_nearClip", frustum.nearClip);
+        shaderRef->setParam("u_farClip", frustum.farClip);
     }
 
     void PerspectiveCamera::updateViewportSize(const glm::vec2& size) {

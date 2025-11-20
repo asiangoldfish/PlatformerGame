@@ -23,6 +23,6 @@ WorldGrid::WorldGrid() {
 void
 WorldGrid::draw(const FW::ref<FW::Shader> shader)
 {
-    shader->bind();
+    // shader->bind();
     RenderCommand::drawIndex(*vertexArray);
 }

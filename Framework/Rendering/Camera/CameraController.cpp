@@ -5,7 +5,7 @@
 
 namespace FW {
     // TODO Find some way so the camera does not have to know what the shader is
-    void CameraController::update(const ref<Shader>& shader) {
+    void CameraController::update(const std::string& shader) {
         selectedCamera->update(shader);
     }
 

@@ -6,6 +6,7 @@
 
 // Framework API
 #include "Framework.h"
+#include "ShaderManager.h"
 
 // App Components
 #include "WorldGrid.h"
@@ -86,18 +87,22 @@ bool PhysicsApp::init() {
     // -----------
     // Textures and shaders
     // -----------
-    shader = FW::createRef<FW::Shader>(
+    cubeShader = "cube";
+    worldGridShader = "cube";
+    FW::ShaderManager::get().createShaderFromFiles(
+      cubeShader,
       RESOURCES_DIR + std::string("shaders/vertex.glsl"),
       RESOURCES_DIR + std::string("shaders/fragment.glsl"));
 
-    worldGridShader = FW::createRef<FW::Shader>(
+    FW::ShaderManager::get().createShaderFromFiles(
+      worldGridShader,
       RESOURCES_DIR + std::string("shaders/worldGridVertex.glsl"),
       RESOURCES_DIR + std::string("shaders/worldGridFrag.glsl"));
 
     // We only have one shader in the application, so we only bind it here.
-    shader->bind();
-    shader->setInt("u_material.diffuse", 0);
-    shader->setInt("u_material.specular", 1);
+    // shader->bind();
+    // shader->setInt("u_material.diffuse", 0);
+    // shader->setInt("u_material.specular", 1);
 
     // -------------
     // Entities
@@ -122,12 +127,12 @@ bool PhysicsApp::init() {
     RenderCommand::setClearColor(glm::vec3(0.5f, 0.5f, 0.5f));
 
     RenderCommand::setClearColor(glm::vec3{ 0.2f, 0.1f, 0.215f });
-    shader->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
+    FW::ShaderManager::get().getShader("cube")->setVisualizeMode(RenderCommand::VisualizeMode::NORMAL);
 
     worldGrid = FW::createRef<WorldGrid>();
 
     scene = FW::createRef<PhysicsScene>();
-    scene->setShader(shader);
+    scene->setShader(cubeShader);
     scene->init();
 
     // Init Dear ImGui
@@ -162,7 +167,8 @@ void PhysicsApp::run() {
 
         cameraController->update(worldGridShader);
 
-        worldGrid->draw(worldGridShader);
+        FW::ShaderManager::get().bind(worldGridShader);
+        worldGrid->draw(nullptr);
 
         // Below line must happen after drawing the world grid because of depth
         RenderCommand::clear(GL_DEPTH_BUFFER_BIT);

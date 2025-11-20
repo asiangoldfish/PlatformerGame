@@ -15,6 +15,7 @@ add_library(${PROJECT_NAME} STATIC
     Texture.h               Texture.cpp
     TextureManager.h        TextureManager.cpp
     Material.h              Material.cpp
+    ShaderManager.h         ShaderManager.cpp
 
     # Lighting
     Light/Light.h
